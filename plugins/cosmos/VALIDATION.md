@@ -37,3 +37,22 @@ Controle de regressão: a suíte expandida foi executada em memória contra a fu
 ## Renomeação para Cosmos
 
 Marca, identificador do plugin, skill e nomes dos perfis atualizados para Cosmos. A demonstração funcional acima foi executada antes da renomeação; após a mudança foram repetidas as validações de estrutura e referências, sem alterar lógica ou modelos.
+
+## Versionamento e Conventional Commits
+
+O repositório passa a usar Semantic Release para calcular versões, notas e tags,
+com Commitlint na CI para commits e títulos de PR. O pacote gerado recebe a
+versão no próprio manifesto; a sincronização da fonte usa uma branch e um PR
+separados. Não há escrita direta na `main`.
+
+Validações locais desta implementação: `npm ci --ignore-scripts`, `npm test`,
+`python3 -m unittest discover -s demo-cosmos -v`, os dois validadores de autoria
+e `actionlint` passaram. O pacote de exemplo `cosmos-1.0.0.zip` foi gerado,
+extraído em diretório temporário e aprovado pelos validadores do plugin e skill.
+Esse pacote é uma simulação local, não uma release publicada.
+
+Os testes de integração dos commits usam as bibliotecas reais do analyzer e
+Commitlint. Testes do pacote usam repositórios temporários, e os da sincronização
+usam APIs simuladas, sem publicar no GitHub. A publicação completa com
+`GITHUB_TOKEN` depende do primeiro merge; a abertura automática do PR também
+depende da permissão administrativa descrita no guia de releases.

@@ -15,19 +15,23 @@ suite, and `settings.before.txt` preserves the intentionally flawed baseline.
 
 ## Build, Test, and Development Commands
 
-This repository has no build step or runtime dependencies. Use Python 3 for
-the demo and the locally installed Codex authoring skills for validation:
+The distributed plugin has no runtime dependencies. Release tooling uses
+Node.js 24.10+ and Python 3.12. Install tooling with `npm ci --ignore-scripts`.
+Use the locally installed Codex authoring skills for plugin validation:
 
 ```bash
 python3 -m unittest discover -s demo-cosmos -v
+npm test
+npm run lint:commits -- --from origin/main --to HEAD --verbose
 python3 /path/to/plugin-creator/scripts/validate_plugin.py plugins/cosmos
 python3 /path/to/skill-creator/scripts/quick_validate.py \
   plugins/cosmos/skills/cosmos-orchestrate
 ```
 
-The first command runs all demo tests. The other commands validate the plugin
-manifest and skill metadata; replace `/path/to/` with the relevant local skill
-location. Run all three before submitting plugin changes.
+Run the demo tests, release-tooling tests, commit lint, and both authoring
+validators before submitting plugin changes. Replace `/path/to/` with the
+relevant local skill location. `npm test` uses local fixtures and mocked APIs;
+it must not publish releases or contact production services.
 
 ## Coding Style & Naming Conventions
 
@@ -48,9 +52,10 @@ the recorded evidence or limitations materially change.
 
 ## Commit & Pull Request Guidelines
 
-The history currently uses concise, imperative summaries such as
-`Initial public release of Cosmos plugin`. Continue with one purpose per commit
-and avoid bundling unrelated cleanup. Pull requests should explain the user
+Use Conventional Commits for new commits and PR titles, such as
+`feat(plugin): add semantic release automation`. Follow `CONTRIBUTING.md`;
+do not rewrite historical commits. Keep one purpose per commit and avoid
+bundling unrelated cleanup. Pull requests should explain the user
 impact, list changed plugin components, and include exact validation commands
 and results. Link related issues when available. Screenshots are required only
 for visible Codex UI or marketplace presentation changes.

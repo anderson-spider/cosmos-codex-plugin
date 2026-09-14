@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A single publisher processes the latest main, including commits accumulated
+# while a previous release was running. Never interrupt an active publication.
+concurrency:
+  group: cosmos-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: python3 -m unittest discover -s demo-cosmos -v
+      - name: Publish semantic release
+        run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Propose manifest synchronization
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const {syncVersion} = await import(`${process.env.GITHUB_WORKSPACE}/scripts/sync-release-version.mjs`);
+            await syncVersion({github, context, core});
