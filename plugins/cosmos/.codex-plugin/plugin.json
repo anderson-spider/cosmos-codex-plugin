@@ -10,6 +10,9 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Cosmos",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "logoDark": "./assets/icon.png",
     "shortDescription": "Delegação seletiva para trabalhar com menos desperdício.",
     "longDescription": "Coordena exploração, pesquisa, design e implementação com contexto delimitado. Oracle sob demanda. Perfis opcionais; nenhuma instalação automática de agentes.",
     "developerName": "Anderson Silva",
