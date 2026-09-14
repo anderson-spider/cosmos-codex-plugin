@@ -5,6 +5,8 @@
   "author": {
     "name": "Anderson Silva"
   },
+  "homepage": "https://github.com/anderson-spider/cosmos-codex-plugin",
+  "repository": "https://github.com/anderson-spider/cosmos-codex-plugin",
   "skills": "./skills/",
   "interface": {
     "displayName": "Cosmos",
