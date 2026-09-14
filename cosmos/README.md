@@ -1,0 +1,55 @@
+# Cosmos — versão mínima local
+
+Plugin com uma skill de orquestração explicitamente invocada e cinco perfis de especialistas. Usa as ferramentas nativas de subagentes disponíveis na sessão. Não possui MCP, hooks, processo persistente, automação do ChatGPT Web ou ponte de sessões.
+
+## Usar sem instalar
+
+Abra o projeto em que deseja trabalhar, selecione **gpt-5.6-sol / low** e peça ao Codex:
+
+> Leia a skill no caminho absoluto `<pasta-do-plugin>/skills/cosmos-orchestrate/SKILL.md` e use esse fluxo para [pedido].
+
+Substitua o caminho pelo local onde este pacote foi salvo. A leitura explícita permite usar as instruções sem registrar o plugin. A skill não altera o modelo da conversa; selecione-o no app. Os especialistas podem receber modelo e esforço explicitamente quando a ferramenta nativa permitir. Se houver limitação, o agente deve informar o desvio e trabalhar diretamente.
+
+Após a instalação e o início de uma nova sessão, a entrada será `$cosmos-orchestrate`. `allow_implicit_invocation: false` impede seleção implícita da skill. O registro em marketplace e a instalação são configurações locais de cada usuário e não fazem parte deste repositório.
+
+## Perfis opcionais
+
+Os cinco TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São referências para a skill e templates de agentes personalizados; estar dentro do plugin não os registra no Codex. O agente principal da conversa, com a skill carregada, exerce o papel de Orchestrator usando o modelo selecionado no chat; **gpt-5.6-sol / low** é a configuração recomendada, não uma troca automática de modelo.
+
+| Papel | Modelo | Esforço |
+|---|---|---|
+| Oracle | gpt-6-astra | low |
+| Librarian | gpt-5.6-luna | medium |
+| Explorer | gpt-5.6-luna | medium |
+| Designer | gpt-5.6-terra | medium |
+| Executor | gpt-5.6-terra | medium |
+
+A documentação oficial oferece `.codex/agents/` para perfis por projeto e `~/.codex/agents/` para perfis pessoais. Se desejar os nomes registrados, uma etapa posterior autorizada pode copiar os TOMLs para o projeto escolhido, depois de verificar colisões por nome e arquivo. Este pacote não contém instalador nem modifica esses destinos. O prefixo `cosmos-` evita substituir o agente nativo `explorer` por acidente.
+
+Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A skill orienta usar criação genérica com instruções do papel quando uma elevação de esforço for necessária. Permissões de leitura nos perfis são defaults; overrides da sessão podem prevalecer. As instruções de somente leitura continuam fazendo parte do contrato, sem promessa de isolamento rígido.
+
+## Comportamento
+
+- Pedido pequeno: execução direta, sem abrir uma equipe.
+- Trabalho desconhecido: Explorer ou Librarian devolve contexto delimitado.
+- Implementação: Executor e/ou Designer, com um responsável por arquivo.
+- Revisão: proporcional; Oracle apenas para decisões difíceis, diagnóstico persistente ou risco relevante. Uma revisão independente rotineira pode usar um Executor novo, sem edição.
+- Falha de modelo ou ferramenta: registrar a limitação, evitar tentativas idênticas e assumir o trabalho quando possível. Não substituir silenciosamente a distribuição.
+
+## Verificação e limites
+
+Consulte `VALIDATION.md` para a evidência desta versão. O pacote foi inspirado na divisão de papéis do [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); as instruções foram escritas para Codex, sem copiar o runtime do OpenCode.
+
+Fontes verificadas em 14/09/2026:
+
+- [Subagentes e perfis TOML](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+- [Plugins](https://learn.chatgpt.com/docs/plugins).
+- [Uso e limites do Codex](https://learn.chatgpt.com/docs/pricing).
+
+## Comparar quota, tempo e retrabalho
+
+Faça pares de tarefas equivalentes a partir do mesmo estado inicial: uma execução direta com Sol low e outra com esta skill. Use tarefas pequenas, uma mudança em vários arquivos e um diagnóstico; alterne a ordem das execuções. Não rode outros trabalhos na conta durante cada medição, se quiser atribuir a diferença ao teste.
+
+Registre modelo/esforço efetivos, horário inicial/final, quota de cinco horas e semanal antes/depois (incluindo horário de reset), agentes acionados, testes aprovados, correções posteriores e defeitos encontrados na revisão. Descarte comparações atravessando reset ou misturadas com outras tarefas da conta. O percentual exibido pode ser arredondado; diferenças muito pequenas são inconclusivas.
+
+Tokens reportados por ferramentas não equivalem diretamente a percentual da assinatura. Compare **quota por tarefa concluída com qualidade equivalente**, junto com tempo e retrabalho, ao longo de vários pares. Um exemplo sintético demonstra funcionamento, não economia. Não há percentual de economia medido ou prometido nesta versão.

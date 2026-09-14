@@ -1,0 +1,2 @@
+def merge_settings(defaults, overrides):
+    return {**defaults, **{k: v for k, v in overrides.items() if v}}

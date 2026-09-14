@@ -1,0 +1,20 @@
+{
+  "name": "cosmos",
+  "version": "0.1.0",
+  "description": "Orquestração enxuta com especialistas nativos do Codex, ativada por skill.",
+  "author": {
+    "name": "Anderson Silva"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Cosmos",
+    "shortDescription": "Delegação seletiva para trabalhar com menos desperdício.",
+    "longDescription": "Coordena exploração, pesquisa, design e implementação com contexto delimitado. Oracle sob demanda. Perfis opcionais; nenhuma instalação automática de agentes.",
+    "developerName": "Anderson Silva",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Use $cosmos-orchestrate para implementar esta tarefa."
+    ]
+  }
+}
