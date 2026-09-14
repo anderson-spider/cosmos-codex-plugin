@@ -38,6 +38,12 @@ Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A ski
 
 ## Verificação e limites
 
+A versão publicada aparece nas tags e releases do repositório. O anexo
+`cosmos-X.Y.Z.zip` contém o manifesto com essa versão; a cópia na `main` é
+sincronizada por um PR automático após a publicação. Consulte
+[guia de releases](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
+para o fluxo e os limites de atualização.
+
 Consulte `VALIDATION.md` para a evidência desta versão. O pacote foi inspirado na divisão de papéis do [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); as instruções foram escritas para Codex, sem copiar o runtime do OpenCode.
 
 Fontes verificadas em 14/09/2026:
