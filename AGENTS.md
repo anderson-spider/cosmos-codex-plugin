@@ -2,11 +2,12 @@
 
 ## Project Structure & Module Organization
 
-`cosmos/` is the distributable Codex plugin. Its manifest lives at
-`cosmos/.codex-plugin/plugin.json`, while `cosmos/skills/cosmos-orchestrate/`
+`plugins/cosmos/` is the distributable Codex plugin. Its manifest lives at
+`plugins/cosmos/.codex-plugin/plugin.json`, while `plugins/cosmos/skills/cosmos-orchestrate/`
 contains the skill instructions, UI metadata, and specialist profiles under
-`references/agents/`. Keep plugin-facing documentation in `cosmos/README.md`
-and validation evidence in `cosmos/VALIDATION.md`.
+`references/agents/`. Keep plugin-facing documentation in `plugins/cosmos/README.md`
+and validation evidence in `plugins/cosmos/VALIDATION.md`. The repository marketplace
+manifest is `.agents/plugins/marketplace.json`.
 
 `demo-cosmos/` is a small Python example used to exercise the orchestration
 workflow. `settings.py` is the implementation, `test_settings.py` is its test
@@ -19,9 +20,9 @@ the demo and the locally installed Codex authoring skills for validation:
 
 ```bash
 python3 -m unittest discover -s demo-cosmos -v
-python3 /path/to/plugin-creator/scripts/validate_plugin.py cosmos
+python3 /path/to/plugin-creator/scripts/validate_plugin.py plugins/cosmos
 python3 /path/to/skill-creator/scripts/quick_validate.py \
-  cosmos/skills/cosmos-orchestrate
+  plugins/cosmos/skills/cosmos-orchestrate
 ```
 
 The first command runs all demo tests. The other commands validate the plugin
@@ -42,7 +43,7 @@ in `snake_case`. Do not add generated caches or machine-specific paths.
 Tests use Python's `unittest`; no coverage threshold is configured. Add focused
 regression tests for every behavior change, including falsy values, nested
 structures, and mutation isolation when relevant. Keep tests deterministic and
-free of network or production access. Update `cosmos/VALIDATION.md` only when
+free of network or production access. Update `plugins/cosmos/VALIDATION.md` only when
 the recorded evidence or limitations materially change.
 
 ## Commit & Pull Request Guidelines

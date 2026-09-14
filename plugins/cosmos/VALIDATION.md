@@ -14,7 +14,7 @@
 
 Com as skills de sistema plugin-creator e skill-creator disponíveis, execute seus scripts `validate_plugin.py <pasta-do-plugin>` e `quick_validate.py <pasta-do-plugin>/skills/cosmos-orchestrate`. Nesta sessão foi usado Python com PyYAML em ambiente virtual isolado, sem instalar dependências globais.
 
-Os arquivos da demonstração são fornecidos separadamente em `../demo-cosmos/`. Execute `python3 -m unittest discover -s ../demo-cosmos -v` a partir desta pasta. A demonstração é sintética e usa somente a biblioteca padrão Python; não acessa produção.
+Os arquivos da demonstração são fornecidos separadamente em `../../demo-cosmos/`. Execute `python3 -m unittest discover -s ../../demo-cosmos -v` a partir desta pasta. A demonstração é sintética e usa somente a biblioteca padrão Python; não acessa produção.
 
 ## Limites da evidência
 

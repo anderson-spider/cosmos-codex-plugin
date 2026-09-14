@@ -1,0 +1,20 @@
+{
+  "name": "cosmos",
+  "interface": {
+    "displayName": "Cosmos"
+  },
+  "plugins": [
+    {
+      "name": "cosmos",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cosmos"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
