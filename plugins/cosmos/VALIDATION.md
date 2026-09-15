@@ -1,4 +1,4 @@
-# Validação — 14/09/2026
+# Validação — 15/09/2026
 
 ## Estrutura e compatibilidade
 
@@ -33,6 +33,8 @@ Resultado: **5 testes aprovados**, cobrindo override básico, merge recursivo/pr
 Executor/Terra medium avaliou a seleção de agentes e os casos de pedido pequeno, ferramenta ausente, modelo indisponível, edições concorrentes e elevação de esforço. Encontrou uma condição incompleta na seleção de perfis por nome. A skill foi corrigida para exigir também que a ferramenta exponha esse seletor; ferramentas como a desta sessão usam criação genérica. Essas situações foram analisadas estaticamente, não executadas como testes ponta a ponta.
 
 Controle de regressão: a suíte expandida foi executada em memória contra a função anterior; **2 testes falharam e 1 terminou em KeyError**, pois o merge raso descartava uma chave necessária. Na versão corrigida, os 5 testes passam.
+
+Um relato real mostrou o Orchestrator dizendo que o Cosmos “não expôs uma skill ou ferramenta acionável” enquanto `cosmos-orchestrate` já estava carregada. O contrato agora separa três estados: skill ativa, decisão de executar diretamente e indisponibilidade da delegação nativa. A revisão estática confirmou que somente o terceiro estado deve ser relatado como limitação; executar diretamente continua sendo comportamento do Cosmos.
 
 ## Renomeação para Cosmos
 

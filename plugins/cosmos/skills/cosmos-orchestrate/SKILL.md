@@ -7,6 +7,12 @@ description: Coordene trabalho de desenvolvimento com especialistas nativos, con
 
 Use este fluxo no pedido que ativou a skill e suas continuações. Não transforme outros pedidos em projetos multiagente.
 
+## Identidade ativa
+
+Quando esta instrução estiver carregada, o Cosmos está ativo por meio da própria skill `cosmos-orchestrate`. Não diga que o Cosmos “não expôs uma skill ou ferramenta acionável”, nem trate a execução direta como abandono do Cosmos. Se o pedido não justificar delegação, informe de forma breve que o Cosmos seguirá diretamente; isso é uma decisão válida do Orchestrator.
+
+Distinga a skill das capacidades auxiliares: os perfis TOML são referências, e as ferramentas nativas de subagentes podem ou não estar disponíveis. Caso falte delegação nativa, nomeie somente essa limitação e continue como Orchestrator. Não atribua essa ausência à skill, ao plugin ou ao Cosmos como um todo.
+
 ## Seleção de trabalho
 
 Resolva diretamente pedidos pequenos, localizados ou já compreendidos. Delegue quando a especialização, a redução de contexto ou o trabalho independente trouxer benefício concreto. Não abra todos os especialistas por rotina, nem use subagentes apenas para chamar ferramentas que você já pode usar. A delegação não amplia o escopo nem as autorizações do pedido.
@@ -23,7 +29,7 @@ O agente principal da conversa é o Orchestrator, e esta skill fornece seu compo
 
 ## Delegação nativa
 
-Use somente ferramentas de subagentes realmente disponíveis na sessão. Não crie tarefas de sidebar, processos CLI ou pontes de sessão para substituir a delegação. Se o recurso não existir, execute diretamente e declare a limitação.
+Use somente ferramentas de subagentes realmente disponíveis na sessão. Não crie tarefas de sidebar, processos CLI ou pontes de sessão para substituir a delegação. Se o recurso não existir, execute diretamente e declare especificamente a indisponibilidade de delegação nativa, sem negar que esta skill está ativa.
 
 Antes de delegar, leia somente o perfil do papel escolhido em `references/agents/cosmos-<papel>.toml` (nomes de arquivo em inglês e minúsculas). Inclua suas instruções no pedido do filho. Use o nome `cosmos-<papel>` somente se o perfil estiver registrado e a ferramenta expuser um seletor de agente personalizado; caso contrário, use criação genérica com modelo e esforço explícitos. A existência desses arquivos no plugin não registra agentes automaticamente.
 
