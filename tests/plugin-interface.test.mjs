@@ -9,6 +9,10 @@ const skillMetadata = readFileSync(
   'plugins/cosmos/skills/cosmos-orchestrate/agents/openai.yaml',
   'utf8',
 );
+const skillInstructions = readFileSync(
+  'plugins/cosmos/skills/cosmos-orchestrate/SKILL.md',
+  'utf8',
+);
 
 test('starter prompts explicitly invoke the installed Cosmos skill', () => {
   const prompts = manifest.interface.defaultPrompt;
@@ -22,4 +26,11 @@ test('starter prompts explicitly invoke the installed Cosmos skill', () => {
 
 test('skill remains eligible for automatic discovery', () => {
   assert.doesNotMatch(skillMetadata, /allow_implicit_invocation:\s*false/);
+});
+
+test('delegation contract carries authorization boundaries to subagents', () => {
+  assert.match(skillInstructions, /Ações autorizadas para o filho/);
+  assert.match(skillInstructions, /restrições aplicáveis/);
+  assert.match(skillInstructions, /efeitos que ainda dependem de aprovação do usuário/);
+  assert.match(skillInstructions, /devolvê-la ao Orchestrator/);
 });

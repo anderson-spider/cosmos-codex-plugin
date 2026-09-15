@@ -35,6 +35,7 @@ Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A ski
 - Pedido pequeno: execução direta, sem abrir uma equipe nem exigir subagente.
 - Trabalho desconhecido: Explorer ou Librarian devolve contexto delimitado.
 - Implementação: Executor e/ou Designer, com um responsável por arquivo.
+- Toda delegação transmite ações autorizadas, restrições e efeitos ainda sujeitos à aprovação; decisões adicionais voltam ao Orchestrator.
 - Revisão: proporcional; Oracle apenas para decisões difíceis, diagnóstico persistente ou risco relevante. Uma revisão independente rotineira pode usar um Executor novo, sem edição.
 - Falha de modelo ou ferramenta: registrar a capacidade auxiliar indisponível, evitar tentativas idênticas e assumir o trabalho quando possível. Não confundir falta de delegação nativa com ausência da skill nem substituir silenciosamente a distribuição.
 
