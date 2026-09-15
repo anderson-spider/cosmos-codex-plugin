@@ -26,15 +26,14 @@ uso, perfis disponíveis, comportamento e limitações.
 
 ## Versões e releases
 
-O [Semantic Release](https://semantic-release.gitbook.io/semantic-release/)
-publica tags `vX.Y.Z`, notas e um pacote `cosmos-X.Y.Z.zip` depois de mudanças
-semânticas chegarem à `main`. Consulte as
+O workflow manual `Release` usa
+[Semantic Release](https://semantic-release.gitbook.io/semantic-release/) para
+publicar tags `vX.Y.Z`, notas e um pacote `cosmos-X.Y.Z.zip` a partir das
+mudanças semânticas que chegaram à `main`. Consulte as
 [releases](https://github.com/anderson-spider/cosmos-codex-plugin/releases)
-para comparar versões. O pacote anexado contém o manifesto atualizado.
-
-A automação abre um PR `chore(release): sync plugin version X.Y.Z` para levar
-essa versão ao manifesto da `main`. Faça o merge desse PR para que o marketplace
-Git também apresente a nova versão. Esse commit não gera outra release.
+para comparar versões. Durante a publicação, a versão é gravada no manifesto e
+commitada automaticamente antes da criação da tag, de modo que a tag e o pacote
+contenham a mesma versão.
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o padrão de commits e
 [RELEASING.md](RELEASING.md) para configuração, recuperação e limites.

@@ -58,7 +58,8 @@ test('prepara um ZIP apenas com arquivos rastreados no layout do marketplace', a
         'plugins/cosmos/skills/cosmos-orchestrate/SKILL.md',
     ].sort());
     assert.equal(JSON.parse(contents.manifest).version, '1.2.3');
-    assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '0.1.0');
+    assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '1.2.3');
+    assert.match(logs[0], /Manifesto atualizado para 1\.2\.3/);
     assert.match(logs[0], /cosmos-1\.2\.3\.zip/);
 });
 

@@ -23,15 +23,17 @@ inglês. Mudanças incompatíveis usam `!` ou um rodapé `BREAKING CHANGE: descr
 | `!` ou `BREAKING CHANGE:` | Major, por exemplo `1.0.0` → `2.0.0` |
 | `docs:`, `chore:`, `test:`, `ci:` e demais tipos aceitos | Sem release, salvo mudança incompatível |
 
-O Semantic Release usa o maior incremento entre os commits ainda não publicados.
-Não incremente versões manualmente. Prefira **Squash and merge**, preservando o
+O Semantic Release usa o maior incremento entre os commits ainda não publicados
+quando um mantenedor executa manualmente o workflow `Release`. Não incremente
+versões manualmente. Prefira **Squash and merge**, preservando o
 título semântico do PR e eventuais rodapés de incompatibilidade. Merge normal
 também funciona com commits semânticos; a mensagem automática de merge é ignorada.
 Ao editar o título ou a mensagem final no GitHub, preserve o padrão.
 
-O job `Validate` verifica título e commits introduzidos pelo PR. Alterações no
-número do manifesto exigem uma tag correspondente já existente e não podem
-reduzir a versão da base. Para torná-lo
+O job `Validate` verifica título e commits introduzidos pelo PR. Alterações
+manuais no número do manifesto exigem uma tag correspondente já existente e não
+podem reduzir a versão da base. O commit de versão gerado pelo release é criado
+diretamente pelo Semantic Release. Para tornar o check
 obrigatório, configure uma regra de proteção da `main` com esse check e exigência
 de branch atualizada. O workflow sozinho não impede um administrador de ignorar
 uma falha. Não reescreva o histórico antigo para adequá-lo ao padrão.

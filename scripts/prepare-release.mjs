@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {mkdirSync, rmSync} from 'node:fs';
+import {mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import path from 'node:path';
 
 const STABLE_VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
@@ -80,6 +80,14 @@ export async function prepare(pluginConfig, context) {
     }
 
     const cwd = path.resolve(context?.cwd ?? process.cwd());
+    const manifestPath = path.join(cwd, PLUGIN_MANIFEST);
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    if (typeof manifest?.version !== 'string' || !STABLE_VERSION.test(manifest.version)) {
+        throw new Error(`O manifesto do plugin contém uma versão inválida: ${String(manifest?.version)}`);
+    }
+    manifest.version = version;
+    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
     const files = trackedFiles(cwd);
     const dist = path.join(cwd, 'dist');
     const archive = path.join(dist, `cosmos-${version}.zip`);
@@ -92,7 +100,7 @@ export async function prepare(pluginConfig, context) {
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'pipe'],
     });
-    context?.logger?.log(`Arquivo de release criado: ${archive}`);
+    context?.logger?.log(`Manifesto atualizado para ${version} e arquivo de release criado: ${archive}`);
 }
 
 export default {prepare};
