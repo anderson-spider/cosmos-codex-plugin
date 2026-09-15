@@ -1,7 +1,8 @@
 # Cosmos Codex Plugin
 
-Cosmos adiciona ao Codex uma skill de orquestração seletiva com perfis para
-exploração, pesquisa, design, implementação e decisões complexas.
+Cosmos adiciona ao Codex uma skill de orquestração seletiva, uma skill Git
+Master e perfis para exploração, pesquisa, design, implementação, publicação e
+decisões complexas.
 
 ## Instalação pelo marketplace
 
@@ -20,7 +21,7 @@ codex plugin add cosmos@cosmos
 ```
 
 Abra uma nova conversa após a instalação e invoque
-`$cosmos:cosmos-orchestrate`.
+`$cosmos:cosmos-orchestrate` ou `$cosmos:git-master`.
 Consulte [`plugins/cosmos/README.md`](plugins/cosmos/README.md) para detalhes de
 uso, perfis disponíveis, comportamento e limitações.
 

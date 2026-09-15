@@ -27,13 +27,24 @@ O agente principal da conversa é o Orchestrator, e esta skill fornece seu compo
 | Librarian | gpt-5.6-luna / medium | Verificar documentação, versões ou exemplos externos. |
 | Designer | gpt-5.6-terra / medium | Implementar interface e estados visuais. |
 | Executor | gpt-5.6-terra / medium | Implementar uma unidade delimitada de trabalho. |
+| Git Master | gpt-5.6-terra / medium | Preparar commits e branches, publicar mudanças autorizadas e trabalhar com PRs, MRs e CI. |
 | Oracle | gpt-6-astra / low | Decisão difícil, diagnóstico persistente ou risco relevante. |
+
+Selecione Git Master quando um fluxo substancial envolver preparação de
+commits, publicação de branch, criação ou atualização de PR/MR, status ou
+correção de CI. Um pedido pequeno e somente local ainda pode ser resolvido
+diretamente. Delegar ao Git Master não autoriza nenhum efeito remoto.
 
 ## Delegação nativa
 
 Use somente ferramentas de subagentes realmente disponíveis na sessão. Não crie tarefas de sidebar, processos CLI ou pontes de sessão para substituir a delegação. Se o recurso não existir, execute diretamente e declare especificamente a indisponibilidade de delegação nativa, sem negar que esta skill está ativa.
 
 Antes de delegar, leia somente o perfil do papel escolhido em `references/agents/cosmos-<papel>.toml` (nomes de arquivo em inglês e minúsculas). Inclua suas instruções no pedido do filho. Use o nome `cosmos-<papel>` somente se o perfil estiver registrado e a ferramenta expuser um seletor de agente personalizado; caso contrário, use criação genérica com modelo e esforço explícitos. A existência desses arquivos no plugin não registra agentes automaticamente.
+
+Para Git Master, resolva também o caminho absoluto da skill irmã
+`../git-master/SKILL.md` a partir da pasta desta skill e inclua esse caminho no pedido
+do filho. O filho deve ler a skill e somente as referências aplicáveis ao modo
+solicitado. Não copie nem resuma o contrato Git no perfil ou na delegação.
 
 Ao usar ferramentas com `fork_turns`, prefira `none` e envie um contexto autossuficiente. Não herde a conversa inteira por conveniência. Respeite os nomes de parâmetros expostos: por exemplo, `reasoning_effort` na criação genérica e `model_reasoning_effort` nos TOMLs. Se modelo/esforço não puder ser selecionado, informe o desvio. Não invente aliases, ferramentas nem sucesso de configuração. Se um modelo falhar, não repita sem nova evidência: assuma a tarefa com o modelo disponível e registre o desvio.
 
