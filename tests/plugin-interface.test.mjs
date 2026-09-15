@@ -14,7 +14,7 @@ const skillInstructions = readFileSync(
   'utf8',
 );
 
-test('starter prompts explicitly invoke the installed Cosmos skill', () => {
+test('plugin starter prompts invoke the installed Cosmos skill namespace', () => {
   const prompts = manifest.interface.defaultPrompt;
 
   assert.ok(prompts.length > 0 && prompts.length <= 3);
@@ -22,6 +22,16 @@ test('starter prompts explicitly invoke the installed Cosmos skill', () => {
     assert.ok(prompt.length <= 128);
     assert.match(prompt, /^Use \$cosmos:cosmos-orchestrate\b/);
   }
+});
+
+test('skill metadata invokes its local skill name without the plugin namespace', () => {
+  const defaultPrompt = skillMetadata.match(
+    /^\s*default_prompt:\s*"([^"]+)"\s*$/m,
+  );
+
+  assert.ok(defaultPrompt, 'interface.default_prompt must be present');
+  assert.match(defaultPrompt[1], /^Use \$cosmos-orchestrate\b/);
+  assert.doesNotMatch(defaultPrompt[1], /\$cosmos:/);
 });
 
 test('skill remains eligible for automatic discovery', () => {

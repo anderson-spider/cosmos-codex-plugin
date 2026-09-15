@@ -5,6 +5,7 @@
 - Scaffold gerado pela skill plugin-creator; manifesto `.codex-plugin/plugin.json` aprovado por `validate_plugin.py`.
 - Skill aprovada por `quick_validate.py`; descoberta automática mantida no padrão habilitado, sem a política `allow_implicit_invocation: false`.
 - Os prompts iniciais do manifesto usam o nome instalado `$cosmos:cosmos-orchestrate`, respeitam o limite de três entradas e têm até 128 caracteres.
+- O `default_prompt` de `agents/openai.yaml` usa o nome local `$cosmos-orchestrate`, como exigido para metadados da própria skill. Testes separados distinguem esse contrato do namespace instalado usado pelo manifesto.
 - Cinco arquivos TOML de especialistas analisados com `tomllib` do Python; campos obrigatórios presentes.
 - Modelos e esforços conferidos no catálogo embarcado do **codex-cli 0.154.0**. Isso valida os identificadores, não acesso universal de qualquer conta.
 - Schema gerado pelo próprio CLI: `PluginDetail` contém skills, MCPs, hooks e outros componentes, mas nenhum campo de registro de agentes. O manifesto usa somente a skill; não promete instalar perfis.
