@@ -24,7 +24,7 @@
 
 - [ ] Definir o ciclo de vida dos subagentes quando o usuário interromper a tarefa, mudar o escopo ou concluir antecipadamente.
 - [ ] Adicionar cenários de fallback para ferramenta de delegação ausente, modelo indisponível, seletor de agente inexistente e falha repetida.
-- [ ] Verificar e documentar a diferença entre `$cosmos:cosmos-orchestrate` no manifesto e `$cosmos-orchestrate` em `agents/openai.yaml`.
+- [x] Verificar e documentar a diferença entre `$cosmos:cosmos-orchestrate` no manifesto e `$cosmos-orchestrate` em `agents/openai.yaml`.
 - [ ] Validar o marketplace e o manifesto reais em conjunto: identidade, caminho da fonte, namespace e layout.
 - [ ] Criar uma matriz de compatibilidade por superfície e versão, usando os estados `verificado`, `indisponível` e `não verificado`.
 - [ ] Deixar explícito que `sandbox_mode = "read-only"` é uma configuração solicitada, não garantia contra overrides da sessão.

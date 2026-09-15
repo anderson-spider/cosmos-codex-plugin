@@ -12,6 +12,12 @@ Substitua o caminho pelo local onde este pacote foi salvo. A leitura explícita 
 
 Após a instalação e o início de uma nova sessão, você pode invocar o fluxo por `@Cosmos` ou `$cosmos:cosmos-orchestrate`, quando essas formas estiverem disponíveis na superfície do Codex usada. A skill também pode ser descoberta automaticamente quando o pedido menciona o Cosmos ou pede explicitamente o fluxo Cosmos. Pedidos comuns de desenvolvimento ou uso de subagentes não são gatilhos pretendidos; essa fronteira deve ser confirmada pela matriz de ativação em `VALIDATION.md`. Os nomes e a sintaxe exibidos podem variar entre superfícies e versões, portanto use a opção visível no seu ambiente. O registro em marketplace e a instalação são configurações locais de cada usuário e não fazem parte deste repositório.
 
+Os dois arquivos de interface usam nomes intencionalmente diferentes. Os prompts
+do manifesto do plugin usam `$cosmos:cosmos-orchestrate`, pois `cosmos` é o
+namespace do componente instalado. Já `agents/openai.yaml` pertence à própria
+skill e usa `$cosmos-orchestrate`, o nome local declarado no `SKILL.md`. Testes
+separados protegem os dois contratos.
+
 ## Perfis opcionais
 
 Os cinco TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São papéis internos da skill e templates opcionais de agentes personalizados: não aparecem no seletor `@`, e estar dentro do plugin não os registra no Codex. O agente principal da conversa, com a skill carregada, exerce o papel de Orchestrator usando o modelo selecionado no chat; **gpt-5.6-sol / low** é a configuração recomendada, não uma troca automática de modelo.
