@@ -10,6 +10,7 @@
 - Schema gerado pelo próprio CLI: `PluginDetail` contém skills, MCPs, hooks e outros componentes, mas nenhum campo de registro de agentes. O manifesto usa somente a skill; não promete instalar perfis.
 - A documentação oficial descreve perfis por projeto em `.codex/agents/`. Uma inspeção com `codex debug prompt-input` em diretório isolado não exibiu os nomes dos perfis; portanto, não foi usada como prova de descoberta ou carregamento. `--strict-config` não é aceito nesse comando de diagnóstico.
 - **Registro/seleção dos perfis TOML por nome e instalação no app não foram validados em execução.** O fluxo demonstrado usa ferramentas nativas de criação genérica, com modelo/esforço explícitos e instruções do papel.
+- O contrato de delegação exige transmitir ações autorizadas, restrições e efeitos ainda sujeitos à aprovação. Um teste automatizado protege esses limites e o retorno de decisões adicionais ao Orchestrator.
 
 ## Reproduzir os validadores de autoria
 

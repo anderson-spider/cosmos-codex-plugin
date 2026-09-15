@@ -40,6 +40,7 @@ Ao usar ferramentas com `fork_turns`, prefira `none` e envie um contexto autossu
 Cada delegação deve conter:
 - Objetivo e resultado esperado, contexto relevante e evidências já obtidas.
 - Arquivos que pode editar, ou indicação explícita de somente leitura.
+- Ações autorizadas para o filho, restrições aplicáveis e efeitos que ainda dependem de aprovação do usuário. Se uma ação necessária ultrapassar esse limite, o filho deve parar e devolvê-la ao Orchestrator; somente ele solicita a decisão ao usuário.
 - Critérios de conclusão e verificação; ferramentas necessárias, se conhecidas.
 - Pedido de síntese curta com arquivos/símbolos ou fontes, verificações executadas e pendências.
 
