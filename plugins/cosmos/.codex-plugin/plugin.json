@@ -1,7 +1,7 @@
 {
   "name": "cosmos",
   "version": "1.0.0",
-  "description": "Orquestração enxuta com especialistas nativos do Codex, ativada por skill.",
+  "description": "Orquestração seletiva de tarefas de desenvolvimento com subagentes nativos do Codex.",
   "author": {
     "name": "Anderson Silva"
   },
@@ -13,13 +13,15 @@
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png",
     "logoDark": "./assets/icon.png",
-    "shortDescription": "Delegação seletiva para trabalhar com menos desperdício.",
-    "longDescription": "Coordena exploração, pesquisa, design e implementação com contexto delimitado. Oracle sob demanda. Perfis opcionais; nenhuma instalação automática de agentes.",
+    "shortDescription": "Orquestre tarefas com delegação seletiva.",
+    "longDescription": "Coordena exploração, pesquisa, design e implementação com contexto delimitado. Usa papéis internos como orientação para subagentes nativos; não registra agentes personalizados no seletor @.",
     "developerName": "Anderson Silva",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "Use $cosmos-orchestrate para implementar esta tarefa."
+      "Use $cosmos:cosmos-orchestrate para implementar uma mudança com delegação seletiva.",
+      "Use $cosmos:cosmos-orchestrate para pesquisar este tema e sintetizar as evidências.",
+      "Use $cosmos:cosmos-orchestrate para diagnosticar esta falha e validar a causa."
     ]
   }
 }
