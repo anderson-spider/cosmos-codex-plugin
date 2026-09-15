@@ -7,12 +7,12 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-test('accepts unchanged source versions and synchronization with a newer release', () => {
+test('accepts unchanged source versions and a newer tagged release version', () => {
   checkVersion('0.1.0', '0.1.0');
   checkVersion('0.1.0', '1.0.0');
 });
 
-test('rejects obsolete synchronization PRs and malformed manifests', () => {
+test('rejects version regressions and malformed manifests', () => {
   assert.throws(() => checkVersion('1.1.0', '1.0.0'), /must not decrease/);
   for (const value of [null, 'v1.0.0', '01.0.0', 'one']) {
     assert.throws(() => checkVersion('1.0.0', value), /Invalid/);

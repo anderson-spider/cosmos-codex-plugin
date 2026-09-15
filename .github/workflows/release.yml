@@ -1,8 +1,6 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -20,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,9 +38,3 @@ jobs:
         run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Propose manifest synchronization
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const {syncVersion} = await import(`${process.env.GITHUB_WORKSPACE}/scripts/sync-release-version.mjs`);
-            await syncVersion({github, context, core});

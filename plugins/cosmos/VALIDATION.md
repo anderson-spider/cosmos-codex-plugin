@@ -58,15 +58,16 @@ Marca, identificador do plugin, skill e nomes dos perfis atualizados para Cosmos
 
 ## Versionamento e Conventional Commits
 
-O repositório passa a usar Semantic Release para calcular versões, notas e tags,
-com Commitlint na CI para commits e títulos de PR. O pacote gerado recebe a
-versão no próprio manifesto; a sincronização da fonte usa uma branch e um PR
-separados. Não há escrita direta na `main`.
+O repositório usa Semantic Release para calcular versões, notas e tags, com
+Commitlint na CI para commits e títulos de PR. O workflow de release é manual.
+Na fase `prepare`, o pacote e o manifesto de origem recebem a versão calculada;
+`@semantic-release/git` commita o manifesto antes da criação da tag.
 
-Validações locais desta alteração: `npm ci --ignore-scripts`, `npm test` (23 testes),
-`python3 -m unittest discover -s demo-cosmos -v` (5 testes), lint de commits,
-`git diff --check` e os dois validadores de autoria passaram. `actionlint` não
-está instalado neste worktree; os workflows não foram alterados.
+Validações locais do fluxo de release manual: `npm test` (17 testes),
+`python3 -m unittest discover -s demo-cosmos -v` (5 testes), `git diff --check`
+e os dois validadores de autoria passaram. A configuração carregada também
+confirmou a ordem `prepare-release` → `@semantic-release/git` →
+`@semantic-release/github`. `actionlint` não está instalado neste worktree.
 
 Na validação anterior do fluxo de release, o pacote de exemplo
 `cosmos-1.0.0.zip` foi gerado, extraído em diretório temporário e aprovado pelos
@@ -74,7 +75,6 @@ validadores do plugin e skill. Esse pacote é uma simulação local, não uma re
 publicada.
 
 Os testes de integração dos commits usam as bibliotecas reais do analyzer e
-Commitlint. Testes do pacote usam repositórios temporários, e os da sincronização
-usam APIs simuladas, sem publicar no GitHub. A publicação completa com
-`GITHUB_TOKEN` depende do primeiro merge; a abertura automática do PR também
-depende da permissão administrativa descrita no guia de releases.
+Commitlint. Testes do pacote usam repositórios temporários, sem publicar no
+GitHub. A publicação completa com `GITHUB_TOKEN` depende das permissões da
+branch e só pode ser comprovada por uma execução manual após o merge.
