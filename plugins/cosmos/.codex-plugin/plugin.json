@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Orquestração seletiva de tarefas de desenvolvimento com subagentes nativos do Codex.",
   "author": {
     "name": "Anderson Silva"
