@@ -3,19 +3,28 @@
 ## Estrutura e compatibilidade
 
 - Scaffold gerado pela skill plugin-creator; manifesto `.codex-plugin/plugin.json` aprovado por `validate_plugin.py`.
-- Skill aprovada por `quick_validate.py`; descoberta automática mantida no padrão habilitado, sem a política `allow_implicit_invocation: false`.
-- Os prompts iniciais do manifesto usam o nome instalado `$cosmos:cosmos-orchestrate`, respeitam o limite de três entradas e têm até 128 caracteres.
-- O `default_prompt` de `agents/openai.yaml` usa o nome local `$cosmos-orchestrate`, como exigido para metadados da própria skill. Testes separados distinguem esse contrato do namespace instalado usado pelo manifesto.
-- Cinco arquivos TOML de especialistas analisados com `tomllib` do Python; campos obrigatórios presentes.
+- As duas skills foram aprovadas por `quick_validate.py`; descoberta automática mantida para ambas.
+- Os prompts iniciais do manifesto usam os nomes instalados `$cosmos:cosmos-orchestrate` e `$cosmos:git-master`, respeitam o limite de três entradas e têm até 128 caracteres.
+- Os arquivos `agents/openai.yaml` usam os nomes locais `$cosmos-orchestrate` e `$git-master`. Testes separados distinguem esses contratos dos namespaces instalados usados pelo manifesto.
+- Seis arquivos TOML de especialistas analisados com `tomllib` do Python; campos obrigatórios presentes.
 - Modelos e esforços conferidos no catálogo embarcado do **codex-cli 0.154.0**. Isso valida os identificadores, não acesso universal de qualquer conta.
 - Schema gerado pelo próprio CLI: `PluginDetail` contém skills, MCPs, hooks e outros componentes, mas nenhum campo de registro de agentes. O manifesto usa somente a skill; não promete instalar perfis.
 - A documentação oficial descreve perfis por projeto em `.codex/agents/`. Uma inspeção com `codex debug prompt-input` em diretório isolado não exibiu os nomes dos perfis; portanto, não foi usada como prova de descoberta ou carregamento. `--strict-config` não é aceito nesse comando de diagnóstico.
 - **Registro/seleção dos perfis TOML por nome e instalação no app não foram validados em execução.** O fluxo demonstrado usa ferramentas nativas de criação genérica, com modelo/esforço explícitos e instruções do papel.
-- O contrato de delegação exige transmitir ações autorizadas, restrições e efeitos ainda sujeitos à aprovação. Um teste automatizado protege esses limites e o retorno de decisões adicionais ao Orchestrator.
+- O contrato de delegação exige transmitir ações autorizadas, restrições e efeitos ainda sujeitos à aprovação. Testes automatizados protegem esses limites, o retorno de decisões adicionais ao Orchestrator e o carregamento da skill irmã pelo Git Master.
+
+## Git Master
+
+- A skill pública cobre inspeção, preparação, commit, push, PR/MR e CI para GitHub e GitLab por referências carregadas progressivamente.
+- Commit exige pedido de commit ou publicação. Push, mutação de PR/MR e retry, rerun ou cancelamento de CI permanecem autorizações independentes.
+- Merge, aprovação, auto-merge, tags, releases, exclusão de branches e force-push estão explicitamente fora do contrato.
+- O perfil interno `cosmos-git-master` recomenda **gpt-5.6-terra / medium** e não é registrado automaticamente no seletor `@`.
+- Uma varredura local do conteúdo novo não encontrou nomes, domínios ou contas privadas presentes nas skills usadas como origem. Os identificadores não foram gravados como fixtures ou regras no repositório público.
+- A descoberta e a execução instaladas de `$cosmos:git-master` ainda dependem de uma futura release, reinstalação e sessão nova; esta entrega não remove as skills locais usadas como fallback.
 
 ## Reproduzir os validadores de autoria
 
-Com as skills de sistema plugin-creator e skill-creator disponíveis, execute seus scripts `validate_plugin.py <pasta-do-plugin>` e `quick_validate.py <pasta-do-plugin>/skills/cosmos-orchestrate`. Nesta sessão foi usado Python com PyYAML em ambiente virtual isolado, sem instalar dependências globais.
+Com as skills de sistema plugin-creator e skill-creator disponíveis, execute `validate_plugin.py <pasta-do-plugin>` e `quick_validate.py` para `skills/cosmos-orchestrate` e `skills/git-master`.
 
 Os arquivos da demonstração são fornecidos separadamente em `../../demo-cosmos/`. Execute `python3 -m unittest discover -s ../../demo-cosmos -v` a partir desta pasta. A demonstração é sintética e usa somente a biblioteca padrão Python; não acessa produção.
 
@@ -35,6 +44,9 @@ Os testes automatizados verificam que os prompts iniciais invocam a skill instal
 - Pedido comum de desenvolvimento ou subagentes, sem Cosmos: a skill não deve ser selecionada apenas por esses termos.
 - Continuação do pedido ativado: o fluxo deve permanecer ativo.
 - Pedido fora do escopo: nenhuma ativação ou ação não suportada.
+- `$cosmos:git-master` seguido de pedido de preparação: nenhuma mutação local ou remota sem a autorização correspondente.
+- Pedido comum de Git, PR/MR ou CI: descoberta automática do Git Master quando aplicável.
+- Delegação de fluxo Git substancial pelo Orchestrator: perfil `cosmos-git-master`, skill irmã carregada e limites de autorização preservados.
 
 ## Demonstração executada
 
@@ -63,9 +75,11 @@ Commitlint na CI para commits e títulos de PR. O workflow de release é manual.
 Na fase `prepare`, o pacote e o manifesto de origem recebem a versão calculada;
 `@semantic-release/git` commita o manifesto antes da criação da tag.
 
-Validações locais do fluxo de release manual: `npm test` (17 testes),
+Validações locais após a inclusão do Git Master: `npm test` (20 testes),
 `python3 -m unittest discover -s demo-cosmos -v` (5 testes), `git diff --check`
-e os dois validadores de autoria passaram. A configuração carregada também
+e os três validadores de autoria passaram. Os seis perfis TOML também foram
+carregados por `tomllib`. A configuração de release carregada anteriormente
+também
 confirmou a ordem `prepare-release` → `@semantic-release/git` →
 `@semantic-release/github`. `actionlint` não está instalado neste worktree.
 

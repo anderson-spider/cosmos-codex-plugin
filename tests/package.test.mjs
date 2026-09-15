@@ -21,6 +21,11 @@ function createRepository({symlink = false} = {}) {
     writeFixture(root, '.agents/plugins/marketplace.json', '{"name":"cosmos"}\n');
     writeFixture(root, 'plugins/cosmos/.codex-plugin/plugin.json', '{"name":"cosmos","version":"0.1.0"}\n');
     writeFixture(root, 'plugins/cosmos/skills/cosmos-orchestrate/SKILL.md', '# Cosmos\n');
+    writeFixture(root, 'plugins/cosmos/skills/cosmos-orchestrate/references/agents/cosmos-git-master.toml', 'name = "cosmos-git-master"\n');
+    writeFixture(root, 'plugins/cosmos/skills/git-master/SKILL.md', '# Git Master\n');
+    writeFixture(root, 'plugins/cosmos/skills/git-master/agents/openai.yaml', 'interface:\n  display_name: "Git Master"\n');
+    writeFixture(root, 'plugins/cosmos/skills/git-master/references/github.md', '# GitHub\n');
+    writeFixture(root, 'plugins/cosmos/skills/git-master/references/retry-and-fix.md', '# Retry\n');
     writeFixture(root, 'plugins/cosmos/assets/icon.png', 'fake png');
     writeFixture(root, 'plugins/cosmos/__pycache__/ignored.pyc', 'cache');
     writeFixture(root, 'plugins/cosmos/untracked.txt', 'not tracked');
@@ -56,6 +61,11 @@ test('prepara um ZIP apenas com arquivos rastreados no layout do marketplace', a
         'plugins/cosmos/.codex-plugin/plugin.json',
         'plugins/cosmos/assets/icon.png',
         'plugins/cosmos/skills/cosmos-orchestrate/SKILL.md',
+        'plugins/cosmos/skills/cosmos-orchestrate/references/agents/cosmos-git-master.toml',
+        'plugins/cosmos/skills/git-master/SKILL.md',
+        'plugins/cosmos/skills/git-master/agents/openai.yaml',
+        'plugins/cosmos/skills/git-master/references/github.md',
+        'plugins/cosmos/skills/git-master/references/retry-and-fix.md',
     ].sort());
     assert.equal(JSON.parse(contents.manifest).version, '1.2.3');
     assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '1.2.3');
