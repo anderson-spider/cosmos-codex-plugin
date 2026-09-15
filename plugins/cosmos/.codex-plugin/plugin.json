@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Orquestração enxuta com especialistas nativos do Codex, ativada por skill.",
   "author": {
     "name": "Anderson Silva"
