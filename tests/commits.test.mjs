@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import lint from '@commitlint/lint';
 import load from '@commitlint/load';
 import {analyzeCommits} from '@semantic-release/commit-analyzer';
+import {generateNotes} from '@semantic-release/release-notes-generator';
 
 import releaseConfig from '../release.config.mjs';
 
@@ -13,8 +14,12 @@ const commitlintConfig = await load({}, {cwd: projectRoot});
 const analyzerEntry = releaseConfig.plugins.find(
   ([plugin]) => plugin === '@semantic-release/commit-analyzer',
 );
+const notesEntry = releaseConfig.plugins.find(
+  ([plugin]) => plugin === '@semantic-release/release-notes-generator',
+);
 
 assert.ok(analyzerEntry, 'release.config.mjs deve configurar o commit-analyzer');
+assert.ok(notesEntry, 'release.config.mjs deve configurar o release-notes-generator');
 
 async function releaseFor(...messages) {
   return analyzeCommits(analyzerEntry[1], {
@@ -61,6 +66,20 @@ test('commit-analyzer escolhe o maior incremento entre commits', async () => {
     ),
     'major',
   );
+});
+
+test('release-notes-generator renderiza o preset configurado', async () => {
+  const notes = await generateNotes(notesEntry[1], {
+    commits: [{hash: '1234567', message: 'fix: corrige a órbita'}],
+    cwd: projectRoot,
+    lastRelease: {gitTag: 'v1.0.0'},
+    nextRelease: {gitTag: 'v1.0.1', version: '1.0.1'},
+    options: {repositoryUrl: 'https://github.com/anderson-spider/cosmos-codex-plugin.git'},
+    logger: {log() {}},
+  });
+
+  assert.match(notes, /Bug Fixes/);
+  assert.match(notes, /corrige a órbita/);
 });
 
 test('commitlint aceita commits convencionais', async () => {
