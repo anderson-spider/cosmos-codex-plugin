@@ -30,11 +30,12 @@ Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A ski
 
 ## Comportamento
 
+- Skill carregada: o Cosmos está ativo; ele não deve alegar que não há skill vinculada ou acionável.
 - Pedido pequeno: execução direta, sem abrir uma equipe.
 - Trabalho desconhecido: Explorer ou Librarian devolve contexto delimitado.
 - Implementação: Executor e/ou Designer, com um responsável por arquivo.
 - Revisão: proporcional; Oracle apenas para decisões difíceis, diagnóstico persistente ou risco relevante. Uma revisão independente rotineira pode usar um Executor novo, sem edição.
-- Falha de modelo ou ferramenta: registrar a limitação, evitar tentativas idênticas e assumir o trabalho quando possível. Não substituir silenciosamente a distribuição.
+- Falha de modelo ou ferramenta: registrar a capacidade auxiliar indisponível, evitar tentativas idênticas e assumir o trabalho quando possível. Não confundir falta de delegação nativa com ausência da skill nem substituir silenciosamente a distribuição.
 
 ## Verificação e limites
 
