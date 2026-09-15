@@ -60,6 +60,12 @@ impact, list changed plugin components, and include exact validation commands
 and results. Link related issues when available. Screenshots are required only
 for visible Codex UI or marketplace presentation changes.
 
+Before creating or amending a commit, validate the exact proposed subject with
+`printf '%s\n' '<subject>' | npm run lint:commits`. Do not create the commit until
+that command passes. Before publishing a branch, also run
+`npm run lint:commits -- --from origin/main --to HEAD --verbose` so every commit
+introduced by the branch follows Conventional Commits.
+
 ## Security & Configuration
 
 Never commit credentials, local marketplace state, absolute machine paths, or

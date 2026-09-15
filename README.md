@@ -19,7 +19,8 @@ codex plugin marketplace add https://github.com/anderson-spider/cosmos-codex-plu
 codex plugin add cosmos@cosmos
 ```
 
-Abra uma nova conversa após a instalação e invoque `$cosmos-orchestrate`.
+Abra uma nova conversa após a instalação e invoque
+`$cosmos:cosmos-orchestrate`.
 Consulte [`plugins/cosmos/README.md`](plugins/cosmos/README.md) para detalhes de
 uso, perfis disponíveis, comportamento e limitações.
 

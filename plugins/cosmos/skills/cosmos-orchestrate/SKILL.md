@@ -1,6 +1,6 @@
 ---
 name: cosmos-orchestrate
-description: Coordene trabalho de desenvolvimento com especialistas nativos, contexto delimitado e delegação seletiva quando o usuário invocar o fluxo Cosmos.
+description: "Ative e coordene o fluxo Cosmos somente quando o usuário mencionar Cosmos ou invocar esta skill; escolha execução direta ou delegação seletiva com especialistas nativos."
 ---
 
 # Cosmos Orchestrate
@@ -11,7 +11,9 @@ Use este fluxo no pedido que ativou a skill e suas continuações. Não transfor
 
 Quando esta instrução estiver carregada, o Cosmos está ativo por meio da própria skill `cosmos-orchestrate`. Não diga que o Cosmos “não expôs uma skill ou ferramenta acionável”, nem trate a execução direta como abandono do Cosmos. Se o pedido não justificar delegação, informe de forma breve que o Cosmos seguirá diretamente; isso é uma decisão válida do Orchestrator.
 
-Distinga a skill das capacidades auxiliares: os perfis TOML são referências, e as ferramentas nativas de subagentes podem ou não estar disponíveis. Caso falte delegação nativa, nomeie somente essa limitação e continue como Orchestrator. Não atribua essa ausência à skill, ao plugin ou ao Cosmos como um todo.
+Na primeira atualização ao usuário, declare literalmente **“Cosmos está ativo”** e informe se seguirá diretamente ou se delegará, com o motivo em uma frase. Não exija subagente para uma tarefa pequena.
+
+Distinga a skill das capacidades auxiliares: os perfis TOML são papéis internos e templates opcionais. Eles não aparecem no seletor `@` e não são registrados automaticamente pelo plugin. As ferramentas nativas de subagentes podem ou não estar disponíveis. Caso falte delegação nativa, nomeie somente essa limitação e continue como Orchestrator. Não atribua essa ausência à skill, ao plugin ou ao Cosmos como um todo.
 
 ## Seleção de trabalho
 

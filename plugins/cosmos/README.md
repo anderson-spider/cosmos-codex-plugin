@@ -1,6 +1,6 @@
 # Cosmos — versão mínima local
 
-Plugin com uma skill de orquestração explicitamente invocada e cinco perfis de especialistas. Usa as ferramentas nativas de subagentes disponíveis na sessão. Não possui MCP, hooks, processo persistente, automação do ChatGPT Web ou ponte de sessões.
+Plugin com uma skill de orquestração automaticamente descobrível e cinco perfis de especialistas internos. Usa as ferramentas nativas de subagentes disponíveis na sessão. Não possui MCP, hooks, processo persistente, automação do ChatGPT Web ou ponte de sessões.
 
 ## Usar sem instalar
 
@@ -10,11 +10,11 @@ Abra o projeto em que deseja trabalhar, selecione **gpt-5.6-sol / low** e peça 
 
 Substitua o caminho pelo local onde este pacote foi salvo. A leitura explícita permite usar as instruções sem registrar o plugin. A skill não altera o modelo da conversa; selecione-o no app. Os especialistas podem receber modelo e esforço explicitamente quando a ferramenta nativa permitir. Se houver limitação, o agente deve informar o desvio e trabalhar diretamente.
 
-Após a instalação e o início de uma nova sessão, a entrada será `$cosmos-orchestrate`. `allow_implicit_invocation: false` impede seleção implícita da skill. O registro em marketplace e a instalação são configurações locais de cada usuário e não fazem parte deste repositório.
+Após a instalação e o início de uma nova sessão, você pode invocar o fluxo por `@Cosmos` ou `$cosmos:cosmos-orchestrate`, quando essas formas estiverem disponíveis na superfície do Codex usada. A skill também pode ser descoberta automaticamente quando o pedido menciona o Cosmos ou pede explicitamente o fluxo Cosmos. Pedidos comuns de desenvolvimento ou uso de subagentes não são gatilhos pretendidos; essa fronteira deve ser confirmada pela matriz de ativação em `VALIDATION.md`. Os nomes e a sintaxe exibidos podem variar entre superfícies e versões, portanto use a opção visível no seu ambiente. O registro em marketplace e a instalação são configurações locais de cada usuário e não fazem parte deste repositório.
 
 ## Perfis opcionais
 
-Os cinco TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São referências para a skill e templates de agentes personalizados; estar dentro do plugin não os registra no Codex. O agente principal da conversa, com a skill carregada, exerce o papel de Orchestrator usando o modelo selecionado no chat; **gpt-5.6-sol / low** é a configuração recomendada, não uma troca automática de modelo.
+Os cinco TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São papéis internos da skill e templates opcionais de agentes personalizados: não aparecem no seletor `@`, e estar dentro do plugin não os registra no Codex. O agente principal da conversa, com a skill carregada, exerce o papel de Orchestrator usando o modelo selecionado no chat; **gpt-5.6-sol / low** é a configuração recomendada, não uma troca automática de modelo.
 
 | Papel | Modelo | Esforço |
 |---|---|---|
@@ -31,7 +31,8 @@ Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A ski
 ## Comportamento
 
 - Skill carregada: o Cosmos está ativo; ele não deve alegar que não há skill vinculada ou acionável.
-- Pedido pequeno: execução direta, sem abrir uma equipe.
+- Primeira atualização: declarar “Cosmos está ativo” e dizer se seguirá diretamente ou delegará.
+- Pedido pequeno: execução direta, sem abrir uma equipe nem exigir subagente.
 - Trabalho desconhecido: Explorer ou Librarian devolve contexto delimitado.
 - Implementação: Executor e/ou Designer, com um responsável por arquivo.
 - Revisão: proporcional; Oracle apenas para decisões difíceis, diagnóstico persistente ou risco relevante. Uma revisão independente rotineira pode usar um Executor novo, sem edição.

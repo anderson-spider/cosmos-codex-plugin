@@ -3,7 +3,8 @@
 ## Estrutura e compatibilidade
 
 - Scaffold gerado pela skill plugin-creator; manifesto `.codex-plugin/plugin.json` aprovado por `validate_plugin.py`.
-- Skill aprovada por `quick_validate.py`; política YAML de invocação explícita configurada.
+- Skill aprovada por `quick_validate.py`; descoberta automática mantida no padrão habilitado, sem a política `allow_implicit_invocation: false`.
+- Os prompts iniciais do manifesto usam o nome instalado `$cosmos:cosmos-orchestrate`, respeitam o limite de três entradas e têm até 128 caracteres.
 - Cinco arquivos TOML de especialistas analisados com `tomllib` do Python; campos obrigatórios presentes.
 - Modelos e esforços conferidos no catálogo embarcado do **codex-cli 0.154.0**. Isso valida os identificadores, não acesso universal de qualquer conta.
 - Schema gerado pelo próprio CLI: `PluginDetail` contém skills, MCPs, hooks e outros componentes, mas nenhum campo de registro de agentes. O manifesto usa somente a skill; não promete instalar perfis.
@@ -19,6 +20,19 @@ Os arquivos da demonstração são fornecidos separadamente em `../../demo-cosmo
 ## Limites da evidência
 
 Marketplace, instalação e configuração global não fazem parte dos arquivos versionados. Arquivos de teste de descoberta ficaram em uma pasta de trabalho isolada. Não se mediu variação de quota, consumo agregado, latência comparativa ou retrabalho em produção; os resultados não demonstram economia.
+
+A ativação por `@Cosmos` e a descoberta automática ainda precisam ser verificadas após reinstalar esta versão e iniciar uma conversa nova no app. A validação automatizada confirma o contrato do pacote, mas não substitui essa observação ponta a ponta.
+
+## Matriz de ativação
+
+Os testes automatizados verificam que os prompts iniciais invocam a skill instalada pelo namespace e que a metadata não desabilita descoberta automática. Após reinstalação, a avaliação no app deve registrar:
+
+- `@Cosmos` seguido de uma tarefa pequena: Cosmos ativo e execução direta declarada.
+- `$cosmos:cosmos-orchestrate` seguido de tarefa complexa: Cosmos ativo e delegação observável quando houver benefício.
+- Menção textual ao fluxo Cosmos: descoberta automática da skill.
+- Pedido comum de desenvolvimento ou subagentes, sem Cosmos: a skill não deve ser selecionada apenas por esses termos.
+- Continuação do pedido ativado: o fluxo deve permanecer ativo.
+- Pedido fora do escopo: nenhuma ativação ou ação não suportada.
 
 ## Demonstração executada
 
@@ -47,11 +61,15 @@ com Commitlint na CI para commits e títulos de PR. O pacote gerado recebe a
 versão no próprio manifesto; a sincronização da fonte usa uma branch e um PR
 separados. Não há escrita direta na `main`.
 
-Validações locais desta implementação: `npm ci --ignore-scripts`, `npm test`,
-`python3 -m unittest discover -s demo-cosmos -v`, os dois validadores de autoria
-e `actionlint` passaram. O pacote de exemplo `cosmos-1.0.0.zip` foi gerado,
-extraído em diretório temporário e aprovado pelos validadores do plugin e skill.
-Esse pacote é uma simulação local, não uma release publicada.
+Validações locais desta alteração: `npm ci --ignore-scripts`, `npm test` (23 testes),
+`python3 -m unittest discover -s demo-cosmos -v` (5 testes), lint de commits,
+`git diff --check` e os dois validadores de autoria passaram. `actionlint` não
+está instalado neste worktree; os workflows não foram alterados.
+
+Na validação anterior do fluxo de release, o pacote de exemplo
+`cosmos-1.0.0.zip` foi gerado, extraído em diretório temporário e aprovado pelos
+validadores do plugin e skill. Esse pacote é uma simulação local, não uma release
+publicada.
 
 Os testes de integração dos commits usam as bibliotecas reais do analyzer e
 Commitlint. Testes do pacote usam repositórios temporários, e os da sincronização
