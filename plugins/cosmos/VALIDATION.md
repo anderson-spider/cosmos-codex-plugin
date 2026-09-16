@@ -19,7 +19,7 @@
 - The public skill covers inspection, preparation, commit, push, PR/MR, and CI for GitHub and GitLab through progressively loaded references.
 - Commit requires a request to commit or publish. Push, PR/MR mutation, and CI retry, rerun, or cancellation remain independent authorizations.
 - Merge, approval, auto-merge, tags, releases, branch deletion, and force-push are explicitly outside the contract.
-- The internal `cosmos-git-master` profile recommends **gpt-5.6-terra / medium** and is not registered automatically in the `@` selector.
+- The internal `cosmos-git-master` profile recommends **gpt-5.6-luna / medium** and is not registered automatically in the `@` selector.
 - A local scan of new content found no private names, domains, or accounts from the source skills. Identifiers were not recorded as fixtures or rules in the public repository.
 - Installed discovery and execution of `$cosmos:git-master` still depend on a future release, reinstallation, and a new session; this delivery does not remove local skills used as fallback.
 
