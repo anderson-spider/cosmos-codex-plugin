@@ -11,9 +11,18 @@ function fakeCli(directory, name, provider) {
   const source = `#!/bin/sh
 if [ "$1" = auth ] && [ "$2" = status ]; then
   if [ "${provider}" = github ] && [ -n "\${GH_TOKEN-}" ]; then exit 1; fi
-  if [ "${provider}" = gitlab ] && [ -n "\${GITLAB_TOKEN-}" ]; then exit 1; fi
+  if [ "${provider}" = github ] && [ "\${FAKE_REQUIRE_ACTIVE-}" = yes ]; then
+    case " $* " in *" --active "*) ;; *) exit 97 ;; esac
+  fi
+  if [ "${provider}" = gitlab ]; then
+    if [ "\${FAKE_WRAPPER_TOKEN-}" = personal ] && [ -n "\${GITLAB_PERSONAL_TOKEN-}" ]; then GITLAB_TOKEN=\${GITLAB_PERSONAL_TOKEN}; fi
+    if [ "\${FAKE_WRAPPER_TOKEN-}" = work ] && [ -n "\${GITLAB_LUIZALABS_TOKEN-}" ]; then GITLAB_TOKEN=\${GITLAB_LUIZALABS_TOKEN}; fi
+    [ -n "\${GITLAB_TOKEN-}" ] && exit 1
+  fi
   [ "\${FAKE_AUTH-host}" = fail ] && exit 1
-  [ "\${FAKE_AUTH-host}" = other-host ] && [ "$#" -gt 2 ] && exit 1
+  if [ "\${FAKE_AUTH-host}" = other-host ]; then
+    case " $* " in *" --hostname "*) exit 1 ;; esac
+  fi
   exit 0
 fi
 case " $* " in *" --jq "*) [ "${provider}" = gitlab ] && exit 99 ;; esac
@@ -72,7 +81,13 @@ test('GitHub doctor reports saved credential, account, host, project, and ready 
   assert.equal(result.stdout, 'status=ready\n');
 });
 
-test('GitLab doctor requires the selected real alias and handles token overrides', () => {
+test('GitHub doctor checks only the active account', () => {
+  const result = run({env: {FAKE_REQUIRE_ACTIVE: 'yes'}});
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+  assert.equal(result.stdout, 'status=ready\n');
+});
+
+test('GitLab doctor requires the selected real alias and handles generic token overrides', () => {
   const missing = run({provider: 'gitlab', alias: 'glab-personal', withCli: false});
   assert.equal(missing.stdout, 'status=cli_missing\n');
   const invalidOverride = run({
@@ -98,4 +113,50 @@ test('GitLab doctor requires the selected real alias and handles token overrides
     run({provider: 'gitlab', alias: 'glab-work', env: {FAKE_PROJECT: 'other/project'}}).stdout,
     'status=project_mismatch\n',
   );
+});
+
+test('GitLab doctor bypasses an invalid selected-wrapper token without exposing it', () => {
+  for (const [alias, wrapperToken, tokenVariable] of [
+    ['glab-personal', 'personal', 'GITLAB_PERSONAL_TOKEN'],
+    ['glab-work', 'work', 'GITLAB_LUIZALABS_TOKEN'],
+  ]) {
+    const token = `fixture-${wrapperToken}-not-a-secret`;
+    const result = run({
+      provider: 'gitlab',
+      alias,
+      env: {FAKE_WRAPPER_TOKEN: wrapperToken, [tokenVariable]: token},
+    });
+    assert.equal(result.status, 1, `${alias}: ${result.stdout}${result.stderr}`);
+    assert.equal(result.stdout, 'status=environment_token_invalid\n');
+    assert.doesNotMatch(`${result.stdout}${result.stderr}`, new RegExp(token));
+  }
+});
+
+test('GitLab doctor reports effective overrides even when no stored credential remains', () => {
+  for (const [alias, wrapperToken, tokenVariable] of [
+    ['glab-personal', 'personal', 'GITLAB_PERSONAL_TOKEN'],
+    ['glab-work', 'work', 'GITLAB_LUIZALABS_TOKEN'],
+  ]) {
+    const result = run({
+      provider: 'gitlab',
+      alias,
+      env: {FAKE_WRAPPER_TOKEN: wrapperToken, [tokenVariable]: 'fixture-invalid', FAKE_AUTH: 'fail'},
+    });
+    assert.equal(result.stdout, 'status=environment_token_invalid\n');
+  }
+  const generic = run({
+    provider: 'gitlab',
+    alias: 'glab-personal',
+    env: {GITLAB_TOKEN: 'fixture-invalid', FAKE_AUTH: 'fail'},
+  });
+  assert.equal(generic.stdout, 'status=environment_token_invalid\n');
+});
+
+test('GitLab doctor does not treat empty token variables as effective overrides', () => {
+  const result = run({
+    provider: 'gitlab',
+    alias: 'glab-personal',
+    env: {FAKE_WRAPPER_TOKEN: 'personal', GITLAB_PERSONAL_TOKEN: '', FAKE_AUTH: 'fail'},
+  });
+  assert.equal(result.stdout, 'status=stored_credential_invalid\n');
 });

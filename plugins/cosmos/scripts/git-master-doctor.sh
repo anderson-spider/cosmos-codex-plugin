@@ -35,9 +35,9 @@ has_github_override=false
 [ "${GH_TOKEN+x}" = x ] && has_github_override=true
 [ "${GITHUB_TOKEN+x}" = x ] && has_github_override=true
 has_gitlab_override=false
-[ "${GITLAB_TOKEN+x}" = x ] && has_gitlab_override=true
-[ "${GITLAB_ACCESS_TOKEN+x}" = x ] && has_gitlab_override=true
-[ "${OAUTH_TOKEN+x}" = x ] && has_gitlab_override=true
+[ -n "${GITLAB_TOKEN-}" ] && has_gitlab_override=true
+[ -n "${GITLAB_ACCESS_TOKEN-}" ] && has_gitlab_override=true
+[ -n "${OAUTH_TOKEN-}" ] && has_gitlab_override=true
 
 result() { printf 'status=%s\n' "$1"; exit "${2:-0}"; }
 
@@ -48,10 +48,10 @@ json_string_field() {
 
 github() {
     real_executable gh || result cli_missing 1
-    gh_auth_host() { gh auth status --hostname "$host" >/dev/null 2>&1; }
-    gh_auth_any_host() { gh auth status >/dev/null 2>&1; }
-    gh_auth_without_overrides() { (unset GH_TOKEN GITHUB_TOKEN; gh auth status --hostname "$host" >/dev/null 2>&1); }
-    gh_any_without_overrides() { (unset GH_TOKEN GITHUB_TOKEN; gh auth status >/dev/null 2>&1); }
+    gh_auth_host() { gh auth status --hostname "$host" --active >/dev/null 2>&1; }
+    gh_auth_any_host() { gh auth status --active >/dev/null 2>&1; }
+    gh_auth_without_overrides() { (unset GH_TOKEN GITHUB_TOKEN; gh auth status --hostname "$host" --active >/dev/null 2>&1); }
+    gh_any_without_overrides() { (unset GH_TOKEN GITHUB_TOKEN; gh auth status --active >/dev/null 2>&1); }
     if ! gh_auth_host; then
         if [ "$has_github_override" = true ] && gh_auth_without_overrides; then result environment_token_invalid 1; fi
         if gh_any_without_overrides; then result wrong_host 1; fi
@@ -67,12 +67,27 @@ github() {
 gitlab() {
     case "$glab_alias" in glab-personal|glab-work) ;; *) usage ;; esac
     real_executable "$glab_alias" || result cli_missing 1
+    case "$glab_alias" in
+        glab-personal)
+            has_wrapper_token=false
+            [ -n "${GITLAB_PERSONAL_TOKEN-}" ] && has_wrapper_token=true
+            glab_auth_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_PERSONAL_TOKEN; "$glab_alias" auth status --hostname "$host" >/dev/null 2>&1); }
+            glab_any_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_PERSONAL_TOKEN; "$glab_alias" auth status >/dev/null 2>&1); }
+            ;;
+        glab-work)
+            has_wrapper_token=false
+            [ -n "${GITLAB_LUIZALABS_TOKEN-}" ] && has_wrapper_token=true
+            glab_auth_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_LUIZALABS_TOKEN; "$glab_alias" auth status --hostname "$host" >/dev/null 2>&1); }
+            glab_any_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_LUIZALABS_TOKEN; "$glab_alias" auth status >/dev/null 2>&1); }
+            ;;
+    esac
     glab_auth_host() { "$glab_alias" auth status --hostname "$host" >/dev/null 2>&1; }
     glab_auth_any_host() { "$glab_alias" auth status >/dev/null 2>&1; }
-    glab_auth_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN; "$glab_alias" auth status --hostname "$host" >/dev/null 2>&1); }
-    glab_any_without_overrides() { (unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN; "$glab_alias" auth status >/dev/null 2>&1); }
     if ! glab_auth_host; then
-        if [ "$has_gitlab_override" = true ] && glab_auth_without_overrides; then result environment_token_invalid 1; fi
+        if [ "$has_gitlab_override" = true ] || [ "$has_wrapper_token" = true ]; then
+            glab_auth_without_overrides || :
+            result environment_token_invalid 1
+        fi
         if glab_any_without_overrides; then result wrong_host 1; fi
         result stored_credential_invalid 1
     fi
