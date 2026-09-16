@@ -1,35 +1,39 @@
-# Cosmos — versão mínima local
+# Cosmos — minimal local version
 
-Plugin com duas skills automaticamente descobríveis e seis perfis de especialistas internos. Usa as ferramentas nativas de subagentes disponíveis na sessão. Não possui MCP, hooks, processo persistente, automação do ChatGPT Web ou ponte de sessões.
+A plugin with two automatically discoverable skills and six internal specialist profiles. It uses native subagent tools available in the session. It has no MCP, hooks, persistent process, ChatGPT Web automation, or session bridge.
 
-## Usar sem instalar
+## Use without installing
 
-Abra o projeto em que deseja trabalhar, selecione **gpt-5.6-sol / low** e peça ao Codex:
+Open the project where you want to work, select **gpt-5.6-sol / low**, and ask Codex:
 
-> Leia a skill no caminho absoluto `<pasta-do-plugin>/skills/cosmos-orchestrate/SKILL.md` e use esse fluxo para [pedido].
+> Read the skill at the absolute path `<plugin-folder>/skills/cosmos-orchestrate/SKILL.md` and use that workflow for [request].
 
-Substitua o caminho pelo local onde este pacote foi salvo. A leitura explícita permite usar as instruções sem registrar o plugin. A skill não altera o modelo da conversa; selecione-o no app. Os especialistas podem receber modelo e esforço explicitamente quando a ferramenta nativa permitir. Se houver limitação, o agente deve informar o desvio e trabalhar diretamente.
+Replace the path with the location where this package was saved. Explicit reading lets you use the instructions without registering the plugin. The skill does not change the conversation model; select it in the app. Specialists can receive an explicit model and effort when the native tool permits it. If there is a limitation, the agent must report the deviation and work directly.
 
-Após a instalação e o início de uma nova sessão, você pode invocar o fluxo por `@Cosmos` ou `$cosmos:cosmos-orchestrate`, quando essas formas estiverem disponíveis na superfície do Codex usada. A skill também pode ser descoberta automaticamente quando o pedido menciona o Cosmos ou pede explicitamente o fluxo Cosmos. Pedidos comuns de desenvolvimento ou uso de subagentes não são gatilhos pretendidos; essa fronteira deve ser confirmada pela matriz de ativação em `VALIDATION.md`. Os nomes e a sintaxe exibidos podem variar entre superfícies e versões, portanto use a opção visível no seu ambiente. O registro em marketplace e a instalação são configurações locais de cada usuário e não fazem parte deste repositório.
+After installation and the start of a new session, you can invoke the workflow with `@Cosmos` or `$cosmos:cosmos-orchestrate` when those forms are available on the Codex surface in use. The skill can also be discovered automatically when the request mentions Cosmos or explicitly asks for the Cosmos workflow. Ordinary development requests or requests to use subagents are not intended triggers; this boundary must be confirmed by the activation matrix in `VALIDATION.md`. Displayed names and syntax may vary across surfaces and versions, so use the option visible in your environment. Marketplace registration and installation are local user settings and are not part of this repository.
 
-Para trabalhar diretamente com commits, branches, push, pull requests, merge
-requests ou CI, invoque `$cosmos:git-master`. Essa skill também pode ser
-descoberta automaticamente por pedidos do domínio. Ela prepara trabalho sem
-presumir autorização: commit, push, mutação de PR/MR e retry de CI são efeitos
-separados. Merge, aprovação, auto-merge, tags, releases e exclusão de branches
-ficam fora do seu escopo.
+To work directly with commits, branches, pushes, pull requests, merge requests,
+or CI, invoke `$cosmos:git-master`. This skill can also be discovered
+automatically by requests in its domain. It prepares work without assuming
+authorization: commit, push, PR/MR mutation, and CI retry are separate effects.
+Merge, approval, auto-merge, tags, releases, and branch deletion are outside its scope.
 
-Os arquivos de interface usam nomes intencionalmente diferentes. Os prompts
-do manifesto do plugin usam `$cosmos:cosmos-orchestrate`, pois `cosmos` é o
-namespace do componente instalado; o atalho Git usa `$cosmos:git-master`. Cada
-`agents/openai.yaml` usa o nome local declarado pela própria skill:
-`$cosmos-orchestrate` ou `$git-master`. Testes separados protegem esses contratos.
+GitLab operations preserve the configured account boundary: personal projects
+use `glab-personal`, work projects use `glab-work`, and the skill does not fall
+back to bare `glab` or silently switch aliases. The selected alias, host, project,
+and account when required must agree before authenticated reads or mutations.
 
-## Perfis opcionais
+Interface files intentionally use different names. Plugin manifest prompts use
+`$cosmos:cosmos-orchestrate` because `cosmos` is the installed component
+namespace; the Git shortcut uses `$cosmos:git-master`. Each `agents/openai.yaml`
+uses the local name declared by the skill itself: `$cosmos-orchestrate` or
+`$git-master`. Separate tests protect these contracts.
 
-Os seis TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São papéis internos da skill e templates opcionais de agentes personalizados: não aparecem no seletor `@`, e estar dentro do plugin não os registra no Codex. O agente principal da conversa, com a skill carregada, exerce o papel de Orchestrator usando o modelo selecionado no chat; **gpt-5.6-sol / low** é a configuração recomendada, não uma troca automática de modelo.
+## Optional profiles
 
-| Papel | Modelo | Esforço |
+The six TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-5.6-sol / low** is the recommended configuration, not an automatic model change.
+
+| Role | Model | Effort |
 |---|---|---|
 | Oracle | gpt-6-astra | low |
 | Librarian | gpt-5.6-luna | medium |
@@ -38,42 +42,42 @@ Os seis TOMLs ficam em `skills/cosmos-orchestrate/references/agents/`. São pap�
 | Executor | gpt-5.6-terra | medium |
 | Git Master | gpt-5.6-terra | medium |
 
-A documentação oficial oferece `.codex/agents/` para perfis por projeto e `~/.codex/agents/` para perfis pessoais. Se desejar os nomes registrados, uma etapa posterior autorizada pode copiar os TOMLs para o projeto escolhido, depois de verificar colisões por nome e arquivo. Este pacote não contém instalador nem modifica esses destinos. O prefixo `cosmos-` evita substituir o agente nativo `explorer` por acidente.
+Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 
-Perfis fixos podem prevalecer sobre modelo/esforço passados na criação. A skill orienta usar criação genérica com instruções do papel quando uma elevação de esforço for necessária. Permissões de leitura nos perfis são defaults; overrides da sessão podem prevalecer. As instruções de somente leitura continuam fazendo parte do contrato, sem promessa de isolamento rígido.
+Fixed profiles can override the model or effort passed during creation. The skill directs the Orchestrator to use generic creation with the role instructions when increased effort is required. Read permissions in the profiles are defaults; session overrides can prevail. Read-only instructions remain part of the contract without promising rigid isolation.
 
-## Comportamento
+## Behavior
 
-- Skill carregada: o Cosmos está ativo; ele não deve alegar que não há skill vinculada ou acionável.
-- Primeira atualização: declarar “Cosmos está ativo” e dizer se seguirá diretamente ou delegará.
-- Pedido pequeno: execução direta, sem abrir uma equipe nem exigir subagente.
-- Trabalho desconhecido: Explorer ou Librarian devolve contexto delimitado.
-- Implementação: Executor e/ou Designer, com um responsável por arquivo.
-- Git, PR/MR ou CI substancial: Git Master recebe o caminho da skill irmã e as autorizações exatas do pedido.
-- Toda delegação transmite ações autorizadas, restrições e efeitos ainda sujeitos à aprovação; decisões adicionais voltam ao Orchestrator.
-- Revisão: proporcional; Oracle apenas para decisões difíceis, diagnóstico persistente ou risco relevante. Uma revisão independente rotineira pode usar um Executor novo, sem edição.
-- Falha de modelo ou ferramenta: registrar a capacidade auxiliar indisponível, evitar tentativas idênticas e assumir o trabalho quando possível. Não confundir falta de delegação nativa com ausência da skill nem substituir silenciosamente a distribuição.
+- Skill loaded: Cosmos is active; it must not claim that there is no linked or actionable skill.
+- First update: state "Cosmos is active" and say whether it will proceed directly or delegate.
+- Small request: execute directly without opening a team or requiring a subagent.
+- Unfamiliar work: Explorer or Librarian returns bounded context.
+- Implementation: Executor and/or Designer, with one owner per file.
+- Substantial Git, PR/MR, or CI work: Git Master receives the sibling skill path and the request's exact authorization.
+- Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
+- Review: proportionate; Oracle only for difficult decisions, persistent diagnosis, or material risk. A routine independent review can use a new read-only Executor.
+- Model or tool failure: record the unavailable supporting capability, avoid identical retries, and take over the work when possible. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
 
-## Verificação e limites
+## Verification and limitations
 
-A versão publicada aparece nas tags e releases do repositório. O anexo
-`cosmos-X.Y.Z.zip` contém o manifesto com essa versão; a cópia na `main` é
-sincronizada por um PR automático após a publicação. Consulte
-[guia de releases](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
-para o fluxo e os limites de atualização.
+The published version appears in repository tags and releases. The
+`cosmos-X.Y.Z.zip` attachment contains the manifest with that version; the copy
+on `main` is synchronized by an automatic PR after publication. See the
+[release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
+for the workflow and update limitations.
 
-Consulte `VALIDATION.md` para a evidência desta versão. O pacote foi inspirado na divisão de papéis do [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); as instruções foram escritas para Codex, sem copiar o runtime do OpenCode.
+See `VALIDATION.md` for evidence for this version. The package was inspired by the role division in [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); its instructions were written for Codex without copying the OpenCode runtime.
 
-Fontes verificadas em 14/09/2026:
+Sources verified on 2026-09-14:
 
-- [Subagentes e perfis TOML](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+- [Subagents and TOML profiles](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 - [Plugins](https://learn.chatgpt.com/docs/plugins).
-- [Uso e limites do Codex](https://learn.chatgpt.com/docs/pricing).
+- [Codex usage and limits](https://learn.chatgpt.com/docs/pricing).
 
-## Comparar quota, tempo e retrabalho
+## Compare quota, time, and rework
 
-Faça pares de tarefas equivalentes a partir do mesmo estado inicial: uma execução direta com Sol low e outra com esta skill. Use tarefas pequenas, uma mudança em vários arquivos e um diagnóstico; alterne a ordem das execuções. Não rode outros trabalhos na conta durante cada medição, se quiser atribuir a diferença ao teste.
+Run pairs of equivalent tasks from the same initial state: one direct run with Sol low and one with this skill. Use small tasks, a multi-file change, and a diagnosis; alternate the run order. Do not run other work on the account during each measurement if you want to attribute the difference to the test.
 
-Registre modelo/esforço efetivos, horário inicial/final, quota de cinco horas e semanal antes/depois (incluindo horário de reset), agentes acionados, testes aprovados, correções posteriores e defeitos encontrados na revisão. Descarte comparações atravessando reset ou misturadas com outras tarefas da conta. O percentual exibido pode ser arredondado; diferenças muito pequenas são inconclusivas.
+Record the effective model and effort, start and end times, five-hour and weekly quota before and after (including reset time), agents used, passing tests, later corrections, and defects found during review. Discard comparisons that cross a reset or mix in other account tasks. Displayed percentages may be rounded; very small differences are inconclusive.
 
-Tokens reportados por ferramentas não equivalem diretamente a percentual da assinatura. Compare **quota por tarefa concluída com qualidade equivalente**, junto com tempo e retrabalho, ao longo de vários pares. Um exemplo sintético demonstra funcionamento, não economia. Não há percentual de economia medido ou prometido nesta versão.
+Tokens reported by tools do not directly equal a subscription percentage. Compare **quota per completed task at equivalent quality**, together with time and rework, across several pairs. A synthetic example demonstrates functionality, not savings. This version does not measure or promise a savings percentage.

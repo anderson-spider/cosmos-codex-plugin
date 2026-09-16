@@ -25,6 +25,18 @@ const gitProfile = readFileSync(
   'plugins/cosmos/skills/cosmos-orchestrate/references/agents/cosmos-git-master.toml',
   'utf8',
 );
+const gitEnvironment = readFileSync(
+  'plugins/cosmos/skills/git-master/references/environment-and-identity.md',
+  'utf8',
+);
+const gitLabInstructions = readFileSync(
+  'plugins/cosmos/skills/git-master/references/gitlab.md',
+  'utf8',
+);
+const gitLabPipelineInstructions = readFileSync(
+  'plugins/cosmos/skills/git-master/references/gitlab-pipelines.md',
+  'utf8',
+);
 
 test('plugin starter prompts invoke the installed Cosmos skill namespace', () => {
   const prompts = manifest.interface.defaultPrompt;
@@ -76,9 +88,21 @@ test('Git Master keeps local and remote effects independently authorized', () =>
   assert.match(gitSkillInstructions, /Never execute a force-push/i);
 });
 
+test('Git Master routes GitLab operations through the configured environment alias', () => {
+  assert.match(gitEnvironment, /Personal GitLab[\s\S]*`glab-personal`/);
+  assert.match(gitEnvironment, /Work GitLab[\s\S]*`glab-work`/);
+  assert.match(gitEnvironment, /Do not use bare `glab`/);
+  assert.match(gitEnvironment, /do not silently[\s\S]*fall back to the other alias/i);
+  assert.match(gitLabInstructions, /<selected-glab-alias> mr create/);
+  assert.match(gitLabInstructions, /Never[\s\S]*substitute bare `glab`/i);
+  assert.match(gitLabPipelineInstructions, /<selected-glab-alias> api/);
+  assert.doesNotMatch(gitLabInstructions, /Prefer an installed `glab` client/);
+  assert.doesNotMatch(gitLabPipelineInstructions, /Prefer an installed `glab` client/);
+});
+
 test('delegation contract carries authorization boundaries to subagents', () => {
-  assert.match(skillInstructions, /Ações autorizadas para o filho/);
-  assert.match(skillInstructions, /restrições aplicáveis/);
-  assert.match(skillInstructions, /efeitos que ainda dependem de aprovação do usuário/);
-  assert.match(skillInstructions, /devolvê-la ao Orchestrator/);
+  assert.match(skillInstructions, /Actions authorized for the child/);
+  assert.match(skillInstructions, /applicable restrictions/);
+  assert.match(skillInstructions, /effects that still require user approval/);
+  assert.match(skillInstructions, /return it to the Orchestrator/);
 });

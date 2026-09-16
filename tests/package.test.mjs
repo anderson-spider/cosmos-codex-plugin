@@ -47,7 +47,7 @@ with zipfile.ZipFile(sys.argv[1]) as z:
     return JSON.parse(execFileSync('python3', ['-c', program, archive], {encoding: 'utf8'}));
 }
 
-test('prepara um ZIP apenas com arquivos rastreados no layout do marketplace', async (t) => {
+test('prepares a ZIP with only tracked files in the marketplace layout', async (t) => {
     const cwd = createRepository();
     t.after(() => rmSync(cwd, {recursive: true, force: true}));
     const logs = [];
@@ -69,20 +69,20 @@ test('prepara um ZIP apenas com arquivos rastreados no layout do marketplace', a
     ].sort());
     assert.equal(JSON.parse(contents.manifest).version, '1.2.3');
     assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '1.2.3');
-    assert.match(logs[0], /Manifesto atualizado para 1\.2\.3/);
+    assert.match(logs[0], /Manifest updated to 1\.2\.3/);
     assert.match(logs[0], /cosmos-1\.2\.3\.zip/);
 });
 
-test('rejeita versões que não são estáveis', async () => {
+test('rejects unstable versions', async () => {
     for (const version of ['1.2.3-beta.1', '01.2.3']) {
         await assert.rejects(
             prepare({}, {cwd: process.cwd(), nextRelease: {version}, logger: {log() {}}}),
-            /versão da release deve ser estável/i,
+            /release version must be stable/i,
         );
     }
 });
 
-test('rejeita links simbólicos rastreados', async (t) => {
+test('rejects tracked symbolic links', async (t) => {
     const cwd = createRepository({symlink: true});
     t.after(() => rmSync(cwd, {recursive: true, force: true}));
 

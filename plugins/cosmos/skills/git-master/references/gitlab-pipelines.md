@@ -1,22 +1,43 @@
 # GitLab pipelines and jobs
 
-Use this reference only for GitLab.com or a self-managed GitLab host.
+Use this reference only for GitLab hosts.
 
-Retrieve the MR and head pipeline with explicit host and project binding. The
-MR state, source and target, head SHA, conflicts, pipeline status, and URLs are
-normally sufficient. Follow pagination only when needed to locate the relevant
-root job or when completeness was requested.
+Prefer the configured `glab-personal` or `glab-work` alias selected by the
+environment and identity boundary, or an explicitly requested supported
+connector whose host and project have been established. Confirm its account
+when authentication is required by the environment and identity boundary; an
+anonymous public read does not require an account. Inspect installed help when
+syntax or JSON fields are uncertain.
 
-Confirm which revision the pipeline evaluates. Identify stale, historical,
-merge-result, or unavailable results instead of presenting them as current head
-status. Preserve job ID, name, stage, status, failure reason, and URL only for
-evidence actually used.
+For status, retrieve the MR and its head pipeline with explicit host and project
+binding. The MR state, source and target, head SHA, conflicts, pipeline status,
+and URL are normally sufficient.
 
-For diagnosis, fetch traces only for failed or root-cause jobs and report the
-decisive lines after masking secrets and sensitive values. Classify the
-supported root blocker when useful: metadata or policy, code or test,
-dependency or toolchain, infrastructure or network, or flaky or unknown.
+Confirm which MR revision the reported pipeline evaluates. Relate each decisive
+result to the current head or its applicable merge-result revision, and identify
+stale or unavailable results explicitly. When the user requests a historical
+pipeline, preserve that historical scope instead of treating it as current
+status.
 
-Retry only after the cause was addressed or evidence supports an infrastructure
-or flaky failure, and only with separate authorization. Verify the resulting
-pipeline and job IDs, revision, URLs, and current states.
+For diagnosis, retrieve enough jobs to identify the failed root job. Preserve
+job ID, name, stage, status, failure reason, and URL for evidence actually used.
+Follow pagination only when the relevant jobs are not yet found, completeness is
+needed to distinguish multiple roots, or the user asks for the full job set.
+
+Fetch traces only for failed or root-cause jobs using the supported equivalent
+of:
+
+```bash
+<selected-glab-alias> api "projects/<project_id>/jobs/<job_id>/trace"
+```
+
+Report decisive error lines with the job URL after masking secret or sensitive
+values.
+
+When authorized and justified, retry through the supported API surface:
+
+```bash
+<selected-glab-alias> api --method POST "projects/<project_id>/pipelines/<pipeline_id>/retry"
+```
+
+Verify the resulting pipeline and job IDs and their current states.

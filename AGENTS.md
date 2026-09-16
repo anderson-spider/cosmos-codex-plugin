@@ -26,9 +26,11 @@ npm run lint:commits -- --from origin/main --to HEAD --verbose
 python3 /path/to/plugin-creator/scripts/validate_plugin.py plugins/cosmos
 python3 /path/to/skill-creator/scripts/quick_validate.py \
   plugins/cosmos/skills/cosmos-orchestrate
+python3 /path/to/skill-creator/scripts/quick_validate.py \
+  plugins/cosmos/skills/git-master
 ```
 
-Run the demo tests, release-tooling tests, commit lint, and both authoring
+Run the demo tests, release-tooling tests, commit lint, and all three authoring
 validators before submitting plugin changes. Replace `/path/to/` with the
 relevant local skill location. `npm test` uses local fixtures and mocked APIs;
 it must not publish releases or contact production services.
