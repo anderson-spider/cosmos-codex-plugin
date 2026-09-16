@@ -1,64 +1,62 @@
-# Releases do Cosmos
+# Cosmos releases
 
-## Fluxo
+## Workflow
 
-1. O autor usa Conventional Commits e um título semântico no PR.
-2. A CI valida os commits, o título e os testes.
-3. Um mantenedor abre **Actions → Release → Run workflow** na `main`.
-4. O workflow testa o código e executa Semantic Release. Commits `fix`/`perf`
-   geram patch, `feat` gera minor e mudanças incompatíveis geram major. Sem
-   commits relevantes, não há release.
-5. Na fase `prepare`, a versão calculada é gravada no manifesto de origem e no
-   pacote `cosmos-X.Y.Z.zip`. O pacote preserva o layout do marketplace,
-   incluindo `.agents/plugins/marketplace.json`.
-6. `@semantic-release/git` cria e envia o commit `chore(release)` com o
-   manifesto. Em seguida, Semantic Release cria a tag apontando para esse commit
-   e publica a release com notas e o pacote.
+1. The author uses Conventional Commits and a semantic PR title.
+2. CI validates commits, the title, and tests.
+3. A maintainer opens **Actions → Release → Run workflow** on `main`.
+4. The workflow tests the code and runs Semantic Release. `fix`/`perf` commits
+   produce a patch, `feat` produces a minor release, and breaking changes produce
+   a major release. Without relevant commits, there is no release.
+5. During `prepare`, the calculated version is written to the source manifest and
+   the `cosmos-X.Y.Z.zip` package. The package preserves the marketplace layout,
+   including `.agents/plugins/marketplace.json`.
+6. `@semantic-release/git` creates and pushes the `chore(release)` commit with the
+   manifest. Semantic Release then creates a tag pointing to that commit and
+   publishes the release with notes and the package.
 
-O disparo é exclusivamente manual e não há publicação no npm. A atualização do
-manifesto ocorre antes da tag porque essa é a ordem do ciclo `prepare` do
-Semantic Release; assim, a tag, o código fonte e o ZIP registram a mesma versão.
-O workflow serializa publicações e processa a `main` mais recente. O commit
-`chore(release)` não gera outro incremento.
+The trigger is exclusively manual and nothing is published to npm. The manifest
+is updated before the tag because that is the order of the Semantic Release
+`prepare` lifecycle; the tag, source code, and ZIP therefore record the same
+version. The workflow serializes publications and processes the latest `main`.
+The `chore(release)` commit does not produce another increment.
 
-## Primeira release
+## First release
 
-O repositório tinha `0.1.0` no manifesto, mas nenhuma tag SemVer ao introduzir
-esta automação. Por padrão, o primeiro lançamento do Semantic Release será
-`1.0.0`. O histórico antigo permanece intacto; ele não precisa ser convertido.
-Depois disso, as tags publicadas são a referência do cálculo de versão.
+The repository had `0.1.0` in the manifest but no SemVer tag when this automation
+was introduced. By default, the first Semantic Release publication will be
+`1.0.0`. Old history remains intact and does not need conversion. Published tags
+become the version calculation reference afterward.
 
-## Configuração do GitHub
+## GitHub configuration
 
-GitHub Actions precisa estar habilitado. O workflow usa `GITHUB_TOKEN`, com
-`contents: write` para o commit, a tag e a release. Não é necessário criar um
-PAT, desde que as regras da `main` permitam esse push do GitHub Actions. Se a
-proteção da branch bloquear o commit automático, a execução falhará antes da
-tag e a regra ou o ator autorizado precisará ser ajustado.
+GitHub Actions must be enabled. The workflow uses `GITHUB_TOKEN` with
+`contents: write` for the commit, tag, and release. A PAT is unnecessary as long
+as `main` rules permit this GitHub Actions push. If branch protection blocks the
+automatic commit, the run fails before the tag and the rule or authorized actor
+must be adjusted.
 
-Em **Settings → Rules → Rulesets**, faça o check `Validate` ser obrigatório
-para PRs na `main` e exija a branch atualizada. Prefira squash com o título
-do PR; preserve o tipo semântico e o indicador de incompatibilidade ao editar
-a mensagem final. Esses ajustes administrativos não são aplicados pelos
-arquivos do workflow.
+In **Settings → Rules → Rulesets**, make the `Validate` check required for PRs to
+`main` and require an up-to-date branch. Prefer squash with the PR title; preserve
+the semantic type and breaking-change marker when editing the final message.
+Workflow files do not apply these administrative settings.
 
-## Recuperação
+## Recovery
 
-Corrija a permissão ou falha encontrada e execute novamente o workflow manual.
-O Semantic Release verifica as tags existentes e não publica novamente uma
-versão concluída.
+Fix the permission or failure and run the manual workflow again. Semantic Release
+checks existing tags and does not republish a completed version.
 
-Uma falha entre a criação da tag e a publicação no GitHub exige inspeção:
-Semantic Release pode considerar a tag já lançada numa nova execução. Não
-apague ou mova tags automaticamente. Verifique os logs, o commit da tag e os
-assets existentes antes de recuperar manualmente a release incompleta.
+A failure between tag creation and GitHub publication requires inspection:
+Semantic Release may consider the tag already released on a new run. Do not
+delete or move tags automatically. Check logs, the tagged commit, and existing
+assets before manually recovering an incomplete release.
 
-## Evidências e referências
+## Evidence and references
 
-Os testes locais usam o analyzer e o Commitlint reais, arquivos temporários e
-APIs simuladas. Eles não executam uma publicação remota. O primeiro merge é
-necessário para validar a publicação completa com o token do GitHub Actions.
+Local tests use the real analyzer and Commitlint, temporary files, and mocked
+APIs. They do not perform remote publication. The first merge is required to
+validate complete publication with the GitHub Actions token.
 
-- [Configuração do Semantic Release](https://semantic-release.gitbook.io/semantic-release/usage/configuration)
-- [Publicação no GitHub e permissões](https://github.com/semantic-release/github)
-- [Commitlint na CI](https://commitlint.js.org/guides/ci-setup.html)
+- [Semantic Release configuration](https://semantic-release.gitbook.io/semantic-release/usage/configuration)
+- [GitHub publication and permissions](https://github.com/semantic-release/github)
+- [Commitlint in CI](https://commitlint.js.org/guides/ci-setup.html)

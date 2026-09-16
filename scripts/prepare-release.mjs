@@ -21,15 +21,15 @@ function trackedFiles(cwd) {
     const files = output.split('\0').filter(Boolean);
 
     if (!files.includes('.agents/plugins/marketplace.json') || !files.includes(PLUGIN_MANIFEST)) {
-        throw new Error('O marketplace e o manifesto do plugin devem estar versionados no Git.');
+        throw new Error('The marketplace and plugin manifest must be tracked in Git.');
     }
 
     for (const file of files) {
         if (!REQUIRED_PREFIXES.some((prefix) => file === prefix || file.startsWith(prefix))) {
-            throw new Error(`Arquivo fora do layout do marketplace: ${file}`);
+            throw new Error(`File is outside the marketplace layout: ${file}`);
         }
         if (path.posix.isAbsolute(file) || file.split('/').includes('..') || isCachePath(file)) {
-            throw new Error(`Arquivo rastreado não pode entrar no pacote: ${file}`);
+            throw new Error(`Tracked file cannot be included in the package: ${file}`);
         }
     }
     return files;
@@ -76,14 +76,14 @@ export async function prepare(pluginConfig, context) {
     void pluginConfig;
     const version = context?.nextRelease?.version;
     if (typeof version !== 'string' || !STABLE_VERSION.test(version)) {
-        throw new Error(`A versão da release deve ser estável no formato x.y.z; recebida: ${String(version)}`);
+        throw new Error(`The release version must be stable and use the x.y.z format; received: ${String(version)}`);
     }
 
     const cwd = path.resolve(context?.cwd ?? process.cwd());
     const manifestPath = path.join(cwd, PLUGIN_MANIFEST);
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
     if (typeof manifest?.version !== 'string' || !STABLE_VERSION.test(manifest.version)) {
-        throw new Error(`O manifesto do plugin contém uma versão inválida: ${String(manifest?.version)}`);
+        throw new Error(`The plugin manifest contains an invalid version: ${String(manifest?.version)}`);
     }
     manifest.version = version;
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -100,7 +100,7 @@ export async function prepare(pluginConfig, context) {
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'pipe'],
     });
-    context?.logger?.log(`Manifesto atualizado para ${version} e arquivo de release criado: ${archive}`);
+    context?.logger?.log(`Manifest updated to ${version} and release archive created: ${archive}`);
 }
 
 export default {prepare};

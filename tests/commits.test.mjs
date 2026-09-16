@@ -18,8 +18,8 @@ const notesEntry = releaseConfig.plugins.find(
   ([plugin]) => plugin === '@semantic-release/release-notes-generator',
 );
 
-assert.ok(analyzerEntry, 'release.config.mjs deve configurar o commit-analyzer');
-assert.ok(notesEntry, 'release.config.mjs deve configurar o release-notes-generator');
+assert.ok(analyzerEntry, 'release.config.mjs must configure commit-analyzer');
+assert.ok(notesEntry, 'release.config.mjs must configure release-notes-generator');
 
 async function releaseFor(...messages) {
   return analyzeCommits(analyzerEntry[1], {
@@ -38,39 +38,39 @@ async function lintCommit(message) {
   });
 }
 
-test('commit-analyzer classifica fix e perf como patch, e feat como minor', async () => {
-  assert.equal(await releaseFor('fix: corrige a órbita'), 'patch');
-  assert.equal(await releaseFor('perf: reduz o tempo de cálculo'), 'patch');
-  assert.equal(await releaseFor('feat: adiciona uma constelação'), 'minor');
+test('commit-analyzer classifies fix and perf as patch and feat as minor', async () => {
+  assert.equal(await releaseFor('fix: correct the orbit'), 'patch');
+  assert.equal(await releaseFor('perf: reduce calculation time'), 'patch');
+  assert.equal(await releaseFor('feat: add a constellation'), 'minor');
 });
 
-test('commit-analyzer classifica marcadores de quebra como major', async () => {
-  assert.equal(await releaseFor('feat!: remove a API anterior'), 'major');
+test('commit-analyzer classifies breaking markers as major', async () => {
+  assert.equal(await releaseFor('feat!: remove the previous API'), 'major');
   assert.equal(
-    await releaseFor('feat: altera o contrato\n\nBREAKING CHANGE: exige nova configuração'),
+    await releaseFor('feat: change the contract\n\nBREAKING CHANGE: require new configuration'),
     'major',
   );
 });
 
-test('commit-analyzer ignora docs e chore', async () => {
-  assert.equal(await releaseFor('docs: explica a instalação'), null);
-  assert.equal(await releaseFor('chore: atualiza metadados'), null);
+test('commit-analyzer ignores docs and chore', async () => {
+  assert.equal(await releaseFor('docs: explain installation'), null);
+  assert.equal(await releaseFor('chore: update metadata'), null);
 });
 
-test('commit-analyzer escolhe o maior incremento entre commits', async () => {
+test('commit-analyzer chooses the largest increment among commits', async () => {
   assert.equal(
     await releaseFor(
-      'fix: corrige um cálculo',
-      'feat: adiciona uma opção',
-      'feat!: remove a opção legada',
+      'fix: correct a calculation',
+      'feat: add an option',
+      'feat!: remove the legacy option',
     ),
     'major',
   );
 });
 
-test('release-notes-generator renderiza o preset configurado', async () => {
+test('release-notes-generator renders the configured preset', async () => {
   const notes = await generateNotes(notesEntry[1], {
-    commits: [{hash: '1234567', message: 'fix: corrige a órbita'}],
+    commits: [{hash: '1234567', message: 'fix: correct the orbit'}],
     cwd: projectRoot,
     lastRelease: {gitTag: 'v1.0.0'},
     nextRelease: {gitTag: 'v1.0.1', version: '1.0.1'},
@@ -79,26 +79,26 @@ test('release-notes-generator renderiza o preset configurado', async () => {
   });
 
   assert.match(notes, /Bug Fixes/);
-  assert.match(notes, /corrige a órbita/);
+  assert.match(notes, /correct the orbit/);
 });
 
-test('commitlint aceita commits convencionais', async () => {
+test('commitlint accepts conventional commits', async () => {
   for (const message of [
-    'fix: corrige a órbita',
-    'feat: adiciona uma constelação',
-    'feat!: remove a API anterior',
-    'feat: altera o contrato\n\nBREAKING CHANGE: exige nova configuração',
-    'docs: explica a instalação',
-    'chore: atualiza metadados',
+    'fix: correct the orbit',
+    'feat: add a constellation',
+    'feat!: remove the previous API',
+    'feat: change the contract\n\nBREAKING CHANGE: require new configuration',
+    'docs: explain installation',
+    'chore: update metadata',
   ]) {
     const result = await lintCommit(message);
     assert.equal(result.valid, true, result.errors.map((error) => error.message).join('\n'));
   }
 });
 
-test('commitlint rejeita texto livre e tipos inventados', async () => {
-  for (const message of ['atualiza o plugin', 'inventado: altera o plugin']) {
+test('commitlint rejects free text and invented types', async () => {
+  for (const message of ['update the plugin', 'invented: change the plugin']) {
     const result = await lintCommit(message);
-    assert.equal(result.valid, false, `${message} deveria ser inválido`);
+    assert.equal(result.valid, false, `${message} should be invalid`);
   }
 });

@@ -1,39 +1,40 @@
 # Cosmos Codex Plugin
 
-Cosmos adiciona ao Codex uma skill de orquestração seletiva com perfis para
-exploração, pesquisa, design, implementação e decisões complexas.
+Cosmos adds a selective orchestration skill, a Git Master skill, and profiles
+for exploration, research, design, implementation, publication, and complex
+decisions to Codex.
 
-## Instalação pelo marketplace
+## Marketplace installation
 
-Adicione este repositório como marketplace usando a URL pública:
+Add this repository as a marketplace using its public URL:
 
 ```text
 https://github.com/anderson-spider/cosmos-codex-plugin
 ```
 
-Depois, instale `cosmos@cosmos` pelo gerenciador de plugins. Pela CLI, o fluxo
-equivalente é:
+Then install `cosmos@cosmos` through the plugin manager. The equivalent CLI
+flow is:
 
 ```bash
 codex plugin marketplace add https://github.com/anderson-spider/cosmos-codex-plugin
 codex plugin add cosmos@cosmos
 ```
 
-Abra uma nova conversa após a instalação e invoque
-`$cosmos:cosmos-orchestrate`.
-Consulte [`plugins/cosmos/README.md`](plugins/cosmos/README.md) para detalhes de
-uso, perfis disponíveis, comportamento e limitações.
+Start a new conversation after installation and invoke
+`$cosmos:cosmos-orchestrate` or `$cosmos:git-master`. See
+[`plugins/cosmos/README.md`](plugins/cosmos/README.md) for usage details,
+available profiles, behavior, and limitations.
 
-## Versões e releases
+## Versions and releases
 
-O workflow manual `Release` usa
-[Semantic Release](https://semantic-release.gitbook.io/semantic-release/) para
-publicar tags `vX.Y.Z`, notas e um pacote `cosmos-X.Y.Z.zip` a partir das
-mudanças semânticas que chegaram à `main`. Consulte as
-[releases](https://github.com/anderson-spider/cosmos-codex-plugin/releases)
-para comparar versões. Durante a publicação, a versão é gravada no manifesto e
-commitada automaticamente antes da criação da tag, de modo que a tag e o pacote
-contenham a mesma versão.
+The manual `Release` workflow uses
+[Semantic Release](https://semantic-release.gitbook.io/semantic-release/) to
+publish `vX.Y.Z` tags, release notes, and a `cosmos-X.Y.Z.zip` package from the
+semantic changes that reached `main`. See the
+[releases](https://github.com/anderson-spider/cosmos-codex-plugin/releases) to
+compare versions. During publication, the version is written to the manifest
+and committed automatically before the tag is created, so the tag and package
+contain the same version.
 
-Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o padrão de commits e
-[RELEASING.md](RELEASING.md) para configuração, recuperação e limites.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the commit convention and
+[RELEASING.md](RELEASING.md) for configuration, recovery, and limitations.

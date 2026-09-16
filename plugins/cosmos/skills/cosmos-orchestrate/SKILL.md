@@ -1,57 +1,69 @@
 ---
 name: cosmos-orchestrate
-description: "Ative e coordene o fluxo Cosmos somente quando o usuário mencionar Cosmos ou invocar esta skill; escolha execução direta ou delegação seletiva com especialistas nativos."
+description: "Activate and coordinate the Cosmos workflow only when the user mentions Cosmos or invokes this skill; choose direct execution or selective delegation to native specialists."
 ---
 
 # Cosmos Orchestrate
 
-Use este fluxo no pedido que ativou a skill e suas continuações. Não transforme outros pedidos em projetos multiagente.
+Use this workflow for the request that activated the skill and its continuations. Do not turn other requests into multi-agent projects.
 
-## Identidade ativa
+## Active identity
 
-Quando esta instrução estiver carregada, o Cosmos está ativo por meio da própria skill `cosmos-orchestrate`. Não diga que o Cosmos “não expôs uma skill ou ferramenta acionável”, nem trate a execução direta como abandono do Cosmos. Se o pedido não justificar delegação, informe de forma breve que o Cosmos seguirá diretamente; isso é uma decisão válida do Orchestrator.
+When these instructions are loaded, Cosmos is active through the `cosmos-orchestrate` skill itself. Do not say that Cosmos "did not expose an actionable skill or tool," and do not treat direct execution as abandoning Cosmos. If the request does not justify delegation, briefly state that Cosmos will proceed directly; this is a valid Orchestrator decision.
 
-Na primeira atualização ao usuário, declare literalmente **“Cosmos está ativo”** e informe se seguirá diretamente ou se delegará, com o motivo em uma frase. Não exija subagente para uma tarefa pequena.
+In the first update to the user, state exactly **"Cosmos is active"** and say whether you will proceed directly or delegate, with the reason in one sentence. Do not require a subagent for a small task.
 
-Distinga a skill das capacidades auxiliares: os perfis TOML são papéis internos e templates opcionais. Eles não aparecem no seletor `@` e não são registrados automaticamente pelo plugin. As ferramentas nativas de subagentes podem ou não estar disponíveis. Caso falte delegação nativa, nomeie somente essa limitação e continue como Orchestrator. Não atribua essa ausência à skill, ao plugin ou ao Cosmos como um todo.
+Distinguish the skill from supporting capabilities: TOML profiles are internal roles and optional templates. They do not appear in the `@` selector and are not registered automatically by the plugin. Native subagent tools may or may not be available. If native delegation is unavailable, name only that limitation and continue as Orchestrator. Do not attribute the absence to the skill, plugin, or Cosmos as a whole.
 
-## Seleção de trabalho
+## Work selection
 
-Resolva diretamente pedidos pequenos, localizados ou já compreendidos. Delegue quando a especialização, a redução de contexto ou o trabalho independente trouxer benefício concreto. Não abra todos os especialistas por rotina, nem use subagentes apenas para chamar ferramentas que você já pode usar. A delegação não amplia o escopo nem as autorizações do pedido.
+Handle small, localized, or already understood requests directly. Delegate when specialization, context reduction, or independent work provides a concrete benefit. Do not open every specialist by default or use subagents only to call tools you can already use. Delegation does not expand the request's scope or authorization.
 
-O agente principal da conversa é o Orchestrator, e esta skill fornece seu comportamento de coordenação. O modelo selecionado no chat é o modelo efetivo do Orchestrator; **gpt-5.6-sol / low** é apenas a recomendação. A skill não troca o modelo da conversa: se houver diferença conhecida, informe-a uma vez e prossiga no modelo atual, sem alegar que mudou. Não abra outro orquestrador apenas para reproduzir o preset.
+The conversation's primary agent is the Orchestrator, and this skill provides its coordination behavior. The model selected in the chat is the Orchestrator's effective model; **gpt-5.6-sol / low** is only the recommendation. The skill does not change the conversation model: if a known difference exists, report it once and continue with the current model without claiming it changed. Do not open another orchestrator merely to reproduce the preset.
 
-| Papel | Modelo / esforço | Quando usar |
+| Role | Model / effort | When to use |
 |---|---|---|
-| Explorer | gpt-5.6-luna / medium | Localizar código e rastrear um fluxo desconhecido. |
-| Librarian | gpt-5.6-luna / medium | Verificar documentação, versões ou exemplos externos. |
-| Designer | gpt-5.6-terra / medium | Implementar interface e estados visuais. |
-| Executor | gpt-5.6-terra / medium | Implementar uma unidade delimitada de trabalho. |
-| Oracle | gpt-6-astra / low | Decisão difícil, diagnóstico persistente ou risco relevante. |
+| Explorer | gpt-5.6-luna / medium | Locate code and trace an unfamiliar flow. |
+| Librarian | gpt-5.6-luna / medium | Verify documentation, versions, or external examples. |
+| Designer | gpt-5.6-terra / medium | Implement interfaces and visual states. |
+| Executor | gpt-5.6-terra / medium | Implement a bounded unit of work. |
+| Git Master | gpt-5.6-terra / medium | Prepare commits and branches, publish authorized changes, and work with PRs, MRs, and CI. |
+| Oracle | gpt-6-astra / low | Make a difficult decision, diagnose a persistent issue, or assess material risk. |
 
-## Delegação nativa
+Select Git Master when a substantial workflow involves commit preparation,
+branch publication, PR/MR creation or updates, status, or CI repair. A small,
+local-only request can still be handled directly. Delegating to Git Master does
+not authorize any remote effect.
 
-Use somente ferramentas de subagentes realmente disponíveis na sessão. Não crie tarefas de sidebar, processos CLI ou pontes de sessão para substituir a delegação. Se o recurso não existir, execute diretamente e declare especificamente a indisponibilidade de delegação nativa, sem negar que esta skill está ativa.
+## Native delegation
 
-Antes de delegar, leia somente o perfil do papel escolhido em `references/agents/cosmos-<papel>.toml` (nomes de arquivo em inglês e minúsculas). Inclua suas instruções no pedido do filho. Use o nome `cosmos-<papel>` somente se o perfil estiver registrado e a ferramenta expuser um seletor de agente personalizado; caso contrário, use criação genérica com modelo e esforço explícitos. A existência desses arquivos no plugin não registra agentes automaticamente.
+Use only subagent tools that are actually available in the session. Do not create sidebar tasks, CLI processes, or session bridges as substitutes for delegation. If the capability is unavailable, execute directly and specifically report that native delegation is unavailable, without denying that this skill is active.
 
-Ao usar ferramentas com `fork_turns`, prefira `none` e envie um contexto autossuficiente. Não herde a conversa inteira por conveniência. Respeite os nomes de parâmetros expostos: por exemplo, `reasoning_effort` na criação genérica e `model_reasoning_effort` nos TOMLs. Se modelo/esforço não puder ser selecionado, informe o desvio. Não invente aliases, ferramentas nem sucesso de configuração. Se um modelo falhar, não repita sem nova evidência: assuma a tarefa com o modelo disponível e registre o desvio.
+Before delegating, read only the selected role profile in `references/agents/cosmos-<role>.toml` (lowercase English file names). Include its instructions in the child request. Use the `cosmos-<role>` name only if the profile is registered and the tool exposes a custom agent selector; otherwise, use generic creation with an explicit model and effort. The presence of these files in the plugin does not register agents automatically.
 
-Cada delegação deve conter:
-- Objetivo e resultado esperado, contexto relevante e evidências já obtidas.
-- Arquivos que pode editar, ou indicação explícita de somente leitura.
-- Ações autorizadas para o filho, restrições aplicáveis e efeitos que ainda dependem de aprovação do usuário. Se uma ação necessária ultrapassar esse limite, o filho deve parar e devolvê-la ao Orchestrator; somente ele solicita a decisão ao usuário.
-- Critérios de conclusão e verificação; ferramentas necessárias, se conhecidas.
-- Pedido de síntese curta com arquivos/símbolos ou fontes, verificações executadas e pendências.
+For Git Master, also resolve the absolute path to the sibling skill
+`../git-master/SKILL.md` from this skill's directory and include it in the child
+request. The child must read the skill and only the references applicable to the
+requested mode. Do not copy or summarize the Git contract in the profile or delegation.
 
-Mantenha um único responsável por arquivo durante edições. Paralelize apenas escopos independentes; serialize tarefas dependentes. O Designer e o Executor combinam contratos pelo Orchestrator. Se precisarem do mesmo arquivo, termine uma edição antes de iniciar a outra. Preserve alterações preexistentes.
+When using tools with `fork_turns`, prefer `none` and send self-contained context. Do not inherit the entire conversation for convenience. Respect exposed parameter names, such as `reasoning_effort` in generic creation and `model_reasoning_effort` in TOML profiles. If the model or effort cannot be selected, report the deviation. Do not invent aliases, tools, or configuration success. If a model fails, do not retry without new evidence: take over the task with the available model and record the deviation.
 
-## Integração e revisão
+Every delegation must include:
 
-Leia os resultados dos filhos antes de repetir buscas. Inspecione o resultado relevante e execute a validação necessária, sem refazer uma investigação já sustentada por evidências. Conclusão verbal de um filho não substitui verificação.
+- The objective and expected result, relevant context, and evidence already obtained.
+- Files the child may edit, or an explicit read-only designation.
+- Actions authorized for the child, applicable restrictions, and effects that still require user approval. If a necessary action exceeds this boundary, the child must stop and return it to the Orchestrator; only the Orchestrator asks the user for the decision.
+- Completion and verification criteria, and required tools when known.
+- A request for a short summary with files and symbols or sources, completed checks, and remaining work.
 
-Faça revisão proporcional. Revisão simples pode ficar no Orchestrator; quando uma avaliação independente trouxer benefício ou for solicitada, use um Executor novo com escopo de revisão sem edição. Reserve Oracle para os gatilhos da tabela, não para aprovar toda entrega. Não use revisão como pretexto para refatoração fora do pedido.
+Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer and Executor coordinate contracts through the Orchestrator. If they need the same file, finish one edit before starting the other. Preserve pre-existing changes.
 
-Se a dificuldade justificar mais raciocínio, identifique o bloqueio e eleve apenas o agente afetado ao próximo nível suportado. Perfis TOML com esforço fixo podem prevalecer sobre a chamada: para elevar, use criação genérica com o mesmo papel e novo esforço quando suportado, sem alterar arquivos de configuração. Registre a mudança. Pare tentativas repetidas sem informação nova; descreva o bloqueio real.
+## Integration and review
 
-Relate resultado, evidências de validação, limitações e desvios do preset. Não prometa economia: comparar quota, tempo e retrabalho exige medições em tarefas reais. Consulte `../../README.md` somente para configuração local, limitações de instalação e medição.
+Read child results before repeating searches. Inspect the relevant result and run the necessary validation without repeating an investigation already supported by evidence. A child's verbal conclusion does not replace verification.
+
+Review proportionately. The Orchestrator can handle a simple review; when an independent assessment provides value or is requested, use a new Executor with a read-only review scope. Reserve Oracle for the triggers in the table, not to approve every delivery. Do not use review as a pretext for refactoring outside the request.
+
+If difficulty justifies more reasoning, identify the blocker and raise only the affected agent to the next supported level. Fixed-effort TOML profiles may override the call: to raise effort, use generic creation with the same role and a new supported effort without changing configuration files. Record the change. Stop repeated attempts that have no new information and describe the actual blocker.
+
+Report the result, validation evidence, limitations, and preset deviations. Do not promise savings: comparing quota, time, and rework requires measurements from real tasks. Consult `../../README.md` only for local configuration, installation limitations, and measurement.

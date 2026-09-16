@@ -13,15 +13,38 @@ const skillInstructions = readFileSync(
   'plugins/cosmos/skills/cosmos-orchestrate/SKILL.md',
   'utf8',
 );
+const gitSkillMetadata = readFileSync(
+  'plugins/cosmos/skills/git-master/agents/openai.yaml',
+  'utf8',
+);
+const gitSkillInstructions = readFileSync(
+  'plugins/cosmos/skills/git-master/SKILL.md',
+  'utf8',
+);
+const gitProfile = readFileSync(
+  'plugins/cosmos/skills/cosmos-orchestrate/references/agents/cosmos-git-master.toml',
+  'utf8',
+);
+const gitEnvironment = readFileSync(
+  'plugins/cosmos/skills/git-master/references/environment-and-identity.md',
+  'utf8',
+);
+const gitLabInstructions = readFileSync(
+  'plugins/cosmos/skills/git-master/references/gitlab.md',
+  'utf8',
+);
+const gitLabPipelineInstructions = readFileSync(
+  'plugins/cosmos/skills/git-master/references/gitlab-pipelines.md',
+  'utf8',
+);
 
 test('plugin starter prompts invoke the installed Cosmos skill namespace', () => {
   const prompts = manifest.interface.defaultPrompt;
 
   assert.ok(prompts.length > 0 && prompts.length <= 3);
-  for (const prompt of prompts) {
-    assert.ok(prompt.length <= 128);
-    assert.match(prompt, /^Use \$cosmos:cosmos-orchestrate\b/);
-  }
+  assert.ok(prompts.every((prompt) => prompt.length <= 128));
+  assert.ok(prompts.some((prompt) => /^Use \$cosmos:cosmos-orchestrate\b/.test(prompt)));
+  assert.ok(prompts.some((prompt) => /^Use \$cosmos:git-master\b/.test(prompt)));
 });
 
 test('skill metadata invokes its local skill name without the plugin namespace', () => {
@@ -36,11 +59,50 @@ test('skill metadata invokes its local skill name without the plugin namespace',
 
 test('skill remains eligible for automatic discovery', () => {
   assert.doesNotMatch(skillMetadata, /allow_implicit_invocation:\s*false/);
+  assert.match(gitSkillMetadata, /allow_implicit_invocation:\s*true/);
+});
+
+test('Git Master metadata invokes its local skill name', () => {
+  const defaultPrompt = gitSkillMetadata.match(
+    /^\s*default_prompt:\s*"([^"]+)"\s*$/m,
+  );
+
+  assert.ok(defaultPrompt, 'Git Master interface.default_prompt must be present');
+  assert.match(defaultPrompt[1], /^Use \$git-master\b/);
+  assert.doesNotMatch(defaultPrompt[1], /\$cosmos:/);
+});
+
+test('orchestrator routes Git Master through the sibling skill', () => {
+  assert.match(skillInstructions, /\| Git Master \| gpt-5\.6-terra \/ medium \|/);
+  assert.match(skillInstructions, /\.\.\/git-master\/SKILL\.md/);
+  assert.match(gitProfile, /^name = "cosmos-git-master"$/m);
+  assert.match(gitProfile, /^model = "gpt-5\.6-terra"$/m);
+  assert.match(gitProfile, /^model_reasoning_effort = "medium"$/m);
+});
+
+test('Git Master keeps local and remote effects independently authorized', () => {
+  assert.match(gitSkillInstructions, /commit or publication/i);
+  assert.match(gitSkillInstructions, /does not authorize a push/i);
+  assert.match(gitSkillInstructions, /separate explicit authorization/i);
+  assert.match(gitSkillInstructions, /Merge, approval, auto-merge, tags, releases, and branch deletion are outside/i);
+  assert.match(gitSkillInstructions, /Never execute a force-push/i);
+});
+
+test('Git Master routes GitLab operations through the configured environment alias', () => {
+  assert.match(gitEnvironment, /Personal GitLab[\s\S]*`glab-personal`/);
+  assert.match(gitEnvironment, /Work GitLab[\s\S]*`glab-work`/);
+  assert.match(gitEnvironment, /Do not use bare `glab`/);
+  assert.match(gitEnvironment, /do not silently[\s\S]*fall back to the other alias/i);
+  assert.match(gitLabInstructions, /<selected-glab-alias> mr create/);
+  assert.match(gitLabInstructions, /Never[\s\S]*substitute bare `glab`/i);
+  assert.match(gitLabPipelineInstructions, /<selected-glab-alias> api/);
+  assert.doesNotMatch(gitLabInstructions, /Prefer an installed `glab` client/);
+  assert.doesNotMatch(gitLabPipelineInstructions, /Prefer an installed `glab` client/);
 });
 
 test('delegation contract carries authorization boundaries to subagents', () => {
-  assert.match(skillInstructions, /Ações autorizadas para o filho/);
-  assert.match(skillInstructions, /restrições aplicáveis/);
-  assert.match(skillInstructions, /efeitos que ainda dependem de aprovação do usuário/);
-  assert.match(skillInstructions, /devolvê-la ao Orchestrator/);
+  assert.match(skillInstructions, /Actions authorized for the child/);
+  assert.match(skillInstructions, /applicable restrictions/);
+  assert.match(skillInstructions, /effects that still require user approval/);
+  assert.match(skillInstructions, /return it to the Orchestrator/);
 });

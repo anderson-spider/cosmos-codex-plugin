@@ -1,4 +1,4 @@
 interface:
   display_name: "Cosmos Orchestrate"
-  short_description: "Orquestre especialistas com delegação seletiva"
-  default_prompt: "Use $cosmos-orchestrate para concluir esta tarefa com delegação seletiva."
+  short_description: "Orchestrate specialists with selective delegation"
+  default_prompt: "Use $cosmos-orchestrate to complete this task with selective delegation."

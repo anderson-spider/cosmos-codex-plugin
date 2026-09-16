@@ -1,9 +1,9 @@
-# Contribuir
+# Contributing
 
-## Commits e pull requests
+## Commits and pull requests
 
-Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-nos commits e no título do PR:
+Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for
+commits and PR titles:
 
 ```text
 fix(orchestrate): preserve specialist context
@@ -12,35 +12,35 @@ docs: explain local installation
 feat(plugin)!: replace the orchestration interface
 ```
 
-O escopo entre parênteses é opcional. Use uma descrição curta e concreta em
-inglês. Mudanças incompatíveis usam `!` ou um rodapé `BREAKING CHANGE: descrição`.
+The parenthesized scope is optional. Use a short, concrete description in
+English. Breaking changes use `!` or a `BREAKING CHANGE: description` footer.
 
-| Tipo | Efeito na próxima release |
+| Type | Effect on the next release |
 | --- | --- |
-| `fix:` | Patch, por exemplo `1.0.0` → `1.0.1` |
+| `fix:` | Patch, for example `1.0.0` → `1.0.1` |
 | `perf:` | Patch |
-| `feat:` | Minor, por exemplo `1.0.0` → `1.1.0` |
-| `!` ou `BREAKING CHANGE:` | Major, por exemplo `1.0.0` → `2.0.0` |
-| `docs:`, `chore:`, `test:`, `ci:` e demais tipos aceitos | Sem release, salvo mudança incompatível |
+| `feat:` | Minor, for example `1.0.0` → `1.1.0` |
+| `!` or `BREAKING CHANGE:` | Major, for example `1.0.0` → `2.0.0` |
+| `docs:`, `chore:`, `test:`, `ci:`, and other accepted types | No release unless the change is breaking |
 
-O Semantic Release usa o maior incremento entre os commits ainda não publicados
-quando um mantenedor executa manualmente o workflow `Release`. Não incremente
-versões manualmente. Prefira **Squash and merge**, preservando o
-título semântico do PR e eventuais rodapés de incompatibilidade. Merge normal
-também funciona com commits semânticos; a mensagem automática de merge é ignorada.
-Ao editar o título ou a mensagem final no GitHub, preserve o padrão.
+Semantic Release uses the largest increment among unpublished commits when a
+maintainer manually runs the `Release` workflow. Do not increment versions
+manually. Prefer **Squash and merge**, preserving the semantic PR title and any
+breaking-change footers. A regular merge also works with semantic commits; the
+automatic merge message is ignored. Preserve the convention when editing the
+title or final message on GitHub.
 
-O job `Validate` verifica título e commits introduzidos pelo PR. Alterações
-manuais no número do manifesto exigem uma tag correspondente já existente e não
-podem reduzir a versão da base. O commit de versão gerado pelo release é criado
-diretamente pelo Semantic Release. Para tornar o check
-obrigatório, configure uma regra de proteção da `main` com esse check e exigência
-de branch atualizada. O workflow sozinho não impede um administrador de ignorar
-uma falha. Não reescreva o histórico antigo para adequá-lo ao padrão.
+The `Validate` job checks the title and commits introduced by the PR. Manual
+changes to the manifest version require a corresponding existing tag and cannot
+lower the base version. Semantic Release creates the generated version commit
+directly. To make the check mandatory, configure a `main` protection rule that
+requires this check and an up-to-date branch. The workflow alone does not prevent
+an administrator from ignoring a failure. Do not rewrite old history to conform
+to the convention.
 
-## Validação local
+## Local validation
 
-Use Node.js 24.10 ou superior e Python 3.12:
+Use Node.js 24.10 or later and Python 3.12:
 
 ```bash
 npm ci --ignore-scripts
@@ -50,6 +50,6 @@ npm run lint:commits -- --from origin/main --to HEAD --verbose
 python3 -m unittest discover -s demo-cosmos -v
 ```
 
-Para alterações do plugin, execute também os validadores de autoria descritos
-no `AGENTS.md`. As dependências Node pertencem apenas à automação deste
-repositório; o plugin instalado não precisa de Node.js ou npm.
+For plugin changes, also run the authoring validators described in `AGENTS.md`.
+Node dependencies belong only to this repository's automation; the installed
+plugin does not require Node.js or npm.

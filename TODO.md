@@ -1,48 +1,48 @@
-# Cosmos — melhorias priorizadas
+# Cosmos — prioritized improvements
 
-## Critérios de prioridade
+## Priority criteria
 
-- **P0 — crítico:** bloqueia uso seguro, release ou funcionamento essencial.
-- **P1 — alto:** reduz risco relevante e deve entrar na próxima evolução.
-- **P2 — médio:** melhora robustez, manutenção e experiência de uso.
-- **P3 — baixo:** refinamento incremental sem risco imediato.
+- **P0 — critical:** blocks safe use, releases, or essential functionality.
+- **P1 — high:** reduces material risk and should be included in the next iteration.
+- **P2 — medium:** improves robustness, maintenance, and user experience.
+- **P3 — low:** incremental refinement with no immediate risk.
 
-## P0 — crítico
+## P0 — critical
 
-- [ ] Nenhum bloqueador crítico confirmado no estado atual.
+- [ ] No confirmed critical blockers in the current state.
 
-## P1 — alto
+## P1 — high
 
-- [x] Exigir que toda delegação informe as ações autorizadas, as restrições aplicáveis e quais efeitos ainda dependem de aprovação.
-- [ ] Adicionar testes automatizados para os cinco perfis TOML: existência, parsing, campos obrigatórios, nomes, modelos, esforço e instruções.
-- [ ] Validar na CI a coerência entre os perfis TOML, a tabela de papéis da skill e o README.
-- [ ] Gerar o pacote real na CI, extrair o ZIP e executar os validadores de plugin e skill sobre o conteúdo distribuível.
-- [ ] Criar uma matriz comportamental versionada para ativação por `@Cosmos`, invocação explícita, descoberta implícita, continuação e pedidos negativos.
-- [ ] Executar e registrar um smoke test do plugin instalado em uma conversa nova do Codex.
+- [x] Require every delegation to report authorized actions, applicable restrictions, and effects that still require approval.
+- [ ] Add automated tests for the six TOML profiles: existence, parsing, required fields, names, models, effort, and instructions.
+- [ ] Validate consistency between TOML profiles, the skill role table, and the README in CI.
+- [ ] Generate the real package in CI, extract the ZIP, and run plugin and skill validators against the distributable content.
+- [ ] Create a versioned behavior matrix for `@Cosmos` activation, explicit invocation, implicit discovery, continuation, and negative requests.
+- [ ] Run and record a smoke test of the installed plugin in a new Codex conversation.
 
-## P2 — médio
+## P2 — medium
 
-- [ ] Definir o ciclo de vida dos subagentes quando o usuário interromper a tarefa, mudar o escopo ou concluir antecipadamente.
-- [ ] Adicionar cenários de fallback para ferramenta de delegação ausente, modelo indisponível, seletor de agente inexistente e falha repetida.
-- [x] Verificar e documentar a diferença entre `$cosmos:cosmos-orchestrate` no manifesto e `$cosmos-orchestrate` em `agents/openai.yaml`.
-- [ ] Validar o marketplace e o manifesto reais em conjunto: identidade, caminho da fonte, namespace e layout.
-- [ ] Criar uma matriz de compatibilidade por superfície e versão, usando os estados `verificado`, `indisponível` e `não verificado`.
-- [ ] Deixar explícito que `sandbox_mode = "read-only"` é uma configuração solicitada, não garantia contra overrides da sessão.
-- [ ] Testar que o Orchestrator não conclui enquanto ainda houver trabalho necessário em subagentes ativos.
+- [ ] Define the subagent lifecycle when the user interrupts the task, changes scope, or finishes early.
+- [ ] Add fallback scenarios for unavailable delegation tools, unavailable models, missing agent selectors, and repeated failures.
+- [x] Verify and document the difference between `$cosmos:cosmos-orchestrate` in the manifest and `$cosmos-orchestrate` in `agents/openai.yaml`.
+- [ ] Validate the actual marketplace and manifest together: identity, source path, namespace, and layout.
+- [ ] Create a compatibility matrix by surface and version using `verified`, `unavailable`, and `not verified` states.
+- [ ] State explicitly that `sandbox_mode = "read-only"` is a requested configuration, not a guarantee against session overrides.
+- [ ] Test that the Orchestrator does not finish while required work remains in active subagents.
 
-## P3 — baixo
+## P3 — low
 
-- [ ] Ampliar o demo com conflitos de tipos aninhados: objeto versus escalar, objeto versus lista e dicionários vazios.
-- [ ] Melhorar a documentação de preparação local, destacando `npm ci --ignore-scripts` antes de `npm test`.
-- [ ] Avaliar um disparo seguro de CI para o PR automático de sincronização de versão, reduzindo intervenção manual após releases.
-- [ ] Registrar data, versão do Codex e ambiente em cada execução da matriz comportamental.
-- [ ] Medir quota, tempo e retrabalho apenas com pares de tarefas equivalentes e qualidade comparável.
+- [ ] Expand the demo with nested type conflicts: object versus scalar, object versus list, and empty dictionaries.
+- [ ] Improve local setup documentation by highlighting `npm ci --ignore-scripts` before `npm test`.
+- [ ] Evaluate a safe CI trigger for the automatic version-sync PR to reduce manual work after releases.
+- [ ] Record date, Codex version, and environment for every behavior-matrix run.
+- [ ] Measure quota, time, and rework only with equivalent task pairs and comparable quality.
 
-## Definição de conclusão da próxima evolução
+## Definition of done for the next iteration
 
-- [ ] Todos os itens P1 implementados e revisados.
-- [ ] `npm test` aprovado após instalação das dependências.
-- [ ] Testes Python do demo aprovados.
-- [ ] Validadores de plugin e skill aprovados sobre o pacote gerado.
-- [ ] `git diff --check` aprovado.
-- [ ] Smoke test instalado registrado com limitações e evidências observadas.
+- [ ] All P1 items implemented and reviewed.
+- [ ] `npm test` passes after dependency installation.
+- [ ] Demo Python tests pass.
+- [ ] Plugin and skill validators pass against the generated package.
+- [ ] `git diff --check` passes.
+- [ ] Installed smoke test recorded with limitations and observed evidence.
