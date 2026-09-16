@@ -52,7 +52,7 @@ function run({provider = 'github', alias, env = {}, withCli = true} = {}) {
   if (provider === 'gitlab') args.push('--glab-alias', alias);
   const result = spawnSync('/bin/sh', args, {
     encoding: 'utf8',
-    env: {PATH: `${directory}:/usr/bin:/bin`, ...env},
+    env: {PATH: withCli ? `${directory}:/usr/bin:/bin` : directory, ...env},
   });
   rmSync(directory, {recursive: true, force: true});
   return result;
