@@ -50,13 +50,16 @@ Fixed profiles can override the model or effort passed during creation. The skil
 
 - Skill loaded: Cosmos is active; it must not claim that there is no linked or actionable skill.
 - First update: state "Cosmos is active" and say whether it will proceed directly or delegate.
-- Small request: execute directly without opening a team or requiring a subagent.
-- Unfamiliar work: Explorer or Librarian returns bounded context.
-- Implementation: Executor and/or Designer, with one owner per file.
-- Substantial Git, PR/MR, or CI work: Git Master receives the sibling skill path and the request's exact authorization.
+- Direct execution: only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution.
+- Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects before substantive work; dispatch independent lanes in parallel and serialize dependencies or overlapping resources.
+- Explorer: broad or uncertain local discovery. Librarian: external, current, or version-specific sources. Oracle: consequential architecture, material risk, or persistent diagnosis.
+- Implementation: Executor owns bounded non-trivial work; Designer owns visual and interaction judgment, with one owner per file and later mechanical work preserving the design intent.
+- Git Master: every requested commit, push, branch publication, PR/MR mutation, or CI correction receives the sibling skill path and the request's exact authorization. A single read-only Git lookup can remain direct.
 - Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
-- Review: proportionate; Oracle only for difficult decisions, persistent diagnosis, or material risk. A routine independent review can use a new read-only Executor.
+- Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Executor.
 - Model or tool failure: record the unavailable supporting capability, avoid identical retries, and take over the work when possible. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
+
+These rules are a tested orchestration contract, not a runtime semantic classifier. The Orchestrator still applies the routing criteria. The TOML profiles remain optional templates rather than automatically registered agents, and session-level configuration can override requested read-only settings.
 
 ## Verification and limitations
 
