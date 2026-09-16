@@ -27,7 +27,7 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 | Librarian | gpt-5.6-luna / medium | Verify documentation, versions, or external examples. |
 | Designer | gpt-5.6-terra / medium | Implement interfaces and visual states. |
 | Executor | gpt-5.6-terra / medium | Implement a bounded unit of work. |
-| Git Master | gpt-5.6-terra / medium | Prepare commits and branches, publish authorized changes, and work with PRs, MRs, and CI. |
+| Git Master | gpt-5.6-luna / medium | Prepare commits and branches, publish authorized changes, and work with PRs, MRs, and CI. |
 | Oracle | gpt-6-astra / low | Make a difficult decision, diagnose a persistent issue, or assess material risk. |
 
 Select Git Master when a substantial workflow involves commit preparation,

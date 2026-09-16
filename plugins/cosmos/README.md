@@ -40,7 +40,7 @@ The six TOML files are in `skills/cosmos-orchestrate/references/agents/`. They a
 | Explorer | gpt-5.6-luna | medium |
 | Designer | gpt-5.6-terra | medium |
 | Executor | gpt-5.6-terra | medium |
-| Git Master | gpt-5.6-terra | medium |
+| Git Master | gpt-5.6-luna | medium |
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 
