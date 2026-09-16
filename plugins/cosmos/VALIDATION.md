@@ -12,7 +12,10 @@
 - Official documentation describes per-project profiles in `.codex/agents/`. An inspection with `codex debug prompt-input` in an isolated directory did not display profile names, so it was not used as proof of discovery or loading. `--strict-config` is not accepted by that diagnostic command.
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
+- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all six specialist roles.
+- Automated tests parse all six TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Executor ownership. This is static contract evidence, not a runtime semantic classifier.
 - GitLab CLI routing is environment-specific: personal operations use `glab-personal`, work operations use `glab-work`, and the skill forbids bare `glab` or silent fallback between aliases. Automated tests protect the routing contract in MR and pipeline guidance.
+- Git Master now documents a CLI-first authenticated preflight and includes the read-only `scripts/git-master-doctor.sh`. Fixture CLIs exercise `cli_missing`, environment-token override recovery, invalid saved credentials, wrong account, wrong host, project mismatch, and ready states without contacting a provider or printing a token value. This is deterministic contract coverage, not proof of any real account or browser fallback.
 
 ## Git Master
 
@@ -22,6 +25,7 @@
 - The internal `cosmos-git-master` profile recommends **gpt-5.6-luna / medium** and is not registered automatically in the `@` selector.
 - A local scan of new content found no private names, domains, or accounts from the source skills. Identifiers were not recorded as fixtures or rules in the public repository.
 - Installed discovery and execution of `$cosmos:git-master` still depend on a future release, reinstallation, and a new session; this delivery does not remove local skills used as fallback.
+- Real `gh`/`glab` login recovery, account identity, host routing, and browser/plugin fallback are intentionally not live-tested by this repository's fixtures. They require a user-confirmed environment and remain blocked until the documented preflight succeeds.
 
 ## Reproduce authoring validators
 
@@ -39,8 +43,8 @@ Activation through `@Cosmos` and automatic discovery still need verification aft
 
 Automated tests verify that starter prompts invoke installed skills by namespace and that metadata does not disable automatic discovery. After reinstallation, app evaluation should record:
 
-- `@Cosmos` followed by a small task: Cosmos active and direct execution declared.
-- `$cosmos:cosmos-orchestrate` followed by a complex task: Cosmos active and observable delegation when beneficial.
+- `@Cosmos` followed by one isolated, clear, already located, low-risk action: Cosmos active and direct execution declared.
+- `$cosmos:cosmos-orchestrate` followed by broad discovery, external research, consequential architecture, non-trivial implementation, visual work, or Git/CI mutation: Cosmos active and the matching specialist selected.
 - A textual mention of the Cosmos workflow: automatic skill discovery.
 - An ordinary development or subagent request without Cosmos: the skill must not be selected based only on those terms.
 - Continuation of the activated request: the workflow remains active.
@@ -48,6 +52,13 @@ Automated tests verify that starter prompts invoke installed skills by namespace
 - `$cosmos:git-master` followed by a preparation request: no local or remote mutation without corresponding authorization.
 - An ordinary Git, PR/MR, or CI request: automatic Git Master discovery when applicable.
 - Delegation of a substantial Git workflow by the Orchestrator: `cosmos-git-master` profile, sibling skill loaded, and authorization boundaries preserved.
+- A five-scenario forward evaluation: unknown local flow routes to Explorer; external versioned documentation routes to Librarian; consequential architecture routes to Oracle; commit, push, MR, or CI mutation routes to Git Master; one isolated known low-risk action remains direct.
+
+## Prescriptive routing forward evaluation
+
+An independent read-only Executor evaluated five requests against the updated skill without receiving the intended routing answers. It selected Explorer for an unknown cross-module session-token flow, Librarian for current SDK removal documentation, Oracle for a sensitive cache architecture decision, Git Master for a GitLab CI correction with commit and push, and direct Orchestrator execution for a one-line typo in a known file and function.
+
+The evaluation preserved the important boundaries: research and advice remained read-only; the architecture recommendation did not authorize implementation; the Git workflow kept diagnosis, correction, validation, commit, and push ordered while excluding MR mutation and pipeline retry; and the direct typo fix did not imply publication. It also identified and prompted correction of an editorial ambiguity between loading only the selected role profile and Git Master's additional sibling-skill requirement. This was a static forward evaluation of the skill text, not an installed-plugin or live routing test.
 
 ## Executed demonstration
 

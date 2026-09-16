@@ -17,29 +17,64 @@ Distinguish the skill from supporting capabilities: TOML profiles are internal r
 
 ## Work selection
 
-Handle small, localized, or already understood requests directly. Delegate when specialization, context reduction, or independent work provides a concrete benefit. Do not open every specialist by default or use subagents only to call tools you can already use. Delegation does not expand the request's scope or authorization.
+Use this workflow before starting substantive work:
+
+1. **Understand:** identify the requested outcome, constraints, authorization, and known evidence.
+2. **Path Selection:** separate discovery, research, decisions, implementation, visual work, and Git or CI effects.
+3. **Delegation Check:** choose direct execution or the specialist lanes below before doing the work.
+4. **Dispatch:** launch independent lanes in parallel and serialize dependent or overlapping work.
+5. **Reconcile:** integrate specialist results, resolve conflicts, and inspect material outputs.
+6. **Verify:** run proportional validation and report evidence, limitations, and preset deviations.
+
+Handle work directly only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution. For broad discovery, external research, consequential architecture, non-trivial implementation, visual or interaction decisions, or Git and CI mutations, delegate to the matching specialist. Do not keep substantive work entirely in the Orchestrator merely because each individual step appears small. Do not delegate merely to call a tool that the Orchestrator can already use.
+
+During the Delegation Check, identify independent lanes, dependency order, allowed file scopes, and the validation owner for each lane. Dispatch independent lanes in parallel before dependent work. Serialize lanes that depend on another result, modify the same files, share a Git index or checkout, or compete for the same test resource. Delegation does not expand the request's scope or authorization.
 
 The conversation's primary agent is the Orchestrator, and this skill provides its coordination behavior. The model selected in the chat is the Orchestrator's effective model; **gpt-5.6-sol / low** is only the recommendation. The skill does not change the conversation model: if a known difference exists, report it once and continue with the current model without claiming it changed. Do not open another orchestrator merely to reproduce the preset.
 
-| Role | Model / effort | When to use |
-|---|---|---|
-| Explorer | gpt-5.6-luna / medium | Locate code and trace an unfamiliar flow. |
-| Librarian | gpt-5.6-luna / medium | Verify documentation, versions, or external examples. |
-| Designer | gpt-5.6-terra / medium | Implement interfaces and visual states. |
-| Executor | gpt-5.6-terra / medium | Implement a bounded unit of work. |
-| Git Master | gpt-5.6-luna / medium | Prepare commits and branches, publish authorized changes, and work with PRs, MRs, and CI. |
-| Oracle | gpt-6-astra / low | Make a difficult decision, diagnose a persistent issue, or assess material risk. |
+### Specialist routing
 
-Select Git Master when a substantial workflow involves commit preparation,
-branch publication, PR/MR creation or updates, status, or CI repair. A small,
-local-only request can still be handled directly. Delegating to Git Master does
-not authorize any remote effect.
+#### Explorer — gpt-5.6-luna / medium
+
+- **Delegate when:** the local code path is unknown, discovery spans multiple files or modules, runtime or data flow must be traced, or broad searches benefit from compressed context.
+- **Don't delegate when:** the exact file and symbol are known and only one specific lookup or direct edit is needed.
+- **Rule of thumb:** "Where is it and how does it connect locally?" goes to Explorer.
+
+#### Librarian — gpt-5.6-luna / medium
+
+- **Delegate when:** the answer depends on external documentation, current or version-specific behavior, primary sources, official examples, or an unfamiliar library or API.
+- **Don't delegate when:** the required information is already in the conversation or repository, or it is stable general programming knowledge that does not need verification.
+- **Rule of thumb:** "What do the current external sources say?" goes to Librarian.
+
+#### Oracle / Architect — gpt-6-astra / low
+
+- **Delegate when:** the task requires a consequential architectural decision, comparison of viable designs, a material security, scalability, performance, data-integrity, or maintainability trade-off, or diagnosis that remains unresolved after evidence-based investigation.
+- **Don't delegate when:** the decision is routine and reversible, the first supported fix is still untried, or a direct lookup or test can answer the question.
+- **Rule of thumb:** "Which consequential design or strategy is safest, and why?" goes to Oracle. Oracle is an escalation and adviser, not a default approval gate or implementer.
+
+#### Designer — gpt-5.6-terra / medium
+
+- **Delegate when:** user-facing layout, interaction, responsive behavior, accessibility, visual hierarchy, motion, or design-system judgment materially affects the result.
+- **Don't delegate when:** the work is headless logic or a purely mechanical change that preserves an already established visual contract.
+- **Rule of thumb:** "Users see it and visual or interaction judgment matters" goes to Designer. Later Executor work must preserve the Designer's intent.
+
+#### Executor — gpt-5.6-terra / medium
+
+- **Delegate when:** implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
+- **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, or the whole change is one small direct action.
+- **Rule of thumb:** "The decision is made; implement and verify this bounded unit" goes to Executor.
+
+#### Git Master — gpt-5.6-luna / medium
+
+- **Delegate when:** the request includes creating a commit, pushing or publishing a branch, creating or mutating a PR or MR, or correcting CI. Also use it for substantial branch, request, or pipeline preparation and diagnosis.
+- **Don't delegate when:** the whole request is one read-only Git lookup or a local explanation with no requested commit, publication, request mutation, or CI correction.
+- **Rule of thumb:** "Change or publish Git, PR/MR, or CI state" goes to Git Master. Delegation never authorizes a remote effect by itself.
 
 ## Native delegation
 
 Use only subagent tools that are actually available in the session. Do not create sidebar tasks, CLI processes, or session bridges as substitutes for delegation. If the capability is unavailable, execute directly and specifically report that native delegation is unavailable, without denying that this skill is active.
 
-Before delegating, read only the selected role profile in `references/agents/cosmos-<role>.toml` (lowercase English file names). Include its instructions in the child request. Use the `cosmos-<role>` name only if the profile is registered and the tool exposes a custom agent selector; otherwise, use generic creation with an explicit model and effort. The presence of these files in the plugin does not register agents automatically.
+Before delegating, read the selected role profile in `references/agents/cosmos-<role>.toml` (lowercase English file names), but do not load the other role profiles. Include its instructions in the child request. Use the `cosmos-<role>` name only if the profile is registered and the tool exposes a custom agent selector; otherwise, use generic creation with an explicit model and effort. The presence of these files in the plugin does not register agents automatically.
 
 For Git Master, also resolve the absolute path to the sibling skill
 `../git-master/SKILL.md` from this skill's directory and include it in the child
@@ -51,9 +86,9 @@ When using tools with `fork_turns`, prefer `none` and send self-contained contex
 Every delegation must include:
 
 - The objective and expected result, relevant context, and evidence already obtained.
-- Files the child may edit, or an explicit read-only designation.
+- The allowed file scope, or an explicit read-only designation.
 - Actions authorized for the child, applicable restrictions, and effects that still require user approval. If a necessary action exceeds this boundary, the child must stop and return it to the Orchestrator; only the Orchestrator asks the user for the decision.
-- Completion and verification criteria, and required tools when known.
+- Completion and verification criteria, required tools when known, and the validation owner.
 - A request for a short summary with files and symbols or sources, completed checks, and remaining work.
 
 Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer and Executor coordinate contracts through the Orchestrator. If they need the same file, finish one edit before starting the other. Preserve pre-existing changes.
@@ -62,7 +97,7 @@ Keep one owner per file during edits. Parallelize only independent scopes and se
 
 Read child results before repeating searches. Inspect the relevant result and run the necessary validation without repeating an investigation already supported by evidence. A child's verbal conclusion does not replace verification.
 
-Review proportionately. The Orchestrator can handle a simple review; when an independent assessment provides value or is requested, use a new Executor with a read-only review scope. Reserve Oracle for the triggers in the table, not to approve every delivery. Do not use review as a pretext for refactoring outside the request.
+Review proportionately. The Orchestrator can handle a simple review; when an independent assessment provides value or is requested, use a new Executor with a read-only review scope. Reserve Oracle for consequential architecture, material risk, or persistent diagnosis, not to approve every delivery. Do not use review as a pretext for refactoring outside the request.
 
 If difficulty justifies more reasoning, identify the blocker and raise only the affected agent to the next supported level. Fixed-effort TOML profiles may override the call: to raise effort, use generic creation with the same role and a new supported effort without changing configuration files. Record the change. Stop repeated attempts that have no new information and describe the actual blocker.
 

@@ -14,11 +14,12 @@
 ## P1 — high
 
 - [x] Require every delegation to report authorized actions, applicable restrictions, and effects that still require approval.
-- [ ] Add automated tests for the six TOML profiles: existence, parsing, required fields, names, models, effort, and instructions.
-- [ ] Validate consistency between TOML profiles, the skill role table, and the README in CI.
+- [x] Add automated tests for the six TOML profiles: existence, parsing, required fields, names, models, effort, and instructions.
+- [x] Validate consistency between TOML profiles, the skill role contracts, and the README in CI.
 - [ ] Generate the real package in CI, extract the ZIP, and run plugin and skill validators against the distributable content.
 - [ ] Create a versioned behavior matrix for `@Cosmos` activation, explicit invocation, implicit discovery, continuation, and negative requests.
 - [ ] Run and record a smoke test of the installed plugin in a new Codex conversation.
+- [ ] Run a user-authorized, non-mutating GitHub and GitLab CLI preflight smoke test after installation; fixture coverage does not prove local credential recovery or browser fallback.
 
 ## P2 — medium
 

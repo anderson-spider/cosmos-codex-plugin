@@ -73,7 +73,7 @@ test('Git Master metadata invokes its local skill name', () => {
 });
 
 test('orchestrator routes Git Master through the sibling skill', () => {
-  assert.match(skillInstructions, /\| Git Master \| gpt-5\.6-luna \/ medium \|/);
+  assert.match(skillInstructions, /#### Git Master — gpt-5\.6-luna \/ medium/);
   assert.match(skillInstructions, /\.\.\/git-master\/SKILL\.md/);
   assert.match(gitProfile, /^name = "cosmos-git-master"$/m);
   assert.match(gitProfile, /^model = "gpt-5\.6-luna"$/m);

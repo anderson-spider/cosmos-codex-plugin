@@ -74,3 +74,49 @@ does not require Git write access.
 Completion: the target is confirmed and, when authentication is required, the
 expected and actual identities agree. Unknown or conflicting required context
 is blocked before remote repository operations.
+
+## CLI-first preflight and recoverable failures
+
+Run this deterministic sequence before every authenticated read or authorized
+mutation: (1) CLI is a real executable, (2) authentication is valid for the
+confirmed host, (3) current-user identity equals the expected account, (4) the
+host is the intended one, (5) the CLI resolves the explicit project to its
+canonical path, and (6) operation plus exact authorization still match. Record
+only these statuses: `cli_missing`, `environment_token_invalid`,
+`stored_credential_invalid`, `wrong_account`, `wrong_host`,
+`project_mismatch`, or `ready`.
+
+For GitHub, prefer `gh` and never call `gh auth token --show-token`. Every
+GitHub auth-status check must include `--active`, including
+`gh auth status --hostname <host> --active`, so a stale non-active account on
+the same host cannot block the active account. If `GH_TOKEN` or `GITHUB_TOKEN`
+is present and that active-account status fails, retry it once with both
+variables unset. A clean retry that
+succeeds is `environment_token_invalid`; a clean retry that fails is
+`stored_credential_invalid`, except that a valid login on another host is
+`wrong_host`. Recovery is the exact manual command
+`gh auth login --hostname <host> --web --git-protocol ssh`. Pause; then verify
+`gh auth status --hostname <host> --active`, `gh api user --hostname <host>`,
+and the explicit project before continuing.
+
+For GitLab, the selected `glab-personal` or `glab-work` must resolve to a real
+executable in a non-interactive shell. An interactive alias, function, or bare
+`glab` is not evidence and cannot be substituted. Presence (never values) of
+`GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` must be diagnosed by
+repeating auth with those variables unset. The noninteractive wrappers also
+map `GITLAB_PERSONAL_TOKEN` for `glab-personal` and
+`GITLAB_LUIZALABS_TOKEN` for `glab-work` into `GITLAB_TOKEN` on every call.
+For the selected alias only, a clean-auth diagnostic must temporarily unset its
+matching wrapper variable as well as the generic variables, then rerun
+`<selected-glab-alias> auth status --hostname <host>`. Never print, inspect, or
+copy a token value. If the initial status fails while any relevant override is
+effectively present (non-empty), report `environment_token_invalid` regardless
+of the clean diagnostic's result; the clean retry only shows whether stored
+credentials are additionally usable. Empty variables are not overrides. With
+no effective override, a valid selected alias on another host is `wrong_host`;
+otherwise report `stored_credential_invalid`. Revalidate the selected alias's
+`auth status`, current-user endpoint, host, and explicit project. Manual recovery is
+`<selected-glab-alias> auth login --hostname <host> --web --git-protocol ssh`;
+pause for it, then repeat the complete preflight using the same selected alias.
+Do not assume `glab api` supports `--jq`; parse only the required returned JSON
+field without emitting the response or token-related data.
