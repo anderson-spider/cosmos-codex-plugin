@@ -15,6 +15,7 @@
 - The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all six specialist roles.
 - Automated tests parse all six TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Executor ownership. This is static contract evidence, not a runtime semantic classifier.
 - GitLab CLI routing is environment-specific: personal operations use `glab-personal`, work operations use `glab-work`, and the skill forbids bare `glab` or silent fallback between aliases. Automated tests protect the routing contract in MR and pipeline guidance.
+- Git Master now documents a CLI-first authenticated preflight and includes the read-only `scripts/git-master-doctor.sh`. Fixture CLIs exercise `cli_missing`, environment-token override recovery, invalid saved credentials, wrong account, wrong host, project mismatch, and ready states without contacting a provider or printing a token value. This is deterministic contract coverage, not proof of any real account or browser fallback.
 
 ## Git Master
 
@@ -24,6 +25,7 @@
 - The internal `cosmos-git-master` profile recommends **gpt-5.6-luna / medium** and is not registered automatically in the `@` selector.
 - A local scan of new content found no private names, domains, or accounts from the source skills. Identifiers were not recorded as fixtures or rules in the public repository.
 - Installed discovery and execution of `$cosmos:git-master` still depend on a future release, reinstallation, and a new session; this delivery does not remove local skills used as fallback.
+- Real `gh`/`glab` login recovery, account identity, host routing, and browser/plugin fallback are intentionally not live-tested by this repository's fixtures. They require a user-confirmed environment and remain blocked until the documented preflight succeeds.
 
 ## Reproduce authoring validators
 

@@ -23,6 +23,14 @@ use `glab-personal`, work projects use `glab-work`, and the skill does not fall
 back to bare `glab` or silently switch aliases. The selected alias, host, project,
 and account when required must agree before authenticated reads or mutations.
 
+Git Master is CLI-first for authenticated GitHub and GitLab work. Before those
+reads or mutations it validates the executable, authentication, expected account,
+host, explicit project, operation, and authorization. Its included read-only
+`scripts/git-master-doctor.sh` reports only a safe status; it never prints token
+values. A failed CLI recovery pauses for the user to run the documented web/SSH
+login command, then repeats the full preflight. Browser or plugin access is only
+a blocked-CLI fallback and must retain the same confirmed context.
+
 Interface files intentionally use different names. Plugin manifest prompts use
 `$cosmos:cosmos-orchestrate` because `cosmos` is the installed component
 namespace; the Git shortcut uses `$cosmos:git-master`. Each `agents/openai.yaml`

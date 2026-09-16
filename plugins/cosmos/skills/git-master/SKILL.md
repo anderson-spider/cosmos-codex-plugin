@@ -72,3 +72,29 @@ Conventional Commit style only when the repository uses it. Include observed
 validation results, name material checks not run, and omit AI attribution and
 emojis. Add reviewers, labels, and assignees only when requested or required by
 verified repository policy.
+
+## Deterministic CLI preflight and recovery
+
+Before **any authenticated remote read or mutation**, establish the operation
+and its exact authorization, provider, environment, host, full project path,
+expected account, and selected CLI. Then run the provider's CLI preflight in
+that order. Do not treat an attempted read as the preflight.
+
+The optional read-only helper `../../scripts/git-master-doctor.sh` records the
+same boundary without printing credentials. Pass every context field, including
+the operation and authorization; it returns one of `cli_missing`,
+`environment_token_invalid`, `stored_credential_invalid`, `wrong_account`,
+`wrong_host`, `project_mismatch`, or `ready`. It is a diagnostic aid, not
+authorization for the next operation.
+
+On a failed preflight, stop authenticated reads and all mutations. State the
+status, the confirmed context, and the next manual action. Do not inspect token
+values, credential files, cookies, keychains, or `gh auth token --show-token`.
+After a manual recovery, repeat CLI presence, authentication, current-user
+identity, host, and explicit project validation before resuming.
+
+Browser or plugin access is a fallback only when the required CLI is missing or
+CLI recovery is genuinely blocked. Reconfirm provider, environment, host,
+project, and required account in that surface; obtain exact approval again for
+each mutation and message. Never silently switch an account, host, credential,
+or GitLab alias to make a request work.

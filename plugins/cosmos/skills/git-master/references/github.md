@@ -8,6 +8,15 @@ authentication is required by the environment and identity boundary; an
 anonymous public read does not require an account. Inspect installed help when
 syntax or available fields are uncertain.
 
+Before an authenticated GitHub read or mutation, complete the CLI-first
+preflight in `environment-and-identity.md`: `gh` executable, `gh auth status
+--hostname <host>`, current user through `gh api user --hostname <host>`, and
+the explicit project through `gh api repos/<owner>/<repo> --hostname <host>`.
+If environment token overrides cause auth failure, retry with `GH_TOKEN` and
+`GITHUB_TOKEN` unset; never reveal them. Recover only with the documented
+manual `gh auth login --hostname <host> --web --git-protocol ssh` and revalidate
+before resuming.
+
 Before creation, look for an open PR with the same head repository/branch and
 base repository/branch. A matching PR is not a duplicate to replace: report it,
 or update it only when that update is authorized.

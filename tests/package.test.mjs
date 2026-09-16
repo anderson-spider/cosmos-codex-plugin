@@ -26,13 +26,14 @@ function createRepository({symlink = false} = {}) {
     writeFixture(root, 'plugins/cosmos/skills/git-master/agents/openai.yaml', 'interface:\n  display_name: "Git Master"\n');
     writeFixture(root, 'plugins/cosmos/skills/git-master/references/github.md', '# GitHub\n');
     writeFixture(root, 'plugins/cosmos/skills/git-master/references/retry-and-fix.md', '# Retry\n');
+    writeFixture(root, 'plugins/cosmos/scripts/git-master-doctor.sh', '#!/bin/sh\nexit 0\n');
     writeFixture(root, 'plugins/cosmos/assets/icon.png', 'fake png');
     writeFixture(root, 'plugins/cosmos/__pycache__/ignored.pyc', 'cache');
     writeFixture(root, 'plugins/cosmos/untracked.txt', 'not tracked');
     if (symlink) {
         symlinkSync('assets/icon.png', path.join(root, 'plugins/cosmos/link.png'));
     }
-    execFileSync('git', ['add', '.agents', 'plugins/cosmos/.codex-plugin', 'plugins/cosmos/skills', 'plugins/cosmos/assets'], {cwd: root});
+    execFileSync('git', ['add', '.agents', 'plugins/cosmos/.codex-plugin', 'plugins/cosmos/skills', 'plugins/cosmos/scripts', 'plugins/cosmos/assets'], {cwd: root});
     if (symlink) {
         execFileSync('git', ['add', 'plugins/cosmos/link.png'], {cwd: root});
     }
@@ -66,6 +67,7 @@ test('prepares a ZIP with only tracked files in the marketplace layout', async (
         'plugins/cosmos/skills/git-master/agents/openai.yaml',
         'plugins/cosmos/skills/git-master/references/github.md',
         'plugins/cosmos/skills/git-master/references/retry-and-fix.md',
+        'plugins/cosmos/scripts/git-master-doctor.sh',
     ].sort());
     assert.equal(JSON.parse(contents.manifest).version, '1.2.3');
     assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '1.2.3');

@@ -9,6 +9,11 @@ when authentication is required by the environment and identity boundary; an
 anonymous public read does not require an account. Inspect installed help when
 syntax or JSON fields are uncertain.
 
+Pipeline and job reads are authenticated remote reads: complete the selected
+GitLab alias preflight before them. A browser or plugin fallback requires the
+same reconfirmed environment, host, project, account, and exact authorization
+for any resulting mutation.
+
 For status, retrieve the MR and its head pipeline with explicit host and project
 binding. The MR state, source and target, head SHA, conflicts, pipeline status,
 and URL are normally sufficient.

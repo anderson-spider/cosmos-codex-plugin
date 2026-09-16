@@ -8,6 +8,11 @@ authentication is required by the environment and identity boundary; an
 anonymous public read does not require an account. Inspect installed help when
 syntax or JSON fields are uncertain.
 
+Perform the GitHub CLI-first preflight before authenticated status or diagnostic
+reads; a failed authentication, account, host, or project check blocks these
+reads just as it blocks a retry. Do not use a browser or plugin to silently
+change the verified context.
+
 For status, retrieve PR metadata and the check rollup with explicit repository
 binding. Useful fields include number, title, state, draft state, head and base
 refs, head SHA, mergeability, check rollup, and URL. Query detailed checks only

@@ -9,6 +9,14 @@ authentication is required by the environment and identity boundary; an
 anonymous public read does not require an account. Inspect installed help when
 syntax or available fields are uncertain.
 
+Before authenticated GitLab reads or mutations, prove that the selected alias
+is a real non-interactive executable, then validate its auth status for the
+confirmed host, current user, and explicit project. Diagnose token-variable
+overrides without printing values as specified in `environment-and-identity.md`.
+On failure, pause for the manual `glab auth login --hostname <host> --web
+--git-protocol ssh` recovery and repeat the selected-alias preflight; never use
+bare `glab` or switch aliases.
+
 Before creation, look for an open MR with the same source project/branch and
 target project/branch. A matching MR is not a duplicate to replace: report it,
 or update it only when that update is authorized.

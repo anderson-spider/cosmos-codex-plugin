@@ -19,6 +19,7 @@
 - [ ] Generate the real package in CI, extract the ZIP, and run plugin and skill validators against the distributable content.
 - [ ] Create a versioned behavior matrix for `@Cosmos` activation, explicit invocation, implicit discovery, continuation, and negative requests.
 - [ ] Run and record a smoke test of the installed plugin in a new Codex conversation.
+- [ ] Run a user-authorized, non-mutating GitHub and GitLab CLI preflight smoke test after installation; fixture coverage does not prove local credential recovery or browser fallback.
 
 ## P2 — medium
 
