@@ -6,6 +6,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import {prepare} from '../scripts/prepare-release.mjs';
+import releaseConfig from '../release.config.mjs';
 
 function writeFixture(root, file, contents) {
     const target = path.join(root, file);
@@ -70,9 +71,19 @@ test('prepares a ZIP with only tracked files in the marketplace layout', async (
         'plugins/cosmos/scripts/git-master-doctor.sh',
     ].sort());
     assert.equal(JSON.parse(contents.manifest).version, '1.2.3');
-    assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '1.2.3');
-    assert.match(logs[0], /Manifest updated to 1\.2\.3/);
+    assert.equal(JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version, '0.1.0');
+    assert.match(logs[0], /manifest version 1\.2\.3/);
     assert.match(logs[0], /cosmos-1\.2\.3\.zip/);
+});
+
+test('release configuration never commits or pushes the source manifest', () => {
+    const pluginNames = releaseConfig.plugins.map((plugin) => Array.isArray(plugin) ? plugin[0] : plugin);
+
+    assert.equal(pluginNames.includes('@semantic-release/git'), false);
+    assert.deepEqual(pluginNames.slice(-2), [
+        './scripts/prepare-release.mjs',
+        '@semantic-release/github',
+    ]);
 });
 
 test('rejects unstable versions', async () => {
@@ -91,5 +102,9 @@ test('rejects tracked symbolic links', async (t) => {
     await assert.rejects(
         prepare({}, {cwd, nextRelease: {version: '1.2.3'}, logger: {log() {}}}),
         (error) => /symlinks are not allowed/i.test(error.stderr.toString()),
+    );
+    assert.equal(
+        JSON.parse(readFileSync(path.join(cwd, 'plugins/cosmos/.codex-plugin/plugin.json'), 'utf8')).version,
+        '0.1.0',
     );
 });

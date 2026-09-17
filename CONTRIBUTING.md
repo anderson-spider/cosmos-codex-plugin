@@ -32,8 +32,8 @@ title or final message on GitHub.
 
 The `Validate` job checks the title and commits introduced by the PR. Manual
 changes to the manifest version require a corresponding existing tag and cannot
-lower the base version. Semantic Release creates the generated version commit
-directly. To make the check mandatory, configure a `main` protection rule that
+lower the base version. Semantic Release versions the attached plugin package;
+a separate reviewed PR synchronizes the source manifest. To make the check mandatory, configure a `main` protection rule that
 requires this check and an up-to-date branch. The workflow alone does not prevent
 an administrator from ignoring a failure. Do not rewrite old history to conform
 to the convention.
