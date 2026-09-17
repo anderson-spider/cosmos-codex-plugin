@@ -35,6 +35,21 @@ class SettingsTests(unittest.TestCase):
 
         self.assertEqual(merge_settings(defaults, overrides), {'plugins': ['custom']})
 
+    def test_replaces_nested_objects_with_scalars_and_lists(self):
+        defaults = {'scalar': {'nested': True}, 'list': {'nested': True}}
+        overrides = {'scalar': 0, 'list': []}
+
+        self.assertEqual(merge_settings(defaults, overrides), {'scalar': 0, 'list': []})
+
+    def test_replaces_nested_scalars_and_lists_with_objects(self):
+        defaults = {'scalar': 'old', 'list': ['old']}
+        overrides = {'scalar': {'nested': True}, 'list': {}}
+
+        self.assertEqual(
+            merge_settings(defaults, overrides),
+            {'scalar': {'nested': True}, 'list': {}},
+        )
+
     def test_does_not_share_mutable_values_from_either_input(self):
         defaults = {'database': {'hosts': ['primary']}, 'features': ['search']}
         overrides = {'database': {'options': {'timeout': 30}}, 'plugins': ['custom']}

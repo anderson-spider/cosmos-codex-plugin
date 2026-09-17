@@ -22,13 +22,16 @@ Use this workflow before starting substantive work:
 1. **Understand:** identify the requested outcome, constraints, authorization, and known evidence.
 2. **Path Selection:** separate discovery, research, decisions, implementation, visual work, and Git or CI effects.
 3. **Delegation Check:** choose direct execution or the specialist lanes below before doing the work.
-4. **Dispatch:** launch independent lanes in parallel and serialize dependent or overlapping work.
+4. **Dispatch:** choose a concurrency budget, launch independent lanes within it, and serialize dependent or overlapping work.
 5. **Reconcile:** integrate specialist results, resolve conflicts, and inspect material outputs.
-6. **Verify:** run proportional validation and report evidence, limitations, and preset deviations.
+6. **Verify:** complete the implementation, verification, and independent-review phases that the risk warrants.
+7. **Completion Gate:** account for delegated work, validation, findings, pending decisions, and unauthorized effects before reporting completion.
 
 Handle work directly only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution. For broad discovery, external research, consequential architecture, non-trivial implementation, visual or interaction decisions, or Git and CI mutations, delegate to the matching specialist. Do not keep substantive work entirely in the Orchestrator merely because each individual step appears small. Do not delegate merely to call a tool that the Orchestrator can already use.
 
 During the Delegation Check, identify independent lanes, dependency order, allowed file scopes, and the validation owner for each lane. Dispatch independent lanes in parallel before dependent work. Serialize lanes that depend on another result, modify the same files, share a Git index or checkout, or compete for the same test resource. Delegation does not expand the request's scope or authorization.
+
+Choose the smallest useful concurrency budget before dispatch. Default to no more than two concurrent specialists; exceed two only when additional lanes are demonstrably independent, the session supports them, and the expected time or context benefit justifies the quota cost. Available slots are a ceiling, not a target. Do not occupy a slot with work that is waiting on another lane.
 
 The conversation's primary agent is the Orchestrator, and this skill provides its coordination behavior. The model selected in the chat is the Orchestrator's effective model; **gpt-5.6-sol / low** is only the recommendation. The skill does not change the conversation model: if a known difference exists, report it once and continue with the current model without claiming it changed. Do not open another orchestrator merely to reproduce the preset.
 
@@ -93,12 +96,26 @@ Every delegation must include:
 
 Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer and Executor coordinate contracts through the Orchestrator. If they need the same file, finish one edit before starting the other. Preserve pre-existing changes.
 
+Track every delegate as active, completed, blocked, failed, or cancelled. When the user changes scope, promptly notify affected active delegates, cancel work that is no longer useful, and reconcile any result already produced before continuing. When the user interrupts or ends the task, stop or cancel active delegates when the tool supports it; otherwise record that they may still be running. Do not leave idle delegates occupying the concurrency budget, and do not report completion while required delegates remain active.
+
+If a delegate is blocked or incomplete, integrate any verified partial evidence and either reassign the remaining bounded work, take it over directly, or report the concrete unresolved dependency. If results disagree, compare their evidence against the actual files or sources and resolve the conflict before implementation. Cancel or close superseded lanes when the tool supports it. Every delegated result must be accepted, corrected, or explicitly rejected with a reason; receiving a result is not integration.
+
 ## Integration and review
 
 Read child results before repeating searches. Inspect the relevant result and run the necessary validation without repeating an investigation already supported by evidence. A child's verbal conclusion does not replace verification.
 
-Review proportionately. The Orchestrator can handle a simple review; when an independent assessment provides value or is requested, use a new Executor with a read-only review scope. Reserve Oracle for consequential architecture, material risk, or persistent diagnosis, not to approve every delivery. Do not use review as a pretext for refactoring outside the request.
+Keep these phases distinct when they are warranted:
+
+1. **Implementation:** an Executor changes only its assigned files and runs focused checks for its work.
+2. **Verification:** the validation owner reproduces the requested behavior and runs the smallest sufficient deterministic checks. Use a separate Executor when independent verification materially improves confidence; it may edit tests only when that permission and file scope were delegated explicitly.
+3. **Independent Review:** a fresh Executor receives a read-only scope and inspects the actual diff for correctness, regressions, security, data integrity, and missing high-value tests. It reports findings instead of editing. Skip this phase when risk is low and record that proportional decision rather than spawning mechanically.
+
+The same specialist profile may support these phases, but do not conflate their contracts or claim independent verification or review when the implementer performed it. Review proportionately. Reserve Oracle for consequential architecture, material risk, or persistent diagnosis, not to approve every delivery. Do not use review as a pretext for refactoring outside the request.
 
 If difficulty justifies more reasoning, identify the blocker and raise only the affected agent to the next supported level. Fixed-effort TOML profiles may override the call: to raise effort, use generic creation with the same role and a new supported effort without changing configuration files. Record the change. Stop repeated attempts that have no new information and describe the actual blocker.
 
-Report the result, validation evidence, limitations, and preset deviations. Do not promise savings: comparing quota, time, and rework requires measurements from real tasks. Consult `../../README.md` only for local configuration, installation limitations, and measurement.
+If native delegation tools are unavailable, continue directly and record the deviation. If a requested model or named selector is unavailable, use generic creation with the role instructions when possible; otherwise take over the lane. Do not retry the same failed model, selector, or tool call without new evidence or a changed condition.
+
+Before reporting completion, confirm that no required delegate remains active; required delegates completed or their blocked, failed, or cancelled states were recorded; every delegated result was integrated or rejected with a reason; returned decisions were resolved or disclosed; material outputs and changes were inspected; assigned validation ran; and material review findings were resolved or reported. Distinguish observed validation and source evidence from assumptions or unverified claims. Confirm that no commit, publication, retry, or other external effect was inferred from delegation. Record skipped proportional phases and model, effort, or tool deviations.
+
+Report the result, validation evidence, limitations, and preset deviations. Do not promise savings: comparing quota, time, and rework requires measurements from real tasks. Consult `../../README.md` only for local configuration, installation limitations, and measurement. The optional read-only `../../scripts/cosmos-usage.py` can summarize local rollout metadata without displaying prompts or conversation content.

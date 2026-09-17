@@ -25,6 +25,10 @@ Start a new conversation after installation and invoke
 [`plugins/cosmos/README.md`](plugins/cosmos/README.md) for usage details,
 available profiles, behavior, and limitations.
 
+Install the local validation dependencies with `npm ci --ignore-scripts` before
+running `npm test`. The ignored lifecycle scripts keep setup from invoking
+release behavior.
+
 ## Versions and releases
 
 The manual `Release` workflow uses

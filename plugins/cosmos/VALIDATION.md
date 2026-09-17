@@ -1,4 +1,4 @@
-# Validation — 2026-09-15
+# Validation — 2026-09-16
 
 ## Structure and compatibility
 
@@ -13,9 +13,12 @@
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
 - The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all six specialist roles.
+- Dispatch now selects the smallest useful concurrency budget, defaults to no more than two simultaneous specialists, and treats available slots as a ceiling rather than a target. Contract tests protect these rules; they do not measure live scheduler behavior.
+- Delivery distinguishes implementation, verification, and independent read-only review contracts. A completion gate requires accounting for delegate failures, returned decisions, inspected outputs, validation, material findings, unauthorized effects, skipped phases, and preset deviations.
 - Automated tests parse all six TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Executor ownership. This is static contract evidence, not a runtime semantic classifier.
 - GitLab CLI routing is environment-specific: personal operations use `glab-personal`, work operations use `glab-work`, and the skill forbids bare `glab` or silent fallback between aliases. Automated tests protect the routing contract in MR and pipeline guidance.
 - Git Master now documents a CLI-first authenticated preflight and includes the read-only `scripts/git-master-doctor.sh`. Fixture CLIs exercise `cli_missing`, environment-token override recovery, invalid saved credentials, wrong account, wrong host, project mismatch, and ready states without contacting a provider or printing a token value. This is deterministic contract coverage, not proof of any real account or browser fallback.
+- The standard-library-only `scripts/cosmos-usage.py` reads local rollout metadata without modifying sessions. Synthetic fixtures cover token aggregation, role and model reporting, duration and rate-limit metadata, date filtering, unique session-prefix selection, and rejection of conflicting modes. Tests also verify that working directories, prompts, messages, and rollout paths are not emitted.
 
 ## Git Master
 
@@ -35,7 +38,7 @@ Demo files are provided separately in `../../demo-cosmos/`. From this directory,
 
 ## Evidence limitations
 
-Marketplace, installation, and global configuration are not part of versioned files. Discovery test files remained in an isolated working directory. Quota variation, aggregate consumption, comparative latency, and production rework were not measured; the results do not demonstrate savings.
+Marketplace, installation, and global configuration are not part of versioned files. Discovery test files remained in an isolated working directory. Synthetic fixtures prove reporter behavior; a read-only compatibility run also scanned 208 real local rollout files and selected a three-thread session with two delegations without reporting invalid, unreadable, or duplicate inputs. This observation does not prove every historical format. Quota variation, comparative latency, quality, billing, and production rework were not measured; token counters and rate-limit metadata do not demonstrate savings.
 
 Activation through `@Cosmos` and automatic discovery still need verification after reinstalling this version and starting a new app conversation. Automated validation confirms the package contract but does not replace that end-to-end observation.
 
@@ -93,6 +96,42 @@ and all three authoring validators. All six TOML profiles also loaded through
 `tomllib`. The release configuration loaded earlier also confirmed the order
 `prepare-release` → `@semantic-release/git` → `@semantic-release/github`.
 `actionlint` is not installed in this worktree.
+
+## Astra comparison recommendation matrix
+
+The comparison was reconstructed from the branch history, repository TODOs, and official GPT-6 Astra guidance available on 2026-09-16. The original analysis was not committed, so this table records the reconstructed recommendation set and prevents the first four implementation items from becoming the whole scope.
+
+| Recommendation | Status | Evidence or reason |
+|---|---|---|
+| Use short, discriminating skill descriptions and progressive disclosure | Complete | Skill front matter is narrow; role profiles and Git references load only for the selected lane. |
+| Make delegation proportional and bounded | Complete | Routing criteria and the default two-specialist concurrency budget are contract-tested. |
+| Separate implementation, verification, and independent review | Complete | Distinct contracts and test-edit ownership are contract-tested. |
+| Define observable completion and integrate delegated results | Complete | Completion Gate covers active, blocked, failed, cancelled, conflicting, accepted, corrected, and rejected results. |
+| Distinguish evidence, validation, assumptions, and external effects | Complete | Completion Gate requires the distinction and preserves independent authorization. |
+| Handle interruption, scope changes, idle agents, unavailable tools/models/selectors, and repeated failures | Complete | Lifecycle and fallback rules have focused contract tests. |
+| Measure usage locally without exposing conversation content | Complete with limitations | The reporter is read-only, path-free, deterministic, and tested with real metadata shapes; counters are observational rather than billing or quality evidence. |
+| Validate marketplace and manifest identity together | Complete | Interface tests bind name, display name, category, local source path, and manifest layout. |
+| Generate and inspect the real ZIP in CI | Partial | CI builds the current package and runs ZIP integrity checks. External authoring validators have no portable pinned CI dependency, so local extracted-package validation remains required. |
+| Installed activation and CLI preflight smoke tests | Blocked | Installation, a fresh Codex conversation, and authenticated GitHub/GitLab environments are external or environment-specific checks. |
+| Measure quota, elapsed time, and rework across equivalent task pairs | Blocked | This requires controlled repeated tasks without unrelated account usage or rate-limit resets. No savings claim is made. |
+
+## Behavior and compatibility matrix
+
+Recorded on 2026-09-16 from Codex desktop with repository plugin version 1.3.0. `Verified` means a repository test or an observed workflow supports the row; `Not verified` is not a failure.
+
+| Surface or behavior | State | Evidence and limitation |
+|---|---|---|
+| Explicit `$cosmos:cosmos-orchestrate` namespace | Verified | Manifest prompt and namespace tests. |
+| Local `$cosmos-orchestrate` metadata prompt | Verified | `agents/openai.yaml` contract test. |
+| Automatic discovery when Cosmos is named | Verified statically | Skill description and metadata permit discovery; installed runtime matching is not verified. |
+| Continuation after activation | Verified statically | Skill scope includes continuations of the activating request. |
+| Negative request unrelated to Cosmos | Verified statically | Skill forbids turning other requests into Cosmos workflows. |
+| `@Cosmos` selector after installation | Not verified | Requires reinstall and a fresh conversation. |
+| Native generic subagent creation | Verified | This evaluation created Explorer and Git Master with explicit model and effort. |
+| Named TOML agent selectors | Not verified | Profiles are templates and are not automatically registered. |
+| Requested `sandbox_mode = "read-only"` | Not guaranteed | The profile requests it; session configuration can override it. |
+| GitHub CLI preflight | Verified in this source checkout | Read-only account and project binding succeeded for PR #16. |
+| GitLab CLI preflight after plugin installation | Not verified | Requires a user-authorized environment-specific check. |
 
 In the previous release-workflow validation, the sample package
 `cosmos-1.0.0.zip` was generated, extracted to a temporary directory, and passed

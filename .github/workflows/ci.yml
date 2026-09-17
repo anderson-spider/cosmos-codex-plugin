@@ -45,3 +45,7 @@ jobs:
         run: node scripts/check-manifest-version.mjs "$BASE_SHA"
       - run: npm test
       - run: python3 -m unittest discover -s demo-cosmos -v
+      - name: Build and inspect distributable package
+        run: |
+          npm run package:current
+          unzip -t "dist/cosmos-$(node -p "require('./plugins/cosmos/.codex-plugin/plugin.json').version").zip"

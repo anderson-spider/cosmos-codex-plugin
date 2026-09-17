@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
+    "package:current": "node scripts/package-current.mjs",
     "lint:commits": "commitlint",
     "release": "semantic-release"
   },
