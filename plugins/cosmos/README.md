@@ -60,11 +60,14 @@ Fixed profiles can override the model or effort passed during creation. The skil
 - First update: state "Cosmos is active" and say whether it will proceed directly or delegate.
 - Direct execution: only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution.
 - Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects before substantive work; dispatch independent lanes in parallel and serialize dependencies or overlapping resources.
+- Concurrency budget: default to at most two simultaneous specialists and use more only for demonstrably independent lanes whose benefit justifies the quota cost; available slots are not a target.
 - Explorer: broad or uncertain local discovery. Librarian: external, current, or version-specific sources. Oracle: consequential architecture, material risk, or persistent diagnosis.
 - Implementation: Executor owns bounded non-trivial work; Designer owns visual and interaction judgment, with one owner per file and later mechanical work preserving the design intent.
 - Git Master: every requested commit, push, branch publication, PR/MR mutation, or CI correction receives the sibling skill path and the request's exact authorization. A single read-only Git lookup can remain direct.
 - Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
 - Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Executor.
+- Implementation, verification, and independent review use distinct contracts. A verifier edits tests only when explicitly authorized, while an independent reviewer remains read-only and reports findings instead of fixing them.
+- Completion gate: account for delegate failures, returned decisions, inspected outputs, validation, material review findings, unauthorized effects, skipped phases, and preset deviations before reporting completion.
 - Model or tool failure: record the unavailable supporting capability, avoid identical retries, and take over the work when possible. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
 
 These rules are a tested orchestration contract, not a runtime semantic classifier. The Orchestrator still applies the routing criteria. The TOML profiles remain optional templates rather than automatically registered agents, and session-level configuration can override requested read-only settings.
@@ -92,3 +95,15 @@ Run pairs of equivalent tasks from the same initial state: one direct run with S
 Record the effective model and effort, start and end times, five-hour and weekly quota before and after (including reset time), agents used, passing tests, later corrections, and defects found during review. Discard comparisons that cross a reset or mix in other account tasks. Displayed percentages may be rounded; very small differences are inconclusive.
 
 Tokens reported by tools do not directly equal a subscription percentage. Compare **quota per completed task at equivalent quality**, together with time and rework, across several pairs. A synthetic example demonstrates functionality, not savings. This version does not measure or promise a savings percentage.
+
+### Local usage summary
+
+`scripts/cosmos-usage.py` reads rollout metadata already stored under `~/.codex/sessions` and summarizes threads, roles, models, effort, duration, token counters, and available rate-limit movement. It is standard-library-only and read-only. It does not emit prompts, messages, working directories, session file paths, or other conversation content.
+
+```bash
+python3 scripts/cosmos-usage.py --list --date 2026-09-16
+python3 scripts/cosmos-usage.py --latest --date 2026-09-16
+python3 scripts/cosmos-usage.py --session <root-id-or-unique-prefix> --format json
+```
+
+Use `--sessions-dir` only to point at another rollout directory or a synthetic test fixture. JSON output is intended for local comparisons; review it before sharing because thread IDs and model names remain present. Token totals describe recorded model usage, not billing, subscription percentage, quality, or savings.

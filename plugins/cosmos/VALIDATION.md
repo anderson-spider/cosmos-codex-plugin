@@ -1,4 +1,4 @@
-# Validation — 2026-09-15
+# Validation — 2026-09-16
 
 ## Structure and compatibility
 
@@ -13,9 +13,12 @@
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
 - The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all six specialist roles.
+- Dispatch now selects the smallest useful concurrency budget, defaults to no more than two simultaneous specialists, and treats available slots as a ceiling rather than a target. Contract tests protect these rules; they do not measure live scheduler behavior.
+- Delivery distinguishes implementation, verification, and independent read-only review contracts. A completion gate requires accounting for delegate failures, returned decisions, inspected outputs, validation, material findings, unauthorized effects, skipped phases, and preset deviations.
 - Automated tests parse all six TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Executor ownership. This is static contract evidence, not a runtime semantic classifier.
 - GitLab CLI routing is environment-specific: personal operations use `glab-personal`, work operations use `glab-work`, and the skill forbids bare `glab` or silent fallback between aliases. Automated tests protect the routing contract in MR and pipeline guidance.
 - Git Master now documents a CLI-first authenticated preflight and includes the read-only `scripts/git-master-doctor.sh`. Fixture CLIs exercise `cli_missing`, environment-token override recovery, invalid saved credentials, wrong account, wrong host, project mismatch, and ready states without contacting a provider or printing a token value. This is deterministic contract coverage, not proof of any real account or browser fallback.
+- The standard-library-only `scripts/cosmos-usage.py` reads local rollout metadata without modifying sessions. Synthetic fixtures cover token aggregation, role and model reporting, duration and rate-limit metadata, date filtering, unique session-prefix selection, and rejection of conflicting modes. Tests also verify that working directories, prompts, messages, and rollout paths are not emitted.
 
 ## Git Master
 
@@ -35,7 +38,7 @@ Demo files are provided separately in `../../demo-cosmos/`. From this directory,
 
 ## Evidence limitations
 
-Marketplace, installation, and global configuration are not part of versioned files. Discovery test files remained in an isolated working directory. Quota variation, aggregate consumption, comparative latency, and production rework were not measured; the results do not demonstrate savings.
+Marketplace, installation, and global configuration are not part of versioned files. Discovery test files remained in an isolated working directory. The usage reporter was tested with synthetic rollouts, not the user's real session store. Quota variation, comparative latency, quality, billing, and production rework were not measured; token counters and rate-limit metadata do not demonstrate savings.
 
 Activation through `@Cosmos` and automatic discovery still need verification after reinstalling this version and starting a new app conversation. Automated validation confirms the package contract but does not replace that end-to-end observation.
 

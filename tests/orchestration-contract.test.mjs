@@ -61,6 +61,7 @@ test('orchestrator applies the prescriptive delegation threshold and workflow', 
     'Dispatch',
     'Reconcile',
     'Verify',
+    'Completion Gate',
   ]) {
     assert.match(skill, new RegExp(`\\*\\*${step}:\\*\\*`));
   }
@@ -73,6 +74,24 @@ test('orchestrator applies the prescriptive delegation threshold and workflow', 
   assert.match(skill, /Dispatch independent lanes in parallel/);
   assert.match(skill, /Serialize lanes that depend on another result/);
   assert.match(skill, /allowed file scopes, and the validation owner/);
+});
+
+test('orchestrator budgets concurrency instead of filling available slots', () => {
+  assert.match(skill, /smallest useful concurrency budget/);
+  assert.match(skill, /Default to no more than two concurrent specialists/);
+  assert.match(skill, /Available slots are a ceiling, not a target/);
+  assert.match(skill, /Do not occupy a slot with work that is waiting/);
+});
+
+test('delivery separates implementation, verification, review, and completion', () => {
+  assert.match(skill, /\*\*Implementation:\*\*/);
+  assert.match(skill, /\*\*Verification:\*\*/);
+  assert.match(skill, /\*\*Independent Review:\*\*/);
+  assert.match(skill, /may edit tests only when that permission and file scope were delegated explicitly/);
+  assert.match(skill, /fresh Executor receives a read-only scope/);
+  assert.match(skill, /do not conflate their contracts/);
+  assert.match(skill, /required delegates completed or their failures were recorded/);
+  assert.match(skill, /no commit, publication, retry, or other external effect was inferred/);
 });
 
 test('all six roles define positive, negative, and rule-of-thumb routing', () => {
