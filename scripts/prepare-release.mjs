@@ -1,5 +1,5 @@
 import {execFileSync} from 'node:child_process';
-import {mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {mkdirSync, readFileSync, rmSync} from 'node:fs';
 import path from 'node:path';
 
 const STABLE_VERSION = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
@@ -85,9 +85,6 @@ export async function prepare(pluginConfig, context) {
     if (typeof manifest?.version !== 'string' || !STABLE_VERSION.test(manifest.version)) {
         throw new Error(`The plugin manifest contains an invalid version: ${String(manifest?.version)}`);
     }
-    manifest.version = version;
-    writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-
     const files = trackedFiles(cwd);
     const dist = path.join(cwd, 'dist');
     const archive = path.join(dist, `cosmos-${version}.zip`);
@@ -100,7 +97,7 @@ export async function prepare(pluginConfig, context) {
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'pipe'],
     });
-    context?.logger?.log(`Manifest updated to ${version} and release archive created: ${archive}`);
+    context?.logger?.log(`Release archive created with manifest version ${version}: ${archive}`);
 }
 
 export default {prepare};

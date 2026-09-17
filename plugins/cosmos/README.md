@@ -78,7 +78,7 @@ These rules are a tested orchestration contract, not a runtime semantic classifi
 
 The published version appears in repository tags and releases. The
 `cosmos-X.Y.Z.zip` attachment contains the manifest with that version; the copy
-on `main` is synchronized by an automatic PR after publication. See the
+on `main` is synchronized by a separate reviewed PR after publication. See the
 [release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
 for the workflow and update limitations.
 

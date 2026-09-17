@@ -8,18 +8,16 @@
 4. The workflow tests the code and runs Semantic Release. `fix`/`perf` commits
    produce a patch, `feat` produces a minor release, and breaking changes produce
    a major release. Without relevant commits, there is no release.
-5. During `prepare`, the calculated version is written to the source manifest and
-   the `cosmos-X.Y.Z.zip` package. The package preserves the marketplace layout,
-   including `.agents/plugins/marketplace.json`.
-6. `@semantic-release/git` creates and pushes the `chore(release)` commit with the
-   manifest. Semantic Release then creates a tag pointing to that commit and
-   publishes the release with notes and the package.
+5. During `prepare`, the calculated version is written only to the manifest in
+   `cosmos-X.Y.Z.zip`. The package preserves the marketplace layout, including
+   `.agents/plugins/marketplace.json`, and the checkout remains unchanged.
+6. Semantic Release tags the tested `main` commit and publishes the release with
+   notes and the package. A separate reviewed PR synchronizes the source manifest.
 
-The trigger is exclusively manual and nothing is published to npm. The manifest
-is updated before the tag because that is the order of the Semantic Release
-`prepare` lifecycle; the tag, source code, and ZIP therefore record the same
-version. The workflow serializes publications and processes the latest `main`.
-The `chore(release)` commit does not produce another increment.
+The trigger is exclusively manual and nothing is published to npm. The tag and
+GitHub-generated source archive identify the tested commit and may contain the
+previous source-manifest version; the attached Cosmos ZIP is the versioned plugin
+artifact. The workflow serializes publications and processes the latest `main`.
 
 ## First release
 
@@ -31,10 +29,9 @@ become the version calculation reference afterward.
 ## GitHub configuration
 
 GitHub Actions must be enabled. The workflow uses `GITHUB_TOKEN` with
-`contents: write` for the commit, tag, and release. A PAT is unnecessary as long
-as `main` rules permit this GitHub Actions push. If branch protection blocks the
-automatic commit, the run fails before the tag and the rule or authorized actor
-must be adjusted.
+`contents: write` for the tag and release. It never pushes a commit directly to
+`main`; branch protection remains enforced. Semantic Release may perform a
+non-mutating push dry run while verifying authentication.
 
 In **Settings → Rules → Rulesets**, make the `Validate` check required for PRs to
 `main` and require an up-to-date branch. Prefer squash with the PR title; preserve
@@ -43,7 +40,7 @@ Workflow files do not apply these administrative settings.
 
 ## Recovery
 
-Fix the permission or failure and run the manual workflow again. Semantic Release
+Fix the configuration or failure and run the manual workflow again. Semantic Release
 checks existing tags and does not republish a completed version.
 
 A failure between tag creation and GitHub publication requires inspection:

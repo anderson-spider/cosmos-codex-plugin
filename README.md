@@ -36,9 +36,9 @@ The manual `Release` workflow uses
 publish `vX.Y.Z` tags, release notes, and a `cosmos-X.Y.Z.zip` package from the
 semantic changes that reached `main`. See the
 [releases](https://github.com/anderson-spider/cosmos-codex-plugin/releases) to
-compare versions. During publication, the version is written to the manifest
-and committed automatically before the tag is created, so the tag and package
-contain the same version.
+compare versions. During publication, the calculated version is written only
+to the manifest inside the release package. The tag points to the tested `main`
+commit; the source manifest is synchronized separately through a reviewed PR.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the commit convention and
 [RELEASING.md](RELEASING.md) for configuration, recovery, and limitations.
