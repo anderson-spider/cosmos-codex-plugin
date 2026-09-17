@@ -96,6 +96,10 @@ Every delegation must include:
 
 Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer and Executor coordinate contracts through the Orchestrator. If they need the same file, finish one edit before starting the other. Preserve pre-existing changes.
 
+Track every delegate as active, completed, blocked, failed, or cancelled. When the user changes scope, promptly notify affected active delegates, cancel work that is no longer useful, and reconcile any result already produced before continuing. When the user interrupts or ends the task, stop or cancel active delegates when the tool supports it; otherwise record that they may still be running. Do not leave idle delegates occupying the concurrency budget, and do not report completion while required delegates remain active.
+
+If a delegate is blocked or incomplete, integrate any verified partial evidence and either reassign the remaining bounded work, take it over directly, or report the concrete unresolved dependency. If results disagree, compare their evidence against the actual files or sources and resolve the conflict before implementation. Cancel or close superseded lanes when the tool supports it. Every delegated result must be accepted, corrected, or explicitly rejected with a reason; receiving a result is not integration.
+
 ## Integration and review
 
 Read child results before repeating searches. Inspect the relevant result and run the necessary validation without repeating an investigation already supported by evidence. A child's verbal conclusion does not replace verification.
@@ -110,6 +114,8 @@ The same specialist profile may support these phases, but do not conflate their 
 
 If difficulty justifies more reasoning, identify the blocker and raise only the affected agent to the next supported level. Fixed-effort TOML profiles may override the call: to raise effort, use generic creation with the same role and a new supported effort without changing configuration files. Record the change. Stop repeated attempts that have no new information and describe the actual blocker.
 
-Before reporting completion, confirm that required delegates completed or their failures were recorded, returned decisions were resolved or disclosed, material outputs and changes were inspected, assigned validation ran, and material review findings were resolved or reported. Confirm that no commit, publication, retry, or other external effect was inferred from delegation. Record skipped proportional phases and model, effort, or tool deviations.
+If native delegation tools are unavailable, continue directly and record the deviation. If a requested model or named selector is unavailable, use generic creation with the role instructions when possible; otherwise take over the lane. Do not retry the same failed model, selector, or tool call without new evidence or a changed condition.
+
+Before reporting completion, confirm that no required delegate remains active; required delegates completed or their blocked, failed, or cancelled states were recorded; every delegated result was integrated or rejected with a reason; returned decisions were resolved or disclosed; material outputs and changes were inspected; assigned validation ran; and material review findings were resolved or reported. Distinguish observed validation and source evidence from assumptions or unverified claims. Confirm that no commit, publication, retry, or other external effect was inferred from delegation. Record skipped proportional phases and model, effort, or tool deviations.
 
 Report the result, validation evidence, limitations, and preset deviations. Do not promise savings: comparing quota, time, and rework requires measurements from real tasks. Consult `../../README.md` only for local configuration, installation limitations, and measurement. The optional read-only `../../scripts/cosmos-usage.py` can summarize local rollout metadata without displaying prompts or conversation content.

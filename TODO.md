@@ -16,27 +16,27 @@
 - [x] Require every delegation to report authorized actions, applicable restrictions, and effects that still require approval.
 - [x] Add automated tests for the six TOML profiles: existence, parsing, required fields, names, models, effort, and instructions.
 - [x] Validate consistency between TOML profiles, the skill role contracts, and the README in CI.
-- [ ] Generate the real package in CI, extract the ZIP, and run plugin and skill validators against the distributable content.
-- [ ] Create a versioned behavior matrix for `@Cosmos` activation, explicit invocation, implicit discovery, continuation, and negative requests.
+- [ ] Generate the real package in CI, extract the ZIP, and run plugin and skill validators against the distributable content. CI now builds and integrity-checks the real ZIP; portable authoring-validator installation remains unresolved.
+- [x] Create a versioned behavior matrix for `@Cosmos` activation, explicit invocation, implicit discovery, continuation, and negative requests.
 - [ ] Run and record a smoke test of the installed plugin in a new Codex conversation.
 - [ ] Run a user-authorized, non-mutating GitHub and GitLab CLI preflight smoke test after installation; fixture coverage does not prove local credential recovery or browser fallback.
 
 ## P2 — medium
 
-- [ ] Define the subagent lifecycle when the user interrupts the task, changes scope, or finishes early.
-- [ ] Add fallback scenarios for unavailable delegation tools, unavailable models, missing agent selectors, and repeated failures.
+- [x] Define the subagent lifecycle when the user interrupts the task, changes scope, or finishes early.
+- [x] Add fallback scenarios for unavailable delegation tools, unavailable models, missing agent selectors, and repeated failures.
 - [x] Verify and document the difference between `$cosmos:cosmos-orchestrate` in the manifest and `$cosmos-orchestrate` in `agents/openai.yaml`.
-- [ ] Validate the actual marketplace and manifest together: identity, source path, namespace, and layout.
-- [ ] Create a compatibility matrix by surface and version using `verified`, `unavailable`, and `not verified` states.
-- [ ] State explicitly that `sandbox_mode = "read-only"` is a requested configuration, not a guarantee against session overrides.
-- [ ] Test that the Orchestrator does not finish while required work remains in active subagents.
+- [x] Validate the actual marketplace and manifest together: identity, source path, namespace, and layout.
+- [x] Create a compatibility matrix by surface and version using `verified`, `unavailable`, and `not verified` states.
+- [x] State explicitly that `sandbox_mode = "read-only"` is a requested configuration, not a guarantee against session overrides.
+- [x] Test that the Orchestrator does not finish while required work remains in active subagents.
 
 ## P3 — low
 
-- [ ] Expand the demo with nested type conflicts: object versus scalar, object versus list, and empty dictionaries.
-- [ ] Improve local setup documentation by highlighting `npm ci --ignore-scripts` before `npm test`.
-- [ ] Evaluate a safe CI trigger for the automatic version-sync PR to reduce manual work after releases.
-- [ ] Record date, Codex version, and environment for every behavior-matrix run.
+- [x] Expand the demo with nested type conflicts: object versus scalar, object versus list, and empty dictionaries.
+- [x] Improve local setup documentation by highlighting `npm ci --ignore-scripts` before `npm test`.
+- [x] Evaluate a safe CI trigger for the automatic version-sync PR to reduce manual work after releases. Keep the release workflow manual: an automatic trigger would grant write access to unreviewed release output and is not justified by current release frequency.
+- [x] Record date, Codex version, and environment for every behavior-matrix run.
 - [ ] Measure quota, time, and rework only with equivalent task pairs and comparable quality.
 
 ## Definition of done for the next iteration

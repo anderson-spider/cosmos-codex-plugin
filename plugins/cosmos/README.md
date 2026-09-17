@@ -68,6 +68,8 @@ Fixed profiles can override the model or effort passed during creation. The skil
 - Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Executor.
 - Implementation, verification, and independent review use distinct contracts. A verifier edits tests only when explicitly authorized, while an independent reviewer remains read-only and reports findings instead of fixing them.
 - Completion gate: account for delegate failures, returned decisions, inspected outputs, validation, material review findings, unauthorized effects, skipped phases, and preset deviations before reporting completion.
+- Delegate lifecycle: track active, completed, blocked, failed, and cancelled lanes; reconcile scope changes, stop superseded or idle work when supported, and never finish while required work remains active.
+- Result integration: accept, correct, or reject every delegated result with evidence; resolve disagreements against actual files or sources before implementation.
 - Model or tool failure: record the unavailable supporting capability, avoid identical retries, and take over the work when possible. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
 
 These rules are a tested orchestration contract, not a runtime semantic classifier. The Orchestrator still applies the routing criteria. The TOML profiles remain optional templates rather than automatically registered agents, and session-level configuration can override requested read-only settings.
@@ -106,4 +108,4 @@ python3 scripts/cosmos-usage.py --latest --date 2026-09-16
 python3 scripts/cosmos-usage.py --session <root-id-or-unique-prefix> --format json
 ```
 
-Use `--sessions-dir` only to point at another rollout directory or a synthetic test fixture. JSON output is intended for local comparisons; review it before sharing because thread IDs and model names remain present. Token totals describe recorded model usage, not billing, subscription percentage, quality, or savings.
+Use `--sessions-dir` only to point at another rollout directory or a synthetic test fixture. `--date` selects the corresponding rollout-storage day. JSON output is intended for local comparisons; review it before sharing because thread IDs and model names remain present. The report includes path-free counts for invalid lines, invalid rollouts, duplicates, and unreadable inputs; warnings never identify session files. When cumulative and incremental token records coexist, the latest cumulative total wins to prevent double counting. Token totals describe recorded model usage, not billing, subscription percentage, quality, or savings.

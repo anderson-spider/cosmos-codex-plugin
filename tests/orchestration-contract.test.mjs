@@ -90,8 +90,25 @@ test('delivery separates implementation, verification, review, and completion', 
   assert.match(skill, /may edit tests only when that permission and file scope were delegated explicitly/);
   assert.match(skill, /fresh Executor receives a read-only scope/);
   assert.match(skill, /do not conflate their contracts/);
-  assert.match(skill, /required delegates completed or their failures were recorded/);
+  assert.match(skill, /required delegates completed or their blocked, failed, or cancelled states were recorded/);
   assert.match(skill, /no commit, publication, retry, or other external effect was inferred/);
+});
+
+test('orchestrator owns delegate lifecycle and result integration', () => {
+  assert.match(skill, /active, completed, blocked, failed, or cancelled/);
+  assert.match(skill, /user changes scope/);
+  assert.match(skill, /Do not leave idle delegates occupying the concurrency budget/);
+  assert.match(skill, /do not report completion while required delegates remain active/);
+  assert.match(skill, /If results disagree, compare their evidence/);
+  assert.match(skill, /accepted, corrected, or explicitly rejected with a reason/);
+  assert.match(skill, /no required delegate remains active/);
+});
+
+test('fallbacks avoid repeated failures and preserve evidence boundaries', () => {
+  assert.match(skill, /native delegation tools are unavailable/);
+  assert.match(skill, /requested model or named selector is unavailable/);
+  assert.match(skill, /Do not retry the same failed model, selector, or tool call without new evidence/);
+  assert.match(skill, /Distinguish observed validation and source evidence from assumptions/);
 });
 
 test('all six roles define positive, negative, and rule-of-thumb routing', () => {

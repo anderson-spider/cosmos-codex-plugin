@@ -5,6 +5,9 @@ import test from 'node:test';
 const manifest = JSON.parse(
   readFileSync('plugins/cosmos/.codex-plugin/plugin.json', 'utf8'),
 );
+const marketplace = JSON.parse(
+  readFileSync('.agents/plugins/marketplace.json', 'utf8'),
+);
 const skillMetadata = readFileSync(
   'plugins/cosmos/skills/cosmos-orchestrate/agents/openai.yaml',
   'utf8',
@@ -45,6 +48,16 @@ test('plugin starter prompts invoke the installed Cosmos skill namespace', () =>
   assert.ok(prompts.every((prompt) => prompt.length <= 128));
   assert.ok(prompts.some((prompt) => /^Use \$cosmos:cosmos-orchestrate\b/.test(prompt)));
   assert.ok(prompts.some((prompt) => /^Use \$cosmos:git-master\b/.test(prompt)));
+});
+
+test('marketplace identity and source resolve to the plugin manifest', () => {
+  const entry = marketplace.plugins.find((plugin) => plugin.name === manifest.name);
+
+  assert.equal(marketplace.name, manifest.name);
+  assert.equal(marketplace.interface.displayName, manifest.interface.displayName);
+  assert.ok(entry, 'marketplace must contain the manifest plugin name');
+  assert.deepEqual(entry.source, {source: 'local', path: './plugins/cosmos'});
+  assert.equal(entry.category, manifest.interface.category);
 });
 
 test('skill metadata invokes its local skill name without the plugin namespace', () => {
