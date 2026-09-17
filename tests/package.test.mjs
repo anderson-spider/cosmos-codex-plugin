@@ -8,6 +8,8 @@ import test from 'node:test';
 import {prepare} from '../scripts/prepare-release.mjs';
 import releaseConfig from '../release.config.mjs';
 
+const releaseWorkflow = readFileSync('.github/workflows/release.yml', 'utf8');
+
 function writeFixture(root, file, contents) {
     const target = path.join(root, file);
     mkdirSync(path.dirname(target), {recursive: true});
@@ -84,6 +86,29 @@ test('release configuration never commits or pushes the source manifest', () => 
         './scripts/prepare-release.mjs',
         '@semantic-release/github',
     ]);
+});
+
+test('release workflow opens a failure-tolerant manifest-only PR', () => {
+    assert.match(releaseWorkflow, /^  sync-manifest:$/m);
+    assert.match(releaseWorkflow, /^    continue-on-error: true$/m);
+    assert.match(releaseWorkflow, /pull-requests: write/);
+    assert.match(releaseWorkflow, /releases\/latest/);
+    assert.match(releaseWorkflow, /cosmos-\$\{tag#v\}\.zip/);
+    assert.match(releaseWorkflow, /git merge-base --is-ancestor/);
+    assert.match(releaseWorkflow, /scripts\/sync-release-manifest\.mjs/);
+    assert.match(releaseWorkflow, /git push origin "HEAD:refs\/heads\/\$branch"/);
+    assert.match(releaseWorkflow, /gh pr list --state all --base main --head "\$branch"/);
+    assert.match(releaseWorkflow, /gh pr create/);
+    assert.doesNotMatch(releaseWorkflow, /git push[^\n]*refs\/heads\/main/);
+    assert.doesNotMatch(releaseWorkflow, /gh pr merge/);
+    assert.ok(
+        releaseWorkflow.indexOf('gh auth setup-git') < releaseWorkflow.indexOf('git fetch --force --tags origin'),
+        'Git authentication must be configured before fetching tags',
+    );
+    assert.ok(
+        releaseWorkflow.indexOf('gh pr list --state all') < releaseWorkflow.indexOf('git push origin'),
+        'Existing PR decisions must be checked before recreating a deleted branch',
+    );
 });
 
 test('rejects unstable versions', async () => {

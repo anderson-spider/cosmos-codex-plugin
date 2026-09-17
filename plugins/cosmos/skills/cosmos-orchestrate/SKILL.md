@@ -55,13 +55,13 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 - **Don't delegate when:** the decision is routine and reversible, the first supported fix is still untried, or a direct lookup or test can answer the question.
 - **Rule of thumb:** "Which consequential design or strategy is safest, and why?" goes to Oracle. Oracle is an escalation and adviser, not a default approval gate or implementer.
 
-#### Designer — gpt-5.6-terra / medium
+#### Designer — gpt-5.6-luna / high
 
 - **Delegate when:** user-facing layout, interaction, responsive behavior, accessibility, visual hierarchy, motion, or design-system judgment materially affects the result.
 - **Don't delegate when:** the work is headless logic or a purely mechanical change that preserves an already established visual contract.
 - **Rule of thumb:** "Users see it and visual or interaction judgment matters" goes to Designer. Later Executor work must preserve the Designer's intent.
 
-#### Executor — gpt-5.6-terra / medium
+#### Executor — gpt-5.6-luna / high
 
 - **Delegate when:** implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
 - **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, or the whole change is one small direct action.

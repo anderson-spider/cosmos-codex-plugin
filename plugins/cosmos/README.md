@@ -46,8 +46,8 @@ The six TOML files are in `skills/cosmos-orchestrate/references/agents/`. They a
 | Oracle | gpt-6-astra | low |
 | Librarian | gpt-5.6-luna | medium |
 | Explorer | gpt-5.6-luna | medium |
-| Designer | gpt-5.6-terra | medium |
-| Executor | gpt-5.6-terra | medium |
+| Designer | gpt-5.6-luna | high |
+| Executor | gpt-5.6-luna | high |
 | Git Master | gpt-5.6-luna | medium |
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
@@ -78,7 +78,8 @@ These rules are a tested orchestration contract, not a runtime semantic classifi
 
 The published version appears in repository tags and releases. The
 `cosmos-X.Y.Z.zip` attachment contains the manifest with that version; the copy
-on `main` is synchronized by a separate reviewed PR after publication. See the
+on `main` is synchronized by an automatically opened, reviewed PR after
+publication. The automation never merges that PR. See the
 [release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
 for the workflow and update limitations.
 

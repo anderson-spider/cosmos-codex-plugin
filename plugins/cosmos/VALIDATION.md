@@ -89,6 +89,8 @@ The repository uses Semantic Release to calculate versions, notes, and tags,
 with Commitlint in CI for commits and PR titles. The release workflow is manual.
 During `prepare`, only the packaged manifest receives the calculated version.
 The checkout stays unchanged, so publication does not push directly to `main`.
+After publication, a failure-tolerant job verifies the latest stable release,
+tag ancestry, and versioned ZIP before opening an idempotent manifest-only PR.
 
 Local validations after adding Git Master passed: `npm test` (21 tests),
 `python3 -m unittest discover -s demo-cosmos -v` (5 tests), `git diff --check`,
