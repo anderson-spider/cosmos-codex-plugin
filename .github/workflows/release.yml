@@ -38,3 +38,95 @@ jobs:
         run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sync-manifest:
+    needs: release
+    if: needs.release.result == 'success'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+      - name: Reconcile source manifest with the latest release
+        id: reconcile
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          trap 'echo "::warning::Release succeeded, but manifest synchronization needs attention."' ERR
+          release=$(gh api "repos/$GH_REPO/releases/latest")
+          tag=$(jq -r 'select(.draft == false and .prerelease == false) | .tag_name' <<<"$release")
+          test "$tag" != "null"
+          asset=$(jq -r --arg name "cosmos-${tag#v}.zip" '.assets[] | select(.name == $name) | .name' <<<"$release")
+          test "$asset" = "cosmos-${tag#v}.zip"
+          gh auth setup-git
+          git fetch --force --tags origin
+          git show-ref --verify --quiet "refs/tags/$tag"
+          git merge-base --is-ancestor "$tag^{}" origin/main
+          version=${tag#v}
+          node scripts/sync-release-manifest.mjs "$version"
+          if git diff --quiet -- plugins/cosmos/.codex-plugin/plugin.json; then
+            echo "Manifest already matches $tag; no PR is needed."
+            echo "Manifest already matches $tag; no synchronization PR was needed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          branch="chore/sync-manifest-$tag"
+          existing=$(gh pr list --state all --base main --head "$branch" --json number,state --jq '.[0] // empty')
+          if test -n "$existing"; then
+            number=$(jq -r .number <<<"$existing")
+            state=$(jq -r .state <<<"$existing")
+            if test "$state" = "OPEN"; then
+              echo "Manifest synchronization PR #$number already exists."
+              exit 0
+            fi
+            echo "::warning::Manifest synchronization PR #$number is $state; preserving the maintainer decision."
+            exit 0
+          fi
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git switch -c "$branch"
+          git add plugins/cosmos/.codex-plugin/plugin.json
+          git commit -m "chore(release): sync manifest to $version"
+
+          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            remote_version=$(git show "FETCH_HEAD:plugins/cosmos/.codex-plugin/plugin.json" | jq -r .version)
+            test "$remote_version" = "$version"
+            unexpected=$(git diff --name-only origin/main...FETCH_HEAD | grep -v '^plugins/cosmos/.codex-plugin/plugin.json$' || true)
+            test -z "$unexpected"
+            echo "Remote branch already contains manifest version $version."
+          else
+            git push origin "HEAD:refs/heads/$branch"
+          fi
+
+          body_file=$(mktemp)
+          printf '%s\n' \
+            '## Summary' \
+            '' \
+            "- Synchronize the source plugin manifest with release $tag." \
+            '- Keep the release artifact, tag, and repository metadata aligned through a reviewed change.' \
+            '' \
+            '## Validation' \
+            '' \
+            "- Confirmed that $tag is reachable from main." \
+            '- Changed only `plugins/cosmos/.codex-plugin/plugin.json`.' \
+            > "$body_file"
+          pr_url=$(gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "chore(release): sync manifest to $version" \
+            --body-file "$body_file")
+          echo "Created manifest synchronization PR: $pr_url"
+          printf 'Created manifest synchronization PR for `%s`: %s\n' "$tag" "$pr_url" >> "$GITHUB_STEP_SUMMARY"
