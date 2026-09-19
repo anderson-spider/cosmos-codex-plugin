@@ -37,10 +37,10 @@ const parsedProfiles = JSON.parse(
 );
 
 const expectedRoles = new Map([
-  ['cosmos-designer', ['Designer', 'gpt-5.6-luna', 'high']],
-  ['cosmos-executor', ['Executor', 'gpt-5.6-luna', 'high']],
-  ['cosmos-explorer', ['Explorer', 'gpt-5.6-luna', 'medium']],
-  ['cosmos-git-master', ['Git Master', 'gpt-5.6-luna', 'medium']],
+  ['cosmos-designer', ['Designer', 'gpt-5.6-terra', 'medium']],
+  ['cosmos-executor', ['Executor', 'gpt-5.6-terra', 'medium']],
+  ['cosmos-explorer', ['Explorer', 'gpt-5.6-luna', 'low']],
+  ['cosmos-git-master', ['Git Master', 'gpt-5.6-luna', 'low']],
   ['cosmos-librarian', ['Librarian', 'gpt-5.6-luna', 'medium']],
   ['cosmos-oracle', ['Oracle / Architect', 'gpt-6-astra', 'low']],
 ]);

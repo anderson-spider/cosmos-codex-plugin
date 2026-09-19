@@ -37,7 +37,7 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 
 ### Specialist routing
 
-#### Explorer — gpt-5.6-luna / medium
+#### Explorer — gpt-5.6-luna / low
 
 - **Delegate when:** the local code path is unknown, discovery spans multiple files or modules, runtime or data flow must be traced, or broad searches benefit from compressed context.
 - **Don't delegate when:** the exact file and symbol are known and only one specific lookup or direct edit is needed.
@@ -55,19 +55,19 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 - **Don't delegate when:** the decision is routine and reversible, the first supported fix is still untried, or a direct lookup or test can answer the question.
 - **Rule of thumb:** "Which consequential design or strategy is safest, and why?" goes to Oracle. Oracle is an escalation and adviser, not a default approval gate or implementer.
 
-#### Designer — gpt-5.6-luna / high
+#### Designer — gpt-5.6-terra / medium
 
 - **Delegate when:** user-facing layout, interaction, responsive behavior, accessibility, visual hierarchy, motion, or design-system judgment materially affects the result.
 - **Don't delegate when:** the work is headless logic or a purely mechanical change that preserves an already established visual contract.
 - **Rule of thumb:** "Users see it and visual or interaction judgment matters" goes to Designer. Later Executor work must preserve the Designer's intent.
 
-#### Executor — gpt-5.6-luna / high
+#### Executor — gpt-5.6-terra / medium
 
 - **Delegate when:** implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
 - **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, or the whole change is one small direct action.
 - **Rule of thumb:** "The decision is made; implement and verify this bounded unit" goes to Executor.
 
-#### Git Master — gpt-5.6-luna / medium
+#### Git Master — gpt-5.6-luna / low
 
 - **Delegate when:** the request includes creating a commit, pushing or publishing a branch, creating or mutating a PR or MR, or correcting CI. Also use it for substantial branch, request, or pipeline preparation and diagnosis.
 - **Don't delegate when:** the whole request is one read-only Git lookup or a local explanation with no requested commit, publication, request mutation, or CI correction.
