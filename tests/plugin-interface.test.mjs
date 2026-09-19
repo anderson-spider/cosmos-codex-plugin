@@ -86,11 +86,11 @@ test('Git Master metadata invokes its local skill name', () => {
 });
 
 test('orchestrator routes Git Master through the sibling skill', () => {
-  assert.match(skillInstructions, /#### Git Master — gpt-5\.6-luna \/ medium/);
+  assert.match(skillInstructions, /#### Git Master — gpt-5\.6-luna \/ low/);
   assert.match(skillInstructions, /\.\.\/git-master\/SKILL\.md/);
   assert.match(gitProfile, /^name = "cosmos-git-master"$/m);
   assert.match(gitProfile, /^model = "gpt-5\.6-luna"$/m);
-  assert.match(gitProfile, /^model_reasoning_effort = "medium"$/m);
+  assert.match(gitProfile, /^model_reasoning_effort = "low"$/m);
 });
 
 test('Git Master keeps local and remote effects independently authorized', () => {
