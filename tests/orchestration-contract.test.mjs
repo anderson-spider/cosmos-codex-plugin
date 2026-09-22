@@ -37,13 +37,14 @@ const parsedProfiles = JSON.parse(
 );
 
 const expectedRoles = new Map([
-  ['cosmos-reviewer', ['Reviewer', 'gpt-5.6-terra', 'medium']],
-  ['cosmos-designer', ['Designer', 'gpt-5.6-terra', 'medium']],
-  ['cosmos-implementer', ['Implementer', 'gpt-5.6-luna', 'high']],
-  ['cosmos-explorer', ['Explorer', 'gpt-5.6-luna', 'low']],
-  ['cosmos-git-master', ['Git Master', 'gpt-5.6-luna', 'low']],
-  ['cosmos-librarian', ['Librarian', 'gpt-5.6-luna', 'medium']],
-  ['cosmos-oracle', ['Oracle / Architect', 'gpt-5.6-sol', 'low']],
+  ['cosmos-reviewer', ['Reviewer', 'gpt-6-sol', 'high']],
+  ['cosmos-designer', ['Designer', 'gpt-6-sol', 'medium']],
+  ['cosmos-implementer', ['Implementer', 'gpt-6-luna', 'high']],
+  ['cosmos-3d-modeler', ['3D Modeler', 'gpt-6-astra', 'medium']],
+  ['cosmos-explorer', ['Explorer', 'gpt-6-luna', 'low']],
+  ['cosmos-git-master', ['Git Master', 'gpt-6-luna', 'low']],
+  ['cosmos-librarian', ['Librarian', 'gpt-6-luna', 'medium']],
+  ['cosmos-oracle', ['Oracle / Architect', 'gpt-6-astra', 'high']],
 ]);
 
 function roleSection(role) {
@@ -112,8 +113,8 @@ test('fallbacks avoid repeated failures and preserve evidence boundaries', () =>
   assert.match(skill, /Distinguish observed validation and source evidence from assumptions/);
 });
 
-test('all seven roles define positive, negative, and rule-of-thumb routing', () => {
-  assert.equal(expectedRoles.size, 7);
+test('all eight roles define positive, negative, and rule-of-thumb routing', () => {
+  assert.equal(expectedRoles.size, 8);
 
   for (const [, [role, model, effort]] of expectedRoles) {
     const section = roleSection(role);
@@ -152,6 +153,8 @@ test('routing preserves Designer ownership and Git Master authorization', () => 
     roleSection('Implementer'),
     /discovery, external research, architecture, or visual direction is still unresolved/,
   );
+  assert.match(roleSection('Implementer'), /the task is 3D asset creation or editing/);
+  assert.match(roleSection('3D Modeler'), /the work is gameplay or tooling code without 3D asset edits/);
   assert.match(roleSection('Git Master'), /creating a commit/);
   assert.match(
     roleSection('Git Master'),
@@ -160,8 +163,20 @@ test('routing preserves Designer ownership and Git Master authorization', () => 
   assert.match(skill, /\.\.\/git-master\/SKILL\.md/);
 });
 
+test('3D Modeler routes Unity work through MCP before computer use', () => {
+  const section = roleSection('3D Modeler');
+  const profile = parsedProfiles.find((p) => p.name === 'cosmos-3d-modeler');
+  assert.match(section, /3D asset or scene requiring modeling/);
+  assert.match(section, /prefer an available Unity MCP/);
+  assert.match(section, /computer use as a fallback only when the MCP is unavailable or lacks the needed operation/);
+  assert.match(section, /Never infer tool access or visual validation from the model preset alone/);
+  assert.match(profile.developer_instructions, /prefer an available Unity MCP/);
+  assert.match(profile.developer_instructions, /Use computer use to operate the Unity Editor only when the MCP is unavailable or lacks the needed operation/);
+  assert.match(profile.developer_instructions, /Do not claim visual or runtime validation unless it occurred/);
+});
+
 test('all specialist profiles parse and match documented names and models', () => {
-  assert.equal(parsedProfiles.length, 7);
+  assert.equal(parsedProfiles.length, 8);
 
   for (const profile of parsedProfiles) {
     const expected = expectedRoles.get(profile.name);
@@ -214,7 +229,7 @@ test('fixed presets exclude adaptive escalation and require verified named profi
   assert.match(skill, /Never claim independent review or independent verification when the Orchestrator takes over its own work/);
   assert.match(skill, /Return the lane to the Orchestrator/);
   assert.match(skill, /return evidence and partial work/);
-  assert.match(skill, /gpt-6-astra \/ low/);
+  assert.match(skill, /gpt-6-sol \/ medium/);
   assert.match(skill, /skill does not change the conversation model/);
 });
 
@@ -229,7 +244,7 @@ test('reviewer separates code and plan review from implementation', () => {
   assert.match(roleSection('Reviewer'), /independent code review/);
   assert.match(roleSection('Reviewer'), /work plan needs independent review/);
   assert.match(roleSection('Reviewer'), /Do not invoke every role as a mandatory pipeline/);
-  assert.match(roleSection('Implementer'), /implementation is bounded and non-trivial/);
+  assert.match(roleSection('Implementer'), /code implementation is bounded and non-trivial/);
   assert.ok(!parsedProfiles.some((p) => p.name === 'cosmos-executor'));
   assert.match(readme, /no compatibility alias is shipped/);
   assert.match(readme, /does not migrate or remove installed copies/);
