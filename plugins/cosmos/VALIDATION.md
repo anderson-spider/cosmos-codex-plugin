@@ -1,4 +1,11 @@
-# Validation — 2026-09-16
+# Validation — 2026-09-22
+
+## GPT-6 preset update
+
+- All seven specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer and Reviewer use Sol; Oracle uses Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.
+- The [OpenAI announcement](https://openai.com/index/introducing-gpt-6-sol-and-luna/) confirms Sol and Luna availability in Codex. The [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages confirm the identifiers and selected effort levels.
+- These sources establish model support, not effective custom-profile registration, task quality, quota use, or savings in a live Codex session. Installed copies of the optional TOML templates are not updated by this source change.
+- Validation: `python3 -m unittest discover -s demo-cosmos -v` passed 7 tests; `npm test` passed 57 tests after `npm ci --ignore-scripts`; `validate_plugin.py plugins/cosmos` and both `quick_validate.py` checks passed. `git diff --check` passed. No live custom-profile run or comparative quota measurement was performed.
 
 ## Structure and compatibility
 
@@ -6,8 +13,8 @@
 - Both skills passed `quick_validate.py`; automatic discovery remains enabled for both.
 - Manifest starter prompts use the installed names `$cosmos:cosmos-orchestrate` and `$cosmos:git-master`, respect the three-entry limit, and are at most 128 characters long.
 - The `agents/openai.yaml` files use the local names `$cosmos-orchestrate` and `$git-master`. Separate tests distinguish these contracts from installed namespaces used by the manifest.
-- Six specialist TOML files parsed with Python `tomllib`; required fields are present.
-- Models and effort levels were checked against the catalog embedded in **codex-cli 0.154.0**. This validates identifiers, not universal access for every account.
+- Seven specialist TOML files parsed with Python `tomllib`; required fields are present.
+- Earlier model and effort presets were checked against the catalog embedded in **codex-cli 0.154.0**. Current GPT-6 pairs were checked against the official model pages above. Neither check establishes universal access for every account.
 - CLI-generated schema: `PluginDetail` contains skills, MCPs, hooks, and other components, but no agent-registration field. The manifest uses only skills and does not promise profile installation.
 - Official documentation describes per-project profiles in `.codex/agents/`. An inspection with `codex debug prompt-input` in an isolated directory did not display profile names, so it was not used as proof of discovery or loading. `--strict-config` is not accepted by that diagnostic command.
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
@@ -25,7 +32,7 @@
 - The public skill covers inspection, preparation, commit, push, PR/MR, and CI for GitHub and GitLab through progressively loaded references.
 - Commit requires a request to commit or publish. Push, PR/MR mutation, and CI retry, rerun, or cancellation remain independent authorizations.
 - Merge, approval, auto-merge, tags, releases, branch deletion, and force-push are explicitly outside the contract.
-- The internal `cosmos-git-master` profile recommends **gpt-5.6-luna / low** and is not registered automatically in the `@` selector.
+- The internal `cosmos-git-master` profile recommends **gpt-6-luna / low** and is not registered automatically in the `@` selector.
 - A local scan of new content found no private names, domains, or accounts from the source skills. Identifiers were not recorded as fixtures or rules in the public repository.
 - Installed discovery and execution of `$cosmos:git-master` still depend on a future release, reinstallation, and a new session; this delivery does not remove local skills used as fallback.
 - Real `gh`/`glab` login recovery, account identity, host routing, and browser/plugin fallback are intentionally not live-tested by this repository's fixtures. They require a user-confirmed environment and remain blocked until the documented preflight succeeds.
@@ -150,7 +157,7 @@ manual run after merge.
 
 This section records the current source update; all earlier observations above remain historical evidence for their original configuration.
 
-- Seven specialist profiles parse and match the skill and README. Implementer (Luna/high) replaces Executor without an alias; Reviewer (Terra/medium) owns independent code and plan review. Oracle uses Sol/low. Astra/low is the main-session recommendation, not an enforced model switch.
+- Seven specialist profiles parse and match the skill and README. Implementer (Luna/high) replaces Executor without an alias; Reviewer (Sol/high) owns independent code and plan review. Oracle uses Astra/high. Sol/medium is the main-session recommendation, not an enforced model switch.
 - Static contract checks cover bounded implementation, independent code and plan review, Oracle architecture routing, trivial direct work, fixed-pair unavailability with an explicit deviation, verified named-profile selection, and no claim of independent review after an Orchestrator takeover. They check the written contract, not live model routing or semantic decisions.
 - Historical rollout fixtures with `executor`, prior runtime records, and completed TODO entries are preserved. The rename is a breaking change for manually copied profiles; no installed copy was changed.
 - Validation commands and results:

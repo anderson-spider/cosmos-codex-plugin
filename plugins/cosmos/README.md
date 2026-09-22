@@ -4,7 +4,7 @@ A plugin with two automatically discoverable skills and seven internal specialis
 
 ## Use without installing
 
-Open the project where you want to work, select **gpt-6-astra / low**, and ask Codex:
+Open the project where you want to work, select **gpt-6-sol / medium**, and ask Codex:
 
 > Read the skill at the absolute path `<plugin-folder>/skills/cosmos-orchestrate/SKILL.md` and use that workflow for [request].
 
@@ -39,17 +39,19 @@ uses the local name declared by the skill itself: `$cosmos-orchestrate` or
 
 ## Optional profiles
 
-The seven TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-6-astra / low** is the recommended configuration, not an automatic model change.
+The seven TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-6-sol / medium** is the recommended configuration, not an automatic model change.
 
 | Role | Model | Effort |
 |---|---|---|
-| Oracle | gpt-5.6-sol | low |
-| Librarian | gpt-5.6-luna | medium |
-| Explorer | gpt-5.6-luna | low |
-| Designer | gpt-5.6-terra | medium |
-| Implementer | gpt-5.6-luna | high |
-| Reviewer | gpt-5.6-terra | medium |
-| Git Master | gpt-5.6-luna | low |
+| Oracle | gpt-6-astra | high |
+| Librarian | gpt-6-luna | medium |
+| Explorer | gpt-6-luna | low |
+| Designer | gpt-6-sol | medium |
+| Implementer | gpt-6-luna | high |
+| Reviewer | gpt-6-sol | high |
+| Git Master | gpt-6-luna | low |
+
+These fixed presets use Luna for focused discovery, research, bounded implementation, and Git work; Sol for visual decisions and independent review; and Astra for consequential architecture. Effort is assigned by role, not raised automatically for a difficult request. The primary Orchestrator still uses the chat-selected model; Sol/medium is a recommendation, not a profile setting. The model IDs and supported effort levels are documented in the [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages. Availability and savings in a particular Codex account require runtime measurement.
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 

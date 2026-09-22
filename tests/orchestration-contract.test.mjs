@@ -37,13 +37,13 @@ const parsedProfiles = JSON.parse(
 );
 
 const expectedRoles = new Map([
-  ['cosmos-reviewer', ['Reviewer', 'gpt-5.6-terra', 'medium']],
-  ['cosmos-designer', ['Designer', 'gpt-5.6-terra', 'medium']],
-  ['cosmos-implementer', ['Implementer', 'gpt-5.6-luna', 'high']],
-  ['cosmos-explorer', ['Explorer', 'gpt-5.6-luna', 'low']],
-  ['cosmos-git-master', ['Git Master', 'gpt-5.6-luna', 'low']],
-  ['cosmos-librarian', ['Librarian', 'gpt-5.6-luna', 'medium']],
-  ['cosmos-oracle', ['Oracle / Architect', 'gpt-5.6-sol', 'low']],
+  ['cosmos-reviewer', ['Reviewer', 'gpt-6-sol', 'high']],
+  ['cosmos-designer', ['Designer', 'gpt-6-sol', 'medium']],
+  ['cosmos-implementer', ['Implementer', 'gpt-6-luna', 'high']],
+  ['cosmos-explorer', ['Explorer', 'gpt-6-luna', 'low']],
+  ['cosmos-git-master', ['Git Master', 'gpt-6-luna', 'low']],
+  ['cosmos-librarian', ['Librarian', 'gpt-6-luna', 'medium']],
+  ['cosmos-oracle', ['Oracle / Architect', 'gpt-6-astra', 'high']],
 ]);
 
 function roleSection(role) {
@@ -214,7 +214,7 @@ test('fixed presets exclude adaptive escalation and require verified named profi
   assert.match(skill, /Never claim independent review or independent verification when the Orchestrator takes over its own work/);
   assert.match(skill, /Return the lane to the Orchestrator/);
   assert.match(skill, /return evidence and partial work/);
-  assert.match(skill, /gpt-6-astra \/ low/);
+  assert.match(skill, /gpt-6-sol \/ medium/);
   assert.match(skill, /skill does not change the conversation model/);
 });
 
