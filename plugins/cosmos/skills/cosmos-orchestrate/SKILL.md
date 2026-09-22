@@ -59,7 +59,7 @@ The criteria below select a role after delegation has been judged useful; they a
 - **Don't delegate when:** the required information is already in the conversation or repository, or it is stable general programming knowledge that does not need verification.
 - **Rule of thumb:** "What do the current external sources say?" goes to Librarian.
 
-#### Oracle / Architect — gpt-6-astra / high
+#### Oracle / Architect — gpt-6-astra / medium
 
 - **After deciding to delegate, choose this specialist when:** the task requires a consequential architectural decision, comparison of viable designs, a material security, scalability, performance, data-integrity, or maintainability trade-off, or diagnosis that remains unresolved after evidence-based investigation.
 - **Don't delegate when:** the decision is routine and reversible, the first supported fix is still untried, or a direct lookup or test can answer the question.

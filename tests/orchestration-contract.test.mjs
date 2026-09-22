@@ -45,7 +45,7 @@ const expectedRoles = new Map([
   ['cosmos-explorer', ['Explorer', 'gpt-6-luna', 'low']],
   ['cosmos-git-master', ['Git Master', 'gpt-6-luna', 'low']],
   ['cosmos-librarian', ['Librarian', 'gpt-6-luna', 'medium']],
-  ['cosmos-oracle', ['Oracle / Architect', 'gpt-6-astra', 'high']],
+  ['cosmos-oracle', ['Oracle / Architect', 'gpt-6-astra', 'medium']],
 ]);
 
 function roleSection(role) {
