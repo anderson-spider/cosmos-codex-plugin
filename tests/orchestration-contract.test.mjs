@@ -8,6 +8,7 @@ const skill = readFileSync(
   'utf8',
 );
 const readme = readFileSync('plugins/cosmos/README.md', 'utf8');
+const repositoryReadme = readFileSync('README.md', 'utf8');
 const profileDirectory =
   'plugins/cosmos/skills/cosmos-orchestrate/references/agents';
 const profilePaths = readdirSync(profileDirectory)
@@ -53,6 +54,22 @@ function roleSection(role) {
   assert.notEqual(start, -1, `missing routing section for ${role}`);
   const next = skill.indexOf('\n#### ', start + heading.length);
   return skill.slice(start, next === -1 ? skill.length : next);
+}
+
+function agentTable(document) {
+  const lines = document.split('\n');
+  const start = lines.indexOf('| Agent | Model | Effort |');
+  assert.notEqual(start, -1, 'missing Agent/Model/Effort table');
+  assert.equal(lines[start + 1], '|---|---|---|');
+  const rows = new Map();
+  for (const line of lines.slice(start + 2)) {
+    if (!line.startsWith('|')) break;
+    const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
+    assert.equal(cells.length, 3, `invalid agent row: ${line}`);
+    assert.ok(!rows.has(cells[0]), `duplicate agent: ${cells[0]}`);
+    rows.set(cells[0], cells.slice(1));
+  }
+  return rows;
 }
 
 test('orchestrator chooses direct work or bounded delegation', () => {
@@ -121,10 +138,36 @@ test('all eight roles define positive, negative, and rule-of-thumb routing', () 
       section,
       new RegExp(`${model.replaceAll('.', '\\.')} \\/ ${effort}`),
     );
-    assert.match(section, /\*\*Delegate when:\*\*/);
+    assert.match(section, /\*\*After deciding to delegate, choose this specialist when:\*\*/);
     assert.match(section, /\*\*Don't delegate when:\*\*/);
     assert.match(section, /\*\*Rule of thumb:\*\*/);
   }
+});
+
+test('both README agent tables match the eight TOML presets and chat-selected Orchestrator recommendation', () => {
+  const expected = new Map([['Orchestrator', ['gpt-6-sol', 'medium']]]);
+  for (const profile of parsedProfiles) {
+    const role = expectedRoles.get(profile.name)?.[0];
+    assert.ok(role, `unexpected profile ${profile.name}`);
+    expected.set(role.split(' / ')[0], [profile.model, profile.model_reasoning_effort]);
+  }
+  assert.equal(expected.size, 9);
+  const sortedEntries = (table) => [...table].sort(([left], [right]) => left.localeCompare(right));
+  assert.deepEqual(sortedEntries(agentTable(repositoryReadme)), sortedEntries(expected));
+  assert.deepEqual(sortedEntries(agentTable(readme)), sortedEntries(expected));
+  assert.match(repositoryReadme, /only a recommendation for the Orchestrator/);
+  assert.match(repositoryReadme, /selected in the chat/);
+  assert.match(repositoryReadme, /does not register the\s+specialists automatically/);
+});
+
+test('routing examples and session instructions preserve decision and Git boundaries', () => {
+  assert.match(skill, /Make decisions using the instructions loaded in this session/);
+  assert.match(skill, /source checkout or a local installation/);
+  assert.match(skill, /does not retroactively change the instructions/);
+  assert.match(skill, /small change in a known file directly/);
+  assert.match(skill, /sequential local Git sync[\s\S]*reading the sibling Git Master skill/);
+  assert.match(skill, /read-only investigation to Oracle[\s\S]*independent judgment/);
+  assert.match(skill, /For direct Git or CI work, read the sibling/);
 });
 
 test('routing keeps Explorer, Librarian, and Oracle responsibilities distinct', () => {

@@ -18,11 +18,13 @@ the requested external effect is not explicit.
   when task-scoped implementation is authorized.
 - **Commit:** stage only task-owned changes and commit only when the user asked
   for a commit or publication.
-- **Push:** publish only the confirmed non-protected task branch after explicit
-  authorization for that push and destination.
-- **PR/MR:** prepare, create, or update the confirmed request. Creation or update
-  requires its own explicit authorization and does not authorize a push. Do not
-  create a duplicate when one already exists.
+- **Push:** publish only the confirmed non-protected task branch after an explicit
+  push request or as the necessary step to open a requested PR/MR for that branch.
+  Confirm the destination and scope before publishing.
+- **PR/MR:** prepare, create, or update the confirmed request. A request to open
+  one authorizes the task-scoped commit and branch push needed to create it;
+  no separate push confirmation is needed when the destination is confirmed.
+  Do not create a duplicate when one already exists.
 - **CI:** report status, diagnose a blocker, or make a requested local correction.
   Retry, rerun, or cancellation requires separate explicit authorization.
 
@@ -52,11 +54,14 @@ needed for the selected mode.
 Inspection and diagnosis are read-only. A request to fix CI authorizes the
 smallest supported local correction and proportional validation, but not a
 commit, push, PR/MR mutation, or retry unless that effect was also requested.
+A request to open a PR/MR includes the commit and branch push necessary for that
+request, but not a push to another branch or repository, a CI retry, or a merge.
 
 Bind every remote mutation to the confirmed provider, environment, host,
 account when authentication matters, repository, operation, source branch, and
-target. Authorization for one category never implies another. Reuse an
-authorization only when all of those dimensions remain unchanged.
+target. Keep effects separate except for the task-branch commit and push needed
+to open a requested PR/MR. Reuse an authorization only when all of those
+dimensions remain unchanged.
 
 Use the minimum current evidence needed for the selected mode. Preserve
 unrelated work, stop before publication when identity or destination conflicts,

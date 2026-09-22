@@ -15,7 +15,9 @@ After installation and the start of a new session, you can invoke the workflow w
 To work directly with commits, branches, pushes, pull requests, merge requests,
 or CI, invoke `$cosmos:git-master`. This skill can also be discovered
 automatically by requests in its domain. It prepares work without assuming
-authorization: commit, push, PR/MR mutation, and CI retry are separate effects.
+authorization: a request to open a PR/MR includes its necessary task-branch
+commit and push after destination checks. Other pushes, PR/MR updates, CI retry,
+and merge remain separate effects.
 Merge, approval, auto-merge, tags, releases, and branch deletion are outside its scope.
 
 GitLab operations preserve the configured account boundary: personal projects
@@ -41,8 +43,9 @@ uses the local name declared by the skill itself: `$cosmos-orchestrate` or
 
 The eight TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-6-sol / medium** is the recommended configuration, not an automatic model change.
 
-| Role | Model | Effort |
+| Agent | Model | Effort |
 |---|---|---|
+| Orchestrator | gpt-6-sol | medium |
 | Oracle | gpt-6-astra | high |
 | Librarian | gpt-6-luna | medium |
 | Explorer | gpt-6-luna | low |

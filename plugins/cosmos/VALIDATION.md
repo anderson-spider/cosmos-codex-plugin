@@ -185,3 +185,15 @@ This section records the current source update; all earlier observations above r
 - The contract test checks the push destination, manifest-only staging, and absence of PR creation. Local tests cannot prove that the GitHub Actions token can push under future branch rules or that a live release succeeds.
 - Local validation passed: 7 Python demo tests, 58 Node tests, plugin validation, both skill validators, YAML parsing, Bash syntax checking of the synchronization step, and `git diff --check`.
 - A push made with `GITHUB_TOKEN` does not trigger a new `push` workflow, per GitHub's [workflow trigger documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow). The release job tests source code before publication; the manifest-only commit has no separate push-triggered CI run.
+
+## Delegation documentation and agent tables — 2026-09-22
+
+- The main and plugin READMEs now show the Orchestrator recommendation and all eight specialist presets. A test parses both tables and compares every specialist row with its TOML profile, catching missing, extra, or duplicate rows. The Orchestrator row is checked as a recommendation; the chat selects its effective model and effort.
+- The skill states that routing uses instructions loaded in the current session and that later source or installation updates are not retroactive. Short examples cover direct editing, sequential local Git work after reading Git Master, and an investigation benefiting from independent judgment. Specialist headings apply only after the decision to delegate.
+- Validation: `python3 -m unittest discover -s demo-cosmos -v` passed (7 tests); `npm test` passed (60 tests); `npm run lint:commits -- --from origin/main --to HEAD --verbose` passed; `validate_plugin.py` and both `quick_validate.py` checks passed; `git diff --check` passed. Node dependencies were installed locally with `npm ci --ignore-scripts --prefer-offline` after the first test run found them absent.
+- These are static source and contract checks. No installed-plugin session, live routing decision, named-profile registration, or model selection behavior was observed for this change.
+
+## PR publication authorization — 2026-09-22
+
+- Git Master now treats a request to open a PR/MR as authorization for the necessary task-scoped commit and push to a confirmed non-protected source branch. It still requires destination and identity checks; unrelated pushes, PR/MR updates, CI retries, and merges remain separate effects.
+- Static tests protect this distinction in the public skill and Git Master profile. They do not establish that a live push or PR creation succeeds in a particular account.

@@ -93,12 +93,13 @@ test('orchestrator routes Git Master through the sibling skill', () => {
   assert.match(gitProfile, /^model_reasoning_effort = "low"$/m);
 });
 
-test('Git Master keeps local and remote effects independently authorized', () => {
-  assert.match(gitSkillInstructions, /commit or publication/i);
-  assert.match(gitSkillInstructions, /does not authorize a push/i);
-  assert.match(gitSkillInstructions, /separate explicit authorization/i);
+test('Git Master includes the necessary task-branch push in a requested PR opening', () => {
+  assert.match(gitSkillInstructions, /request to open a PR\/MR includes the commit and branch push/);
+  assert.match(gitSkillInstructions, /no separate push confirmation is needed when the destination is confirmed/);
+  assert.match(gitSkillInstructions, /not a push to another branch or repository/);
   assert.match(gitSkillInstructions, /Merge, approval, auto-merge, tags, releases, and branch deletion are outside/i);
   assert.match(gitSkillInstructions, /Never execute a force-push/i);
+  assert.match(gitProfile, /request to open a PR or MR authorizes the task-scoped commit/);
 });
 
 test('Git Master routes GitLab operations through the configured environment alias', () => {
