@@ -63,9 +63,15 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 
 #### Implementer — gpt-6-luna / high
 
-- **Delegate when:** implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
-- **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, or the whole change is one small direct action.
-- **Rule of thumb:** "The decision is made; implement and verify this bounded unit" goes to Implementer.
+- **Delegate when:** code implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
+- **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, the task is 3D asset creation or editing, or the whole change is one small direct action.
+- **Rule of thumb:** "The decision is made; implement and verify this bounded code unit" goes to Implementer.
+
+#### 3D Modeler — gpt-6-astra / medium
+
+- **Delegate when:** the requested result is a 3D asset or scene requiring modeling, materials, placement, or visual inspection in Blender or Unity, and suitable tools are available to the child.
+- **Don't delegate when:** the work is gameplay or tooling code without 3D asset edits, a 2D interface decision, concept art alone, or a task the available tools cannot perform or inspect.
+- **Rule of thumb:** "Create or edit this 3D asset and verify it in the target application" goes to 3D Modeler. Inspect existing project assets first. For Unity Editor operations, prefer an available Unity MCP; use computer use as a fallback only when the MCP is unavailable or lacks the needed operation. Use Blender or an available Mesh AI tool where the asset workflow calls for them and the request authorizes their use. Never infer tool access or visual validation from the model preset alone.
 
 #### Reviewer — gpt-6-sol / high
 
@@ -100,7 +106,7 @@ Every delegation must include:
 - Completion and verification criteria, required tools when known, and the validation owner.
 - A request for a short summary with files and symbols or sources, completed checks, and remaining work.
 
-Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer and Implementer coordinate contracts through the Orchestrator. If they need the same file, finish one edit before starting the other. Preserve pre-existing changes.
+Keep one owner per file during edits. Parallelize only independent scopes and serialize dependent tasks. Designer, Implementer, and 3D Modeler coordinate contracts through the Orchestrator. If they need the same file or 3D application session, finish one operation before starting the other. Preserve pre-existing changes.
 
 Track every delegate as active, completed, blocked, failed, or cancelled. When the user changes scope, promptly notify affected active delegates, cancel work that is no longer useful, and reconcile any result already produced before continuing. When the user interrupts or ends the task, stop or cancel active delegates when the tool supports it; otherwise record that they may still be running. Do not leave idle delegates occupying the concurrency budget, and do not report completion while required delegates remain active.
 
@@ -112,7 +118,7 @@ Read child results before repeating searches. Inspect the relevant result and ru
 
 Keep these phases distinct when they are warranted:
 
-1. **Implementation:** an Implementer changes only its assigned files and runs focused checks for its work.
+1. **Implementation:** an Implementer or 3D Modeler changes only its assigned files and runs focused checks for its work. For 3D work, distinguish an inspected asset in the target application from an uninspected generated file.
 2. **Verification:** the validation owner reproduces the requested behavior and runs the smallest sufficient deterministic checks. Use a separate Implementer when independent verification materially improves confidence; it may edit tests only when that permission and file scope were delegated explicitly.
 3. **Independent Review:** a fresh Reviewer receives a read-only scope and inspects the actual diff for correctness, regressions, security, data integrity, and missing high-value tests. It reports findings instead of editing. Skip this phase when risk is low and record that proportional decision rather than spawning mechanically.
 

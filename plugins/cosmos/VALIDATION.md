@@ -2,10 +2,10 @@
 
 ## GPT-6 preset update
 
-- All seven specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer and Reviewer use Sol; Oracle uses Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.
+- All eight specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer and Reviewer use Sol; Oracle and 3D Modeler use Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.
 - The [OpenAI announcement](https://openai.com/index/introducing-gpt-6-sol-and-luna/) confirms Sol and Luna availability in Codex. The [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages confirm the identifiers and selected effort levels.
 - These sources establish model support, not effective custom-profile registration, task quality, quota use, or savings in a live Codex session. Installed copies of the optional TOML templates are not updated by this source change.
-- Validation: `python3 -m unittest discover -s demo-cosmos -v` passed 7 tests; `npm test` passed 57 tests after `npm ci --ignore-scripts`; `validate_plugin.py plugins/cosmos` and both `quick_validate.py` checks passed. `git diff --check` passed. No live custom-profile run or comparative quota measurement was performed.
+- Validation: `python3 -m unittest discover -s demo-cosmos -v` passed 7 tests; `npm test` passed 58 tests with installed local tooling; `validate_plugin.py plugins/cosmos` and both `quick_validate.py` checks passed. `git diff --check` passed. No live custom-profile run or comparative quota measurement was performed.
 
 ## Structure and compatibility
 
@@ -13,16 +13,16 @@
 - Both skills passed `quick_validate.py`; automatic discovery remains enabled for both.
 - Manifest starter prompts use the installed names `$cosmos:cosmos-orchestrate` and `$cosmos:git-master`, respect the three-entry limit, and are at most 128 characters long.
 - The `agents/openai.yaml` files use the local names `$cosmos-orchestrate` and `$git-master`. Separate tests distinguish these contracts from installed namespaces used by the manifest.
-- Seven specialist TOML files parsed with Python `tomllib`; required fields are present.
+- Eight specialist TOML files parsed with Python `tomllib`; required fields are present.
 - Earlier model and effort presets were checked against the catalog embedded in **codex-cli 0.154.0**. Current GPT-6 pairs were checked against the official model pages above. Neither check establishes universal access for every account.
 - CLI-generated schema: `PluginDetail` contains skills, MCPs, hooks, and other components, but no agent-registration field. The manifest uses only skills and does not promise profile installation.
 - Official documentation describes per-project profiles in `.codex/agents/`. An inspection with `codex debug prompt-input` in an isolated directory did not display profile names, so it was not used as proof of discovery or loading. `--strict-config` is not accepted by that diagnostic command.
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
-- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all six specialist roles.
+- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all eight specialist roles.
 - Dispatch now selects the smallest useful concurrency budget, defaults to no more than two simultaneous specialists, and treats available slots as a ceiling rather than a target. Contract tests protect these rules; they do not measure live scheduler behavior.
 - Delivery distinguishes implementation, verification, and independent read-only review contracts. A completion gate requires accounting for delegate failures, returned decisions, inspected outputs, validation, material findings, unauthorized effects, skipped phases, and preset deviations.
-- Automated tests parse all six TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Executor ownership. This is static contract evidence, not a runtime semantic classifier.
+- Automated tests parse all eight TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Implementer/3D Modeler ownership. This is static contract evidence, not a runtime semantic classifier.
 - GitLab CLI routing is environment-specific: personal operations use `glab-personal`, work operations use `glab-work`, and the skill forbids bare `glab` or silent fallback between aliases. Automated tests protect the routing contract in MR and pipeline guidance.
 - Git Master now documents a CLI-first authenticated preflight and includes the read-only `scripts/git-master-doctor.sh`. Fixture CLIs exercise `cli_missing`, environment-token override recovery, invalid saved credentials, wrong account, wrong host, project mismatch, and ready states without contacting a provider or printing a token value. This is deterministic contract coverage, not proof of any real account or browser fallback.
 - The standard-library-only `scripts/cosmos-usage.py` reads local rollout metadata without modifying sessions. Synthetic fixtures cover token aggregation, role and model reporting, duration and rate-limit metadata, date filtering, unique session-prefix selection, and rejection of conflicting modes. Tests also verify that working directories, prompts, messages, and rollout paths are not emitted.
@@ -157,14 +157,15 @@ manual run after merge.
 
 This section records the current source update; all earlier observations above remain historical evidence for their original configuration.
 
-- Seven specialist profiles parse and match the skill and README. Implementer (Luna/high) replaces Executor without an alias; Reviewer (Sol/high) owns independent code and plan review. Oracle uses Astra/high. Sol/medium is the main-session recommendation, not an enforced model switch.
+- Eight specialist profiles parse and match the skill and README. Implementer (Luna/high) handles bounded code work and replaces Executor without an alias; 3D Modeler (Astra/medium) handles 3D assets and scenes; Reviewer (Sol/high) owns independent code and plan review. Oracle uses Astra/high. Sol/medium is the main-session recommendation, not an enforced model switch.
+- For Unity Editor operations, 3D Modeler prefers an available Unity MCP and uses computer use only if the MCP is unavailable or lacks the needed operation. Blender and Mesh AI are conditional tools. The static tests verify routing and this fallback order, not live tool access or visual quality.
 - Static contract checks cover bounded implementation, independent code and plan review, Oracle architecture routing, trivial direct work, fixed-pair unavailability with an explicit deviation, verified named-profile selection, and no claim of independent review after an Orchestrator takeover. They check the written contract, not live model routing or semantic decisions.
 - Historical rollout fixtures with `executor`, prior runtime records, and completed TODO entries are preserved. The rename is a breaking change for manually copied profiles; no installed copy was changed.
 - Validation commands and results:
   - `npm ci --ignore-scripts`: installed local tooling after the initial suite reported missing `@commitlint/lint` and `semver`; no tracked dependency changes.
   - `python3 -m unittest discover -s demo-cosmos -v`: 7 passed.
-  - `npm test`: 57 passed after installing tooling.
-  - `npm run lint:commits -- --from origin/main --to HEAD --verbose`: passed; no new commits exist in this local change, so this does not validate a future commit subject.
+  - `npm test`: 58 passed with installed local tooling.
+  - `printf '%s\n' 'feat(orchestrate): add 3D modeler specialist' | npm run lint:commits`: passed for the follow-up commit subject. `npm run lint:commits -- --from origin/main --to HEAD --verbose` must pass again after the commit.
   - `python3 <plugin-creator>/scripts/validate_plugin.py plugins/cosmos`: passed.
   - `python3 <skill-creator>/scripts/quick_validate.py plugins/cosmos/skills/cosmos-orchestrate`: passed.
   - `python3 <skill-creator>/scripts/quick_validate.py plugins/cosmos/skills/git-master`: passed.
