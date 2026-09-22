@@ -1,5 +1,11 @@
 # Validation — 2026-09-22
 
+## Oracle Astra effort correction — 2026-09-22
+
+- Oracle now uses `gpt-6-astra / medium` in its profile, routing skill, both README tables, and contract test. Reviewer remains `gpt-6-sol / high`.
+- Local validation passed: 7 Python demo tests, 60 Node tests, the plugin validator, both skill validators, commit subject lint, and `git diff --check`.
+- This is a preset and documentation correction. Static validation checks consistency; a live Oracle subagent run is not part of this source change.
+
 ## GPT-6 preset update
 
 - All eight specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer, 3D Modeler, and Reviewer use Sol; Oracle uses Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.

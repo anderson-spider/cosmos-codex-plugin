@@ -46,7 +46,7 @@ The eight TOML files are in `skills/cosmos-orchestrate/references/agents/`. They
 | Agent | Model | Effort |
 |---|---|---|
 | Orchestrator | gpt-6-sol | medium |
-| Oracle | gpt-6-astra | high |
+| Oracle | gpt-6-astra | medium |
 | Librarian | gpt-6-luna | medium |
 | Explorer | gpt-6-luna | low |
 | Designer | gpt-6-sol | medium |
