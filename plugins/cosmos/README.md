@@ -15,7 +15,9 @@ After installation and the start of a new session, you can invoke the workflow w
 To work directly with commits, branches, pushes, pull requests, merge requests,
 or CI, invoke `$cosmos:git-master`. This skill can also be discovered
 automatically by requests in its domain. It prepares work without assuming
-authorization: commit, push, PR/MR mutation, and CI retry are separate effects.
+authorization: a request to open a PR/MR includes its necessary task-branch
+commit and push after destination checks. Other pushes, PR/MR updates, CI retry,
+and merge remain separate effects.
 Merge, approval, auto-merge, tags, releases, and branch deletion are outside its scope.
 
 GitLab operations preserve the configured account boundary: personal projects

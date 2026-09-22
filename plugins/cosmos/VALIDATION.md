@@ -192,3 +192,8 @@ This section records the current source update; all earlier observations above r
 - The skill states that routing uses instructions loaded in the current session and that later source or installation updates are not retroactive. Short examples cover direct editing, sequential local Git work after reading Git Master, and an investigation benefiting from independent judgment. Specialist headings apply only after the decision to delegate.
 - Validation: `python3 -m unittest discover -s demo-cosmos -v` passed (7 tests); `npm test` passed (60 tests); `npm run lint:commits -- --from origin/main --to HEAD --verbose` passed; `validate_plugin.py` and both `quick_validate.py` checks passed; `git diff --check` passed. Node dependencies were installed locally with `npm ci --ignore-scripts --prefer-offline` after the first test run found them absent.
 - These are static source and contract checks. No installed-plugin session, live routing decision, named-profile registration, or model selection behavior was observed for this change.
+
+## PR publication authorization — 2026-09-22
+
+- Git Master now treats a request to open a PR/MR as authorization for the necessary task-scoped commit and push to a confirmed non-protected source branch. It still requires destination and identity checks; unrelated pushes, PR/MR updates, CI retries, and merges remain separate effects.
+- Static tests protect this distinction in the public skill and Git Master profile. They do not establish that a live push or PR creation succeeds in a particular account.
