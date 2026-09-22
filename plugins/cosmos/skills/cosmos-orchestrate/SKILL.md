@@ -22,20 +22,22 @@ Use this workflow before starting substantive work:
 1. **Understand:** identify the requested outcome, constraints, authorization, and known evidence.
 2. **Path Selection:** separate discovery, research, decisions, implementation, visual work, and Git or CI effects.
 3. **Delegation Check:** choose direct execution or the specialist lanes below before doing the work.
-4. **Dispatch:** choose a concurrency budget, launch independent lanes within it, and serialize dependent or overlapping work.
-5. **Reconcile:** integrate specialist results, resolve conflicts, and inspect material outputs.
+4. **Dispatch:** if delegation helps, choose a concurrency budget, launch independent lanes within it, and serialize dependent or overlapping work.
+5. **Reconcile:** integrate any specialist results, resolve conflicts, and inspect material outputs.
 6. **Verify:** complete the implementation, verification, and independent-review phases that the risk warrants.
 7. **Completion Gate:** account for delegated work, validation, findings, pending decisions, and unauthorized effects before reporting completion.
 
-Handle work directly only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution. For broad discovery, external research, consequential architecture, non-trivial implementation, visual or interaction decisions, or Git and CI mutations, delegate to the matching specialist. Do not keep substantive work entirely in the Orchestrator merely because each individual step appears small. Do not delegate merely to call a tool that the Orchestrator can already use.
+Direct execution is a normal Orchestrator path, including substantive work. Delegate a bounded lane when independent work, specialist judgment or tools, or independent review materially improves the outcome. Task size or category alone does not require delegation. Do not delegate merely to call a tool that the Orchestrator can already use. Complete and verify work directly when delegation adds no clear benefit.
 
-During the Delegation Check, identify independent lanes, dependency order, allowed file scopes, and the validation owner for each lane. Dispatch independent lanes in parallel before dependent work. Serialize lanes that depend on another result, modify the same files, share a Git index or checkout, or compete for the same test resource. Delegation does not expand the request's scope or authorization.
+When delegating, identify independent lanes, dependency order, allowed file scopes, and the validation owner for each lane. Dispatch independent lanes in parallel before dependent work. Serialize lanes that depend on another result, modify the same files, share a Git index or checkout, or compete for the same test resource. Delegation does not expand the request's scope or authorization.
 
 Choose the smallest useful concurrency budget before dispatch. Default to no more than two concurrent specialists; exceed two only when additional lanes are demonstrably independent, the session supports them, and the expected time or context benefit justifies the quota cost. Available slots are a ceiling, not a target. Do not occupy a slot with work that is waiting on another lane.
 
 The conversation's primary agent is the Orchestrator, and this skill provides its coordination behavior. The model selected in the chat is the Orchestrator's effective model; **gpt-6-sol / medium** is only the recommendation. The skill does not change the conversation model: if a known difference exists, report it once and continue with the current model without claiming it changed. Do not open another orchestrator merely to reproduce the preset.
 
 ### Specialist routing
+
+The criteria below select a role after delegation has been judged useful; they are not mandatory triggers based on task category.
 
 #### Explorer — gpt-6-luna / low
 
@@ -67,7 +69,7 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 - **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, the task is 3D asset creation or editing, or the whole change is one small direct action.
 - **Rule of thumb:** "The decision is made; implement and verify this bounded code unit" goes to Implementer.
 
-#### 3D Modeler — gpt-6-astra / medium
+#### 3D Modeler — gpt-6-sol / medium
 
 - **Delegate when:** the requested result is a 3D asset or scene requiring modeling, materials, placement, or visual inspection in Blender or Unity, and suitable tools are available to the child.
 - **Don't delegate when:** the work is gameplay or tooling code without 3D asset edits, a 2D interface decision, concept art alone, or a task the available tools cannot perform or inspect.
@@ -81,9 +83,9 @@ The conversation's primary agent is the Orchestrator, and this skill provides it
 
 #### Git Master — gpt-6-luna / low
 
-- **Delegate when:** the request includes creating a commit, pushing or publishing a branch, creating or mutating a PR or MR, or correcting CI. Also use it for substantial branch, request, or pipeline preparation and diagnosis.
+- **Delegate when:** a distinct Git or CI lane materially helps with a requested commit, push, PR/MR mutation, CI correction, or substantial preparation and diagnosis. For direct Git or CI work, read the sibling `../git-master/SKILL.md` and its relevant references before acting.
 - **Don't delegate when:** the whole request is one read-only Git lookup or a local explanation with no requested commit, publication, request mutation, or CI correction.
-- **Rule of thumb:** "Change or publish Git, PR/MR, or CI state" goes to Git Master. Delegation never authorizes a remote effect by itself.
+- **Rule of thumb:** "Change or publish Git, PR/MR, or CI state" uses Git Master guidance, directly or through a delegate. Delegation never authorizes a remote effect by itself.
 
 ## Native delegation
 
