@@ -78,7 +78,7 @@ test('prepares a ZIP with only tracked files in the marketplace layout', async (
     assert.match(logs[0], /cosmos-1\.2\.3\.zip/);
 });
 
-test('release configuration never commits or pushes the source manifest', () => {
+test('semantic-release packages without committing the source manifest', () => {
     const pluginNames = releaseConfig.plugins.map((plugin) => Array.isArray(plugin) ? plugin[0] : plugin);
 
     assert.equal(pluginNames.includes('@semantic-release/git'), false);
@@ -88,26 +88,26 @@ test('release configuration never commits or pushes the source manifest', () => 
     ]);
 });
 
-test('release workflow opens a failure-tolerant manifest-only PR', () => {
+test('release workflow pushes only the manifest to main after publication', () => {
     assert.match(releaseWorkflow, /^  sync-manifest:$/m);
-    assert.match(releaseWorkflow, /^    continue-on-error: true$/m);
-    assert.match(releaseWorkflow, /pull-requests: write/);
+    assert.doesNotMatch(releaseWorkflow, /continue-on-error: true/);
+    assert.doesNotMatch(releaseWorkflow, /pull-requests: write/);
     assert.match(releaseWorkflow, /releases\/latest/);
     assert.match(releaseWorkflow, /cosmos-\$\{tag#v\}\.zip/);
     assert.match(releaseWorkflow, /git merge-base --is-ancestor/);
+    assert.match(releaseWorkflow, /git switch --detach origin\/main/);
     assert.match(releaseWorkflow, /scripts\/sync-release-manifest\.mjs/);
-    assert.match(releaseWorkflow, /git push origin "HEAD:refs\/heads\/\$branch"/);
-    assert.match(releaseWorkflow, /gh pr list --state all --base main --head "\$branch"/);
-    assert.match(releaseWorkflow, /gh pr create/);
-    assert.doesNotMatch(releaseWorkflow, /git push[^\n]*refs\/heads\/main/);
-    assert.doesNotMatch(releaseWorkflow, /gh pr merge/);
+    assert.match(releaseWorkflow, /git add plugins\/cosmos\/\.codex-plugin\/plugin\.json/);
+    assert.match(releaseWorkflow, /git commit -m "chore\(release\): sync manifest to \$version"/);
+    assert.match(releaseWorkflow, /git push origin HEAD:refs\/heads\/main/);
+    assert.doesNotMatch(releaseWorkflow, /gh pr (list|create|merge)/);
     assert.ok(
         releaseWorkflow.indexOf('gh auth setup-git') < releaseWorkflow.indexOf('git fetch --force --tags origin'),
         'Git authentication must be configured before fetching tags',
     );
     assert.ok(
-        releaseWorkflow.indexOf('gh pr list --state all') < releaseWorkflow.indexOf('git push origin'),
-        'Existing PR decisions must be checked before recreating a deleted branch',
+        releaseWorkflow.indexOf('git switch --detach origin/main') < releaseWorkflow.indexOf('scripts/sync-release-manifest.mjs'),
+        'Manifest synchronization must start from the latest fetched main',
     );
 });
 

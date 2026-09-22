@@ -95,9 +95,9 @@ The brand, plugin identifier, skill, and profile names were updated to Cosmos. T
 The repository uses Semantic Release to calculate versions, notes, and tags,
 with Commitlint in CI for commits and PR titles. The release workflow is manual.
 During `prepare`, only the packaged manifest receives the calculated version.
-The checkout stays unchanged, so publication does not push directly to `main`.
-After publication, a failure-tolerant job verifies the latest stable release,
-tag ancestry, and versioned ZIP before opening an idempotent manifest-only PR.
+The checkout stays unchanged during packaging. After publication, a separate
+job verifies the latest stable release, tag ancestry, and versioned ZIP before
+committing only the source manifest and pushing it directly to `main`.
 
 Local validations after adding Git Master passed: `npm test` (21 tests),
 `python3 -m unittest discover -s demo-cosmos -v` (5 tests), `git diff --check`,
@@ -178,3 +178,10 @@ This section records the current source update; all earlier observations above r
 - `python3 -m unittest discover -s demo-cosmos -v`: 7 passed. `npm test`: 58 passed after updating the routing contract assertions. `npm run lint:commits -- --from origin/main --to HEAD --verbose`: passed for existing commits.
 - Plugin validation and both skill quick validators passed; `git diff --check` passed. The global `AGENTS.md` and personal Proxyman skill are outside this repository and were validated separately.
 - These are source and static contract checks. The revised routing has not been observed in a newly installed plugin or compared with a direct run for time, quota, or quality.
+
+## Direct manifest synchronization — 2026-09-22
+
+- The manual release workflow still publishes from the tested `main` commit. Its following job checks the latest stable release, matching ZIP, and tag ancestry, then stages only the manifest and pushes a normal fast-forward commit to `main`. It no longer creates a branch or PR. A rejected push fails that job; rerunning the workflow can reconcile the latest release.
+- The contract test checks the push destination, manifest-only staging, and absence of PR creation. Local tests cannot prove that the GitHub Actions token can push under future branch rules or that a live release succeeds.
+- Local validation passed: 7 Python demo tests, 58 Node tests, plugin validation, both skill validators, YAML parsing, Bash syntax checking of the synchronization step, and `git diff --check`.
+- A push made with `GITHUB_TOKEN` does not trigger a new `push` workflow, per GitHub's [workflow trigger documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow). The release job tests source code before publication; the manifest-only commit has no separate push-triggered CI run.

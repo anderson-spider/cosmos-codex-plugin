@@ -88,9 +88,8 @@ These rules are a tested orchestration contract, not a runtime semantic classifi
 
 The published version appears in repository tags and releases. The
 `cosmos-X.Y.Z.zip` attachment contains the manifest with that version; the copy
-on `main` is synchronized by an automatically opened, reviewed PR after
-publication. The automation never merges that PR. See the
-[release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
+on `main` is synchronized by a direct manifest-only commit after publication.
+See the [release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
 for the workflow and update limitations.
 
 See `VALIDATION.md` for evidence for this version. The package was inspired by the role division in [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); its instructions were written for Codex without copying the OpenCode runtime.
