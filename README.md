@@ -38,8 +38,9 @@ semantic changes that reached `main`. See the
 [releases](https://github.com/anderson-spider/cosmos-codex-plugin/releases) to
 compare versions. During publication, the calculated version is written only
 to the manifest inside the release package. The tag points to the tested `main`
-commit; a separate failure-tolerant job opens a reviewed PR to synchronize the
-source manifest without pushing to `main` or merging automatically.
+commit; a following job commits only the source manifest version and pushes it
+directly to `main`. If that push fails, the release remains published but the
+workflow reports the synchronization failure.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the commit convention and
 [RELEASING.md](RELEASING.md) for configuration, recovery, and limitations.

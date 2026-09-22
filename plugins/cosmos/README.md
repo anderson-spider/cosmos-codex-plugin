@@ -48,11 +48,11 @@ The eight TOML files are in `skills/cosmos-orchestrate/references/agents/`. They
 | Explorer | gpt-6-luna | low |
 | Designer | gpt-6-sol | medium |
 | Implementer | gpt-6-luna | high |
-| 3D Modeler | gpt-6-astra | medium |
+| 3D Modeler | gpt-6-sol | medium |
 | Reviewer | gpt-6-sol | high |
 | Git Master | gpt-6-luna | low |
 
-These fixed presets use Luna for focused discovery, research, bounded code implementation, and Git work; Sol for interface decisions and independent review; and Astra for consequential architecture and 3D asset work requiring visual inspection or computer use. The 3D Modeler prefers an available Unity MCP for Editor operations and uses computer use only when the MCP cannot perform the needed action. This plugin does not install a Unity MCP; Blender and Mesh AI tools are also conditional on availability and task authorization. Effort is assigned by role, not raised automatically for a difficult request. The primary Orchestrator still uses the chat-selected model; Sol/medium is a recommendation, not a profile setting. The model IDs and supported effort levels are documented in the [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages. Availability and savings in a particular Codex account require runtime measurement.
+These fixed presets use Luna for focused discovery, research, bounded code implementation, and Git work; Sol for interface decisions, 3D asset work, and independent review; and Astra for consequential architecture. The 3D Modeler prefers an available Unity MCP for Editor operations and uses computer use only when the MCP cannot perform the needed action. This plugin does not install a Unity MCP; Blender and Mesh AI tools are also conditional on availability and task authorization. Effort is assigned by role, not raised automatically for a difficult request. The primary Orchestrator still uses the chat-selected model; Sol/medium is a recommendation, not a profile setting. The model IDs and supported effort levels are documented in the [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages. Availability and savings in a particular Codex account require runtime measurement.
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 
@@ -68,12 +68,12 @@ Implementer implements and validates assigned changes. Reviewer independently in
 
 - Skill loaded: Cosmos is active; it must not claim that there is no linked or actionable skill.
 - First update: state "Cosmos is active" and say whether it will proceed directly or delegate.
-- Direct execution: only when the entire request is one isolated, clear, already located, low-risk action and delegation overhead exceeds execution.
-- Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects before substantive work; dispatch independent lanes in parallel and serialize dependencies or overlapping resources.
+- Direct execution: a normal path, including substantive work, when delegation adds no clear benefit.
+- Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects; delegate bounded lanes when independent work, specialist judgment or tools, or independent review materially helps. Parallelize independent lanes and serialize dependencies or overlapping resources.
 - Concurrency budget: default to at most two simultaneous specialists and use more only for demonstrably independent lanes whose benefit justifies the quota cost; available slots are not a target.
 - Explorer: broad or uncertain local discovery. Librarian: external, current, or version-specific sources. Oracle: consequential architecture, material risk, or persistent diagnosis.
-- Implementation: Implementer owns bounded non-trivial code work; 3D Modeler owns 3D asset creation and visual validation when suitable tools are available; Designer owns interface and interaction judgment. Keep one owner per file or shared 3D application session.
-- Git Master: every requested commit, push, branch publication, PR/MR mutation, or CI correction receives the sibling skill path and the request's exact authorization. A single read-only Git lookup can remain direct.
+- Implementation: when delegated, Implementer owns bounded code work; 3D Modeler owns 3D asset creation and visual validation when suitable tools are available; Designer owns interface and interaction judgment. Keep one owner per file or shared 3D application session.
+- Git Master: delegated Git or CI lanes receive the sibling skill path and the request's exact authorization. Direct Git or CI work reads that skill and its relevant references before acting. A single read-only Git lookup does not need the skill.
 - Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
 - Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Reviewer.
 - Implementation, verification, and independent review use distinct contracts. A verifier edits tests only when explicitly authorized, while an independent reviewer remains read-only and reports findings instead of fixing them.
@@ -88,9 +88,8 @@ These rules are a tested orchestration contract, not a runtime semantic classifi
 
 The published version appears in repository tags and releases. The
 `cosmos-X.Y.Z.zip` attachment contains the manifest with that version; the copy
-on `main` is synchronized by an automatically opened, reviewed PR after
-publication. The automation never merges that PR. See the
-[release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
+on `main` is synchronized by a direct manifest-only commit after publication.
+See the [release guide](https://github.com/anderson-spider/cosmos-codex-plugin/blob/main/RELEASING.md)
 for the workflow and update limitations.
 
 See `VALIDATION.md` for evidence for this version. The package was inspired by the role division in [oh-my-opencode-slim](https://github.com/alvinunreal/oh-my-opencode-slim); its instructions were written for Codex without copying the OpenCode runtime.

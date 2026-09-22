@@ -2,7 +2,7 @@
 
 ## GPT-6 preset update
 
-- All eight specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer and Reviewer use Sol; Oracle and 3D Modeler use Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.
+- All eight specialist profiles, the routing skill, README, and contract tests use the same GPT-6 model and effort pairs. Explorer, Librarian, Implementer, and Git Master use Luna; Designer, 3D Modeler, and Reviewer use Sol; Oracle uses Astra. The primary Orchestrator recommends Sol/medium but remains controlled by the chat selection.
 - The [OpenAI announcement](https://openai.com/index/introducing-gpt-6-sol-and-luna/) confirms Sol and Luna availability in Codex. The [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [Sol](https://developers.openai.com/api/docs/models/gpt-6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna) model pages confirm the identifiers and selected effort levels.
 - These sources establish model support, not effective custom-profile registration, task quality, quota use, or savings in a live Codex session. Installed copies of the optional TOML templates are not updated by this source change.
 - Validation: `python3 -m unittest discover -s demo-cosmos -v` passed 7 tests; `npm test` passed 58 tests with installed local tooling; `validate_plugin.py plugins/cosmos` and both `quick_validate.py` checks passed. `git diff --check` passed. No live custom-profile run or comparative quota measurement was performed.
@@ -19,7 +19,7 @@
 - Official documentation describes per-project profiles in `.codex/agents/`. An inspection with `codex debug prompt-input` in an isolated directory did not display profile names, so it was not used as proof of discovery or loading. `--strict-config` is not accepted by that diagnostic command.
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
-- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, direct execution only for one isolated and low-risk action, and explicit positive, negative, and rule-of-thumb guidance for all eight specialist roles.
+- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, allows substantive direct execution when delegation adds no clear benefit, and retains explicit positive, negative, and rule-of-thumb guidance for all eight specialist roles. Contract tests cover the choice and direct Git Master guidance; live routing remains unverified.
 - Dispatch now selects the smallest useful concurrency budget, defaults to no more than two simultaneous specialists, and treats available slots as a ceiling rather than a target. Contract tests protect these rules; they do not measure live scheduler behavior.
 - Delivery distinguishes implementation, verification, and independent read-only review contracts. A completion gate requires accounting for delegate failures, returned decisions, inspected outputs, validation, material findings, unauthorized effects, skipped phases, and preset deviations.
 - Automated tests parse all eight TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Implementer/3D Modeler ownership. This is static contract evidence, not a runtime semantic classifier.
@@ -53,8 +53,8 @@ Activation through `@Cosmos` and automatic discovery still need verification aft
 
 Automated tests verify that starter prompts invoke installed skills by namespace and that metadata does not disable automatic discovery. After reinstallation, app evaluation should record:
 
-- `@Cosmos` followed by one isolated, clear, already located, low-risk action: Cosmos active and direct execution declared.
-- `$cosmos:cosmos-orchestrate` followed by broad discovery, external research, consequential architecture, non-trivial implementation, visual work, or Git/CI mutation: Cosmos active and the matching specialist selected.
+- `@Cosmos` followed by work where delegation adds no clear benefit: Cosmos active and direct execution declared, regardless of task size.
+- `$cosmos:cosmos-orchestrate` followed by work with a bounded independent lane, useful specialist judgment or tools, or material independent review: Cosmos active and the matching specialist selected.
 - A textual mention of the Cosmos workflow: automatic skill discovery.
 - An ordinary development or subagent request without Cosmos: the skill must not be selected based only on those terms.
 - Continuation of the activated request: the workflow remains active.
@@ -62,11 +62,11 @@ Automated tests verify that starter prompts invoke installed skills by namespace
 - `$cosmos:git-master` followed by a preparation request: no local or remote mutation without corresponding authorization.
 - An ordinary Git, PR/MR, or CI request: automatic Git Master discovery when applicable.
 - Delegation of a substantial Git workflow by the Orchestrator: `cosmos-git-master` profile, sibling skill loaded, and authorization boundaries preserved.
-- A five-scenario forward evaluation: unknown local flow routes to Explorer; external versioned documentation routes to Librarian; consequential architecture routes to Oracle; commit, push, MR, or CI mutation routes to Git Master; one isolated known low-risk action remains direct.
+- The earlier five-scenario forward evaluation below tested the previous prescriptive routing threshold; it is historical evidence, not a validation of the current direct-execution rule.
 
-## Prescriptive routing forward evaluation
+## Earlier prescriptive routing forward evaluation
 
-An independent read-only Executor evaluated five requests against the updated skill without receiving the intended routing answers. It selected Explorer for an unknown cross-module session-token flow, Librarian for current SDK removal documentation, Oracle for a sensitive cache architecture decision, Git Master for a GitLab CI correction with commit and push, and direct Orchestrator execution for a one-line typo in a known file and function.
+An independent read-only Executor evaluated five requests against the then-current skill without receiving the intended routing answers. It selected Explorer for an unknown cross-module session-token flow, Librarian for current SDK removal documentation, Oracle for a sensitive cache architecture decision, Git Master for a GitLab CI correction with commit and push, and direct Orchestrator execution for a one-line typo in a known file and function.
 
 The evaluation preserved the important boundaries: research and advice remained read-only; the architecture recommendation did not authorize implementation; the Git workflow kept diagnosis, correction, validation, commit, and push ordered while excluding MR mutation and pipeline retry; and the direct typo fix did not imply publication. It also identified and prompted correction of an editorial ambiguity between loading only the selected role profile and Git Master's additional sibling-skill requirement. This was a static forward evaluation of the skill text, not an installed-plugin or live routing test.
 
@@ -95,9 +95,9 @@ The brand, plugin identifier, skill, and profile names were updated to Cosmos. T
 The repository uses Semantic Release to calculate versions, notes, and tags,
 with Commitlint in CI for commits and PR titles. The release workflow is manual.
 During `prepare`, only the packaged manifest receives the calculated version.
-The checkout stays unchanged, so publication does not push directly to `main`.
-After publication, a failure-tolerant job verifies the latest stable release,
-tag ancestry, and versioned ZIP before opening an idempotent manifest-only PR.
+The checkout stays unchanged during packaging. After publication, a separate
+job verifies the latest stable release, tag ancestry, and versioned ZIP before
+committing only the source manifest and pushing it directly to `main`.
 
 Local validations after adding Git Master passed: `npm test` (21 tests),
 `python3 -m unittest discover -s demo-cosmos -v` (5 tests), `git diff --check`,
@@ -157,9 +157,9 @@ manual run after merge.
 
 This section records the current source update; all earlier observations above remain historical evidence for their original configuration.
 
-- Eight specialist profiles parse and match the skill and README. Implementer (Luna/high) handles bounded code work and replaces Executor without an alias; 3D Modeler (Astra/medium) handles 3D assets and scenes; Reviewer (Sol/high) owns independent code and plan review. Oracle uses Astra/high. Sol/medium is the main-session recommendation, not an enforced model switch.
+- Eight specialist profiles parse and match the skill and README. Implementer (Luna/high) handles bounded code work and replaces Executor without an alias; 3D Modeler (Sol/medium) handles 3D assets and scenes; Reviewer (Sol/high) owns independent code and plan review. Oracle uses Astra/high. Sol/medium is the main-session recommendation, not an enforced model switch.
 - For Unity Editor operations, 3D Modeler prefers an available Unity MCP and uses computer use only if the MCP is unavailable or lacks the needed operation. Blender and Mesh AI are conditional tools. The static tests verify routing and this fallback order, not live tool access or visual quality.
-- Static contract checks cover bounded implementation, independent code and plan review, Oracle architecture routing, trivial direct work, fixed-pair unavailability with an explicit deviation, verified named-profile selection, and no claim of independent review after an Orchestrator takeover. They check the written contract, not live model routing or semantic decisions.
+- Static contract checks cover bounded implementation, independent code and plan review, Oracle architecture routing, direct work, fixed-pair unavailability with an explicit deviation, verified named-profile selection, and no claim of independent review after an Orchestrator takeover. They check the written contract, not live model routing or semantic decisions.
 - Historical rollout fixtures with `executor`, prior runtime records, and completed TODO entries are preserved. The rename is a breaking change for manually copied profiles; no installed copy was changed.
 - Validation commands and results:
   - `npm ci --ignore-scripts`: installed local tooling after the initial suite reported missing `@commitlint/lint` and `semver`; no tracked dependency changes.
@@ -171,3 +171,17 @@ This section records the current source update; all earlier observations above r
   - `python3 <skill-creator>/scripts/quick_validate.py plugins/cosmos/skills/git-master`: passed.
   - `git diff --check`: passed.
 - No end-to-end run of the new specialist configuration, installation, named-profile runtime registration, or quota/quality comparison was performed. Read-only configuration remains a default subject to session overrides; the instruction contract still forbids writes by Reviewer. These checks do not establish savings on Pro 20x.
+
+## Proportional delegation update — 2026-09-22
+
+- Direct execution now remains available for substantive work when delegation adds no clear benefit. A bounded independent lane, useful specialist judgment or tools, or material independent review can justify delegation. Direct Git or CI work still loads Git Master guidance and retains the same authorization boundaries.
+- `python3 -m unittest discover -s demo-cosmos -v`: 7 passed. `npm test`: 58 passed after updating the routing contract assertions. `npm run lint:commits -- --from origin/main --to HEAD --verbose`: passed for existing commits.
+- Plugin validation and both skill quick validators passed; `git diff --check` passed. The global `AGENTS.md` and personal Proxyman skill are outside this repository and were validated separately.
+- These are source and static contract checks. The revised routing has not been observed in a newly installed plugin or compared with a direct run for time, quota, or quality.
+
+## Direct manifest synchronization — 2026-09-22
+
+- The manual release workflow still publishes from the tested `main` commit. Its following job checks the latest stable release, matching ZIP, and tag ancestry, then stages only the manifest and pushes a normal fast-forward commit to `main`. It no longer creates a branch or PR. A rejected push fails that job; rerunning the workflow can reconcile the latest release.
+- The contract test checks the push destination, manifest-only staging, and absence of PR creation. Local tests cannot prove that the GitHub Actions token can push under future branch rules or that a live release succeeds.
+- Local validation passed: 7 Python demo tests, 58 Node tests, plugin validation, both skill validators, YAML parsing, Bash syntax checking of the synchronization step, and `git diff --check`.
+- A push made with `GITHUB_TOKEN` does not trigger a new `push` workflow, per GitHub's [workflow trigger documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow). The release job tests source code before publication; the manifest-only commit has no separate push-triggered CI run.

@@ -13,16 +13,16 @@
    `.agents/plugins/marketplace.json`, and the checkout remains unchanged.
 6. Semantic Release tags the tested `main` commit and publishes the release with
    notes and the package.
-7. A separate, failure-tolerant job creates a non-protected branch and opens a
-   reviewed PR that synchronizes only the source manifest. It never merges the PR.
+7. A following job verifies the latest stable release and pushes a commit with
+   only the synchronized source manifest directly to `main`. It opens no PR.
 
 The trigger is exclusively manual and nothing is published to npm. The tag and
 GitHub-generated source archive identify the tested commit and may contain the
 previous source-manifest version; the attached Cosmos ZIP is the versioned plugin
 artifact. The workflow serializes publications and processes the latest `main`.
-If synchronization fails, the published release remains successful and the job
-emits a warning. Running the workflow again reconciles the latest published
-stable release even when Semantic Release has no new version to publish.
+If synchronization fails, the published release remains available, but the
+workflow reports a failed job. Running the workflow again reconciles the latest
+published stable release even when Semantic Release has no new version to publish.
 
 ## First release
 
@@ -34,24 +34,30 @@ become the version calculation reference afterward.
 ## GitHub configuration
 
 GitHub Actions must be enabled. The workflow uses `GITHUB_TOKEN` with
-`contents: write` for the tag and release. It never pushes a commit directly to
-`main`; branch protection remains enforced. Semantic Release may perform a
-non-mutating push dry run while verifying authentication.
+`contents: write` for the tag, release, and manifest-only push to `main`.
+Semantic Release may perform a non-mutating push dry run while verifying
+authentication. The synchronization push is a normal fast-forward push; it does
+not force-update `main`. If `main` advances while the job is running, the push
+fails and a new manual run can reconcile it. Active branch protection or rulesets
+must permit the GitHub Actions token to push the manifest commit, or the
+synchronization job will fail.
 
-The synchronization job also needs `pull-requests: write`. Repository or
-organization policy must allow GitHub Actions to create pull requests. PRs
-created by `GITHUB_TOKEN` may require a maintainer to select **Approve workflows
-to run** before their validation starts; no PAT or automatic approval is used.
+GitHub does not start a new `push` workflow when a workflow pushes with its
+`GITHUB_TOKEN`. The release job runs tests before publication; the manifest-only
+commit does not receive a separate `Validate` run from that push.
 
-In **Settings → Rules → Rulesets**, make the `Validate` check required for PRs to
-`main` and require an up-to-date branch. Prefer squash with the PR title; preserve
-the semantic type and breaking-change marker when editing the final message.
-Workflow files do not apply these administrative settings.
+In **Settings → Rules → Rulesets**, make the `Validate` check required for
+contributor PRs to `main` and require an up-to-date branch. If a rule also
+restricts direct updates, configure an explicit bypass for the release automation
+or the requested manifest synchronization cannot push. Prefer squash with the PR
+title; preserve the semantic type and breaking-change marker when editing the
+final message. Workflow files do not apply these administrative settings.
 
 ## Recovery
 
 Fix the configuration or failure and run the manual workflow again. Semantic Release
-checks existing tags and does not republish a completed version.
+checks existing tags and does not republish a completed version. Confirm that the
+latest release and ZIP are correct before retrying a failed manifest push.
 
 A failure between tag creation and GitHub publication requires inspection:
 Semantic Release may consider the tag already released on a new run. Do not
@@ -66,4 +72,5 @@ validate complete publication with the GitHub Actions token.
 
 - [Semantic Release configuration](https://semantic-release.gitbook.io/semantic-release/usage/configuration)
 - [GitHub publication and permissions](https://github.com/semantic-release/github)
+- [GitHub Actions token workflow triggers](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)
 - [Commitlint in CI](https://commitlint.js.org/guides/ci-setup.html)

@@ -40,7 +40,7 @@ const expectedRoles = new Map([
   ['cosmos-reviewer', ['Reviewer', 'gpt-6-sol', 'high']],
   ['cosmos-designer', ['Designer', 'gpt-6-sol', 'medium']],
   ['cosmos-implementer', ['Implementer', 'gpt-6-luna', 'high']],
-  ['cosmos-3d-modeler', ['3D Modeler', 'gpt-6-astra', 'medium']],
+  ['cosmos-3d-modeler', ['3D Modeler', 'gpt-6-sol', 'medium']],
   ['cosmos-explorer', ['Explorer', 'gpt-6-luna', 'low']],
   ['cosmos-git-master', ['Git Master', 'gpt-6-luna', 'low']],
   ['cosmos-librarian', ['Librarian', 'gpt-6-luna', 'medium']],
@@ -55,7 +55,7 @@ function roleSection(role) {
   return skill.slice(start, next === -1 ? skill.length : next);
 }
 
-test('orchestrator applies the prescriptive delegation threshold and workflow', () => {
+test('orchestrator chooses direct work or bounded delegation', () => {
   for (const step of [
     'Understand',
     'Path Selection',
@@ -68,11 +68,10 @@ test('orchestrator applies the prescriptive delegation threshold and workflow', 
     assert.match(skill, new RegExp(`\\*\\*${step}:\\*\\*`));
   }
 
-  assert.match(
-    skill,
-    /only when the entire request is one isolated, clear, already located, low-risk action/,
-  );
-  assert.match(skill, /Do not keep substantive work entirely in the Orchestrator/);
+  assert.match(skill, /Direct execution is a normal Orchestrator path, including substantive work/);
+  assert.match(skill, /Task size or category alone does not require delegation/);
+  assert.match(skill, /independent work, specialist judgment or tools, or independent review/);
+  assert.match(skill, /For direct Git or CI work, read the sibling/);
   assert.match(skill, /Dispatch independent lanes in parallel/);
   assert.match(skill, /Serialize lanes that depend on another result/);
   assert.match(skill, /allowed file scopes, and the validation owner/);
@@ -155,7 +154,7 @@ test('routing preserves Designer ownership and Git Master authorization', () => 
   );
   assert.match(roleSection('Implementer'), /the task is 3D asset creation or editing/);
   assert.match(roleSection('3D Modeler'), /the work is gameplay or tooling code without 3D asset edits/);
-  assert.match(roleSection('Git Master'), /creating a commit/);
+  assert.match(roleSection('Git Master'), /requested commit, push, PR\/MR mutation, CI correction/);
   assert.match(
     roleSection('Git Master'),
     /Delegation never authorizes a remote effect by itself/,
