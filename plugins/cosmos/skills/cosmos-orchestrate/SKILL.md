@@ -11,6 +11,8 @@ Use this workflow for the request that activated the skill and its continuations
 
 When these instructions are loaded, Cosmos is active through the `cosmos-orchestrate` skill itself. Do not say that Cosmos "did not expose an actionable skill or tool," and do not treat direct execution as abandoning Cosmos. If the request does not justify delegation, briefly state that Cosmos will proceed directly; this is a valid Orchestrator decision.
 
+Make decisions using the instructions loaded in this session. If the loaded skill differs from the source checkout or a local installation, report the difference when relevant. A later update to either copy does not retroactively change the instructions already loaded in this session.
+
 In the first update to the user, state exactly **"Cosmos is active"** and say whether you will proceed directly or delegate, with the reason in one sentence. Do not require a subagent for a small task.
 
 Distinguish the skill from supporting capabilities: TOML profiles are internal roles and optional templates. They do not appear in the `@` selector and are not registered automatically by the plugin. Native subagent tools may or may not be available. If native delegation is unavailable, name only that limitation and continue as Orchestrator. Do not attribute the absence to the skill, plugin, or Cosmos as a whole.
@@ -29,6 +31,12 @@ Use this workflow before starting substantive work:
 
 Direct execution is a normal Orchestrator path, including substantive work. Delegate a bounded lane when independent work, specialist judgment or tools, or independent review materially improves the outcome. Task size or category alone does not require delegation. Do not delegate merely to call a tool that the Orchestrator can already use. Complete and verify work directly when delegation adds no clear benefit.
 
+Examples:
+
+- Edit a small change in a known file directly, then run its focused check.
+- Perform a sequential local Git sync in one checkout directly after reading the sibling Git Master skill and its relevant references; preserve its authorization boundaries.
+- Delegate a read-only investigation to Oracle when an unresolved diagnosis would benefit from independent judgment, then assess its evidence before acting.
+
 When delegating, identify independent lanes, dependency order, allowed file scopes, and the validation owner for each lane. Dispatch independent lanes in parallel before dependent work. Serialize lanes that depend on another result, modify the same files, share a Git index or checkout, or compete for the same test resource. Delegation does not expand the request's scope or authorization.
 
 Choose the smallest useful concurrency budget before dispatch. Default to no more than two concurrent specialists; exceed two only when additional lanes are demonstrably independent, the session supports them, and the expected time or context benefit justifies the quota cost. Available slots are a ceiling, not a target. Do not occupy a slot with work that is waiting on another lane.
@@ -41,49 +49,49 @@ The criteria below select a role after delegation has been judged useful; they a
 
 #### Explorer — gpt-6-luna / low
 
-- **Delegate when:** the local code path is unknown, discovery spans multiple files or modules, runtime or data flow must be traced, or broad searches benefit from compressed context.
+- **After deciding to delegate, choose this specialist when:** the local code path is unknown, discovery spans multiple files or modules, runtime or data flow must be traced, or broad searches benefit from compressed context.
 - **Don't delegate when:** the exact file and symbol are known and only one specific lookup or direct edit is needed.
 - **Rule of thumb:** "Where is it and how does it connect locally?" goes to Explorer.
 
 #### Librarian — gpt-6-luna / medium
 
-- **Delegate when:** the answer depends on external documentation, current or version-specific behavior, primary sources, official examples, or an unfamiliar library or API.
+- **After deciding to delegate, choose this specialist when:** the answer depends on external documentation, current or version-specific behavior, primary sources, official examples, or an unfamiliar library or API.
 - **Don't delegate when:** the required information is already in the conversation or repository, or it is stable general programming knowledge that does not need verification.
 - **Rule of thumb:** "What do the current external sources say?" goes to Librarian.
 
 #### Oracle / Architect — gpt-6-astra / high
 
-- **Delegate when:** the task requires a consequential architectural decision, comparison of viable designs, a material security, scalability, performance, data-integrity, or maintainability trade-off, or diagnosis that remains unresolved after evidence-based investigation.
+- **After deciding to delegate, choose this specialist when:** the task requires a consequential architectural decision, comparison of viable designs, a material security, scalability, performance, data-integrity, or maintainability trade-off, or diagnosis that remains unresolved after evidence-based investigation.
 - **Don't delegate when:** the decision is routine and reversible, the first supported fix is still untried, or a direct lookup or test can answer the question.
 - **Rule of thumb:** "Which consequential design or strategy is safest, and why?" goes to Oracle. Oracle investigates architectural questions, planning gaps, and persistent diagnoses as an independent adviser, not a default approval gate or implementer.
 
 #### Designer — gpt-6-sol / medium
 
-- **Delegate when:** user-facing layout, interaction, responsive behavior, accessibility, visual hierarchy, motion, or design-system judgment materially affects the result.
+- **After deciding to delegate, choose this specialist when:** user-facing layout, interaction, responsive behavior, accessibility, visual hierarchy, motion, or design-system judgment materially affects the result.
 - **Don't delegate when:** the work is headless logic or a purely mechanical change that preserves an already established visual contract.
 - **Rule of thumb:** "Users see it and visual or interaction judgment matters" goes to Designer. Later Implementer work must preserve the Designer's intent.
 
 #### Implementer — gpt-6-luna / high
 
-- **Delegate when:** code implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
+- **After deciding to delegate, choose this specialist when:** code implementation is bounded and non-trivial, spans multiple coordinated edits, or forms an independent unit with clear acceptance criteria.
 - **Don't delegate when:** discovery, external research, architecture, or visual direction is still unresolved, the task is 3D asset creation or editing, or the whole change is one small direct action.
 - **Rule of thumb:** "The decision is made; implement and verify this bounded code unit" goes to Implementer.
 
 #### 3D Modeler — gpt-6-sol / medium
 
-- **Delegate when:** the requested result is a 3D asset or scene requiring modeling, materials, placement, or visual inspection in Blender or Unity, and suitable tools are available to the child.
+- **After deciding to delegate, choose this specialist when:** the requested result is a 3D asset or scene requiring modeling, materials, placement, or visual inspection in Blender or Unity, and suitable tools are available to the child.
 - **Don't delegate when:** the work is gameplay or tooling code without 3D asset edits, a 2D interface decision, concept art alone, or a task the available tools cannot perform or inspect.
 - **Rule of thumb:** "Create or edit this 3D asset and verify it in the target application" goes to 3D Modeler. Inspect existing project assets first. For Unity Editor operations, prefer an available Unity MCP; use computer use as a fallback only when the MCP is unavailable or lacks the needed operation. Use Blender or an available Mesh AI tool where the asset workflow calls for them and the request authorizes their use. Never infer tool access or visual validation from the model preset alone.
 
 #### Reviewer — gpt-6-sol / high
 
-- **Delegate when:** independent code review is warranted by risk or requested, or a work plan needs independent review before implementation.
+- **After deciding to delegate, choose this specialist when:** independent code review is warranted by risk or requested, or a work plan needs independent review before implementation.
 - **Don't delegate when:** the task only needs implementation or test execution, or a low-risk change does not justify independent review. Do not invoke every role as a mandatory pipeline.
 - **Rule of thumb:** "Find concrete defects in this code or blockers in this plan" goes to Reviewer. Specify code or plan mode and a read-only scope. Code findings need location, evidence, and impact; plan findings must check references, dependencies, contradictions, acceptance criteria, and execution-blocking ambiguities. Reviewer does not implement fixes or approve publication.
 
 #### Git Master — gpt-6-luna / low
 
-- **Delegate when:** a distinct Git or CI lane materially helps with a requested commit, push, PR/MR mutation, CI correction, or substantial preparation and diagnosis. For direct Git or CI work, read the sibling `../git-master/SKILL.md` and its relevant references before acting.
+- **After deciding to delegate, choose this specialist when:** a distinct Git or CI lane materially helps with a requested commit, push, PR/MR mutation, CI correction, or substantial preparation and diagnosis. For direct Git or CI work, read the sibling `../git-master/SKILL.md` and its relevant references before acting.
 - **Don't delegate when:** the whole request is one read-only Git lookup or a local explanation with no requested commit, publication, request mutation, or CI correction.
 - **Rule of thumb:** "Change or publish Git, PR/MR, or CI state" uses Git Master guidance, directly or through a delegate. Delegation never authorizes a remote effect by itself.
 

@@ -29,6 +29,25 @@ Install the local validation dependencies with `npm ci --ignore-scripts` before
 running `npm test`. The ignored lifecycle scripts keep setup from invoking
 release behavior.
 
+## Agents and recommended models
+
+| Agent | Model | Effort |
+|---|---|---|
+| Orchestrator | gpt-6-sol | medium |
+| Oracle | gpt-6-astra | high |
+| Librarian | gpt-6-luna | medium |
+| Explorer | gpt-6-luna | low |
+| Designer | gpt-6-sol | medium |
+| Implementer | gpt-6-luna | high |
+| 3D Modeler | gpt-6-sol | medium |
+| Reviewer | gpt-6-sol | high |
+| Git Master | gpt-6-luna | low |
+
+The eight specialist presets come from their TOML profiles. **gpt-6-sol / medium**
+is only a recommendation for the Orchestrator; its effective model and effort
+are selected in the chat. Shipping the TOML files does not register the
+specialists automatically.
+
 ## Versions and releases
 
 The manual `Release` workflow uses

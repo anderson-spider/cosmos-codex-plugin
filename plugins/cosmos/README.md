@@ -41,8 +41,9 @@ uses the local name declared by the skill itself: `$cosmos-orchestrate` or
 
 The eight TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-6-sol / medium** is the recommended configuration, not an automatic model change.
 
-| Role | Model | Effort |
+| Agent | Model | Effort |
 |---|---|---|
+| Orchestrator | gpt-6-sol | medium |
 | Oracle | gpt-6-astra | high |
 | Librarian | gpt-6-luna | medium |
 | Explorer | gpt-6-luna | low |
