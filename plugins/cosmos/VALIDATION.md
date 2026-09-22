@@ -144,3 +144,22 @@ Commit integration tests use the real analyzer and Commitlint libraries. Package
 tests use temporary repositories without publishing to GitHub. Full publication
 with `GITHUB_TOKEN` depends on branch permissions and can only be proven by a
 manual run after merge.
+
+
+## Fixed specialist presets — 2026-09-22
+
+This section records the current source update; all earlier observations above remain historical evidence for their original configuration.
+
+- Seven specialist profiles parse and match the skill and README. Implementer (Luna/high) replaces Executor without an alias; Reviewer (Terra/medium) owns independent code and plan review. Oracle uses Sol/low. Astra/low is the main-session recommendation, not an enforced model switch.
+- Static contract checks cover bounded implementation, independent code and plan review, Oracle architecture routing, trivial direct work, fixed-pair unavailability with an explicit deviation, verified named-profile selection, and no claim of independent review after an Orchestrator takeover. They check the written contract, not live model routing or semantic decisions.
+- Historical rollout fixtures with `executor`, prior runtime records, and completed TODO entries are preserved. The rename is a breaking change for manually copied profiles; no installed copy was changed.
+- Validation commands and results:
+  - `npm ci --ignore-scripts`: installed local tooling after the initial suite reported missing `@commitlint/lint` and `semver`; no tracked dependency changes.
+  - `python3 -m unittest discover -s demo-cosmos -v`: 7 passed.
+  - `npm test`: 57 passed after installing tooling.
+  - `npm run lint:commits -- --from origin/main --to HEAD --verbose`: passed; no new commits exist in this local change, so this does not validate a future commit subject.
+  - `python3 <plugin-creator>/scripts/validate_plugin.py plugins/cosmos`: passed.
+  - `python3 <skill-creator>/scripts/quick_validate.py plugins/cosmos/skills/cosmos-orchestrate`: passed.
+  - `python3 <skill-creator>/scripts/quick_validate.py plugins/cosmos/skills/git-master`: passed.
+  - `git diff --check`: passed.
+- No end-to-end run of the new specialist configuration, installation, named-profile runtime registration, or quota/quality comparison was performed. Read-only configuration remains a default subject to session overrides; the instruction contract still forbids writes by Reviewer. These checks do not establish savings on Pro 20x.

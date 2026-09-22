@@ -1,10 +1,10 @@
 # Cosmos — minimal local version
 
-A plugin with two automatically discoverable skills and six internal specialist profiles. It uses native subagent tools available in the session. It has no MCP, hooks, persistent process, ChatGPT Web automation, or session bridge.
+A plugin with two automatically discoverable skills and seven internal specialist profiles. It uses native subagent tools available in the session. It has no MCP, hooks, persistent process, ChatGPT Web automation, or session bridge.
 
 ## Use without installing
 
-Open the project where you want to work, select **gpt-5.6-sol / low**, and ask Codex:
+Open the project where you want to work, select **gpt-6-astra / low**, and ask Codex:
 
 > Read the skill at the absolute path `<plugin-folder>/skills/cosmos-orchestrate/SKILL.md` and use that workflow for [request].
 
@@ -39,20 +39,27 @@ uses the local name declared by the skill itself: `$cosmos-orchestrate` or
 
 ## Optional profiles
 
-The six TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-5.6-sol / low** is the recommended configuration, not an automatic model change.
+The seven TOML files are in `skills/cosmos-orchestrate/references/agents/`. They are internal skill roles and optional custom-agent templates: they do not appear in the `@` selector, and including them in the plugin does not register them with Codex. With the skill loaded, the conversation's primary agent acts as Orchestrator using the model selected in the chat; **gpt-6-astra / low** is the recommended configuration, not an automatic model change.
 
 | Role | Model | Effort |
 |---|---|---|
-| Oracle | gpt-6-astra | low |
+| Oracle | gpt-5.6-sol | low |
 | Librarian | gpt-5.6-luna | medium |
 | Explorer | gpt-5.6-luna | low |
 | Designer | gpt-5.6-terra | medium |
-| Executor | gpt-5.6-terra | medium |
+| Implementer | gpt-5.6-luna | high |
+| Reviewer | gpt-5.6-terra | medium |
 | Git Master | gpt-5.6-luna | low |
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 
-Fixed profiles can override the model or effort passed during creation. The skill directs the Orchestrator to use generic creation with the role instructions when increased effort is required. Read permissions in the profiles are defaults; session overrides can prevail. Read-only instructions remain part of the contract without promising rigid isolation.
+Each specialist uses one fixed model and effort, without automatic escalation. Use a registered profile only after inspecting its effective name, model, and effort in the session; otherwise use generic creation with the exact pair and role instructions. If the pair is unavailable, report the limitation instead of silently substituting another model. The Orchestrator may take over directly as a disclosed deviation, without claiming independent review of its own work. Read permissions in profiles are defaults; session overrides can prevail. Read-only instructions remain part of the contract without promising rigid isolation.
+
+### Breaking change: Implementer and Reviewer
+
+`cosmos-implementer.toml` replaces `cosmos-executor.toml` and its identifier; no compatibility alias is shipped. Users who manually copied the old template must reconcile their local customizations, replace the old profile with Implementer, update references to its name, and add Reviewer if desired. This source change does not migrate or remove installed copies. Future delivery must mark the rename with a Conventional Commit breaking-change indicator; do not increment the manifest version manually.
+
+Implementer implements and validates assigned changes. Reviewer independently inspects code or plans in read-only mode: code findings include location, evidence, and impact; plan review checks references, dependencies, contradictions, and acceptance criteria. Oracle provides architecture, planning-gap, and diagnostic advice. Review is proportionate, not a mandatory approval or publication gate.
 
 ## Behavior
 
@@ -62,10 +69,10 @@ Fixed profiles can override the model or effort passed during creation. The skil
 - Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects before substantive work; dispatch independent lanes in parallel and serialize dependencies or overlapping resources.
 - Concurrency budget: default to at most two simultaneous specialists and use more only for demonstrably independent lanes whose benefit justifies the quota cost; available slots are not a target.
 - Explorer: broad or uncertain local discovery. Librarian: external, current, or version-specific sources. Oracle: consequential architecture, material risk, or persistent diagnosis.
-- Implementation: Executor owns bounded non-trivial work; Designer owns visual and interaction judgment, with one owner per file and later mechanical work preserving the design intent.
+- Implementation: Implementer owns bounded non-trivial work; Designer owns visual and interaction judgment, with one owner per file and later mechanical work preserving the design intent.
 - Git Master: every requested commit, push, branch publication, PR/MR mutation, or CI correction receives the sibling skill path and the request's exact authorization. A single read-only Git lookup can remain direct.
 - Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
-- Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Executor.
+- Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Reviewer.
 - Implementation, verification, and independent review use distinct contracts. A verifier edits tests only when explicitly authorized, while an independent reviewer remains read-only and reports findings instead of fixing them.
 - Completion gate: account for delegate failures, returned decisions, inspected outputs, validation, material review findings, unauthorized effects, skipped phases, and preset deviations before reporting completion.
 - Delegate lifecycle: track active, completed, blocked, failed, and cancelled lanes; reconcile scope changes, stop superseded or idle work when supported, and never finish while required work remains active.
