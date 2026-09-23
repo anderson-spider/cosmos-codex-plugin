@@ -8,7 +8,7 @@ Open the project where you want to work, select **gpt-6-sol / medium**, and ask 
 
 > Read the skill at the absolute path `<plugin-folder>/skills/cosmos-orchestrate/SKILL.md` and use that workflow for [request].
 
-Replace the path with the location where this package was saved. Explicit reading lets you use the instructions without registering the plugin. The skill does not change the conversation model; select it in the app. Specialists can receive an explicit model and effort when the native tool permits it. If there is a limitation, the agent must report the deviation and work directly.
+Replace the path with the location where this package was saved. Explicit reading lets you use the instructions without registering the plugin. The skill does not change the conversation model; select it in the app. Specialists can receive an explicit model and effort when the native tool permits it. If a required specialist cannot run, the agent must report the deviation before taking over directly.
 
 After installation and the start of a new session, you can invoke the workflow with `@Cosmos` or `$cosmos:cosmos-orchestrate` when those forms are available on the Codex surface in use. The skill can also be discovered automatically when the request mentions Cosmos or explicitly asks for the Cosmos workflow. Ordinary development requests or requests to use subagents are not intended triggers; this boundary must be confirmed by the activation matrix in `VALIDATION.md`. Displayed names and syntax may vary across surfaces and versions, so use the option visible in your environment. Marketplace registration and installation are local user settings and are not part of this repository.
 
@@ -59,7 +59,7 @@ These fixed presets use Luna for focused discovery, research, bounded code imple
 
 Official documentation provides `.codex/agents/` for project profiles and `~/.codex/agents/` for personal profiles. If registered names are desired, a later authorized step can copy the TOML files to the selected project after checking for name and file collisions. This package has no installer and does not modify those destinations. The `cosmos-` prefix prevents accidentally replacing the native `explorer` agent.
 
-Each specialist uses one fixed model and effort, without automatic escalation. Use a registered profile only after inspecting its effective name, model, and effort in the session; otherwise use generic creation with the exact pair and role instructions. If the pair is unavailable, report the limitation instead of silently substituting another model. The Orchestrator may take over directly as a disclosed deviation, without claiming independent review of its own work. Read permissions in profiles are defaults; session overrides can prevail. Read-only instructions remain part of the contract without promising rigid isolation.
+Each specialist uses one fixed model and effort, without automatic escalation. Use a registered profile only after inspecting its effective name, model, and effort in the session; otherwise use generic creation with the exact pair and role instructions. If the pair is unavailable, report the limitation instead of silently substituting another model. A direct Orchestrator takeover is a disclosed fallback for unavailable delegation, without claiming independent review of its own work. Read permissions in profiles are defaults; session overrides can prevail. Read-only instructions remain part of the contract without promising rigid isolation.
 
 ### Breaking change: Implementer and Reviewer
 
@@ -70,12 +70,12 @@ Implementer implements and validates assigned changes. Reviewer independently in
 ## Behavior
 
 - Skill loaded: Cosmos is active; it must not claim that there is no linked or actionable skill.
-- First update: state "Cosmos is active" and say whether it will proceed directly or delegate.
-- Direct execution: a normal path, including substantive work, when delegation adds no clear benefit.
-- Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects; delegate bounded lanes when independent work, specialist judgment or tools, or independent review materially helps. Parallelize independent lanes and serialize dependencies or overlapping resources.
+- First update: state "Cosmos is active" and name the first specialist lane, or explain the direct-action exception.
+- Direct execution: only one isolated, clear, low-risk action when delegation overhead exceeds doing it directly. Explanations and coordination stay with the Orchestrator.
+- Delegation Check: separate discovery, research, decisions, implementation, visual work, and Git or CI effects. Delegate non-trivial work to the appropriate specialists; do not retain a multi-step task by treating each step as a separate small action. Parallelize independent lanes and serialize dependencies or overlapping resources.
 - Concurrency budget: default to at most two simultaneous specialists and use more only for demonstrably independent lanes whose benefit justifies the quota cost; available slots are not a target.
 - Explorer: broad or uncertain local discovery. Librarian: external, current, or version-specific sources. Oracle: consequential architecture, material risk, or persistent diagnosis.
-- Implementation: when delegated, Implementer owns bounded code work; 3D Modeler owns 3D asset creation and visual validation when suitable tools are available; Designer owns interface and interaction judgment. Keep one owner per file or shared 3D application session.
+- Implementation: Implementer owns non-trivial bounded code work; 3D Modeler owns 3D asset creation and visual validation when suitable tools are available; Designer owns user-facing design and interaction work. Keep one owner per file or shared 3D application session.
 - Git Master: delegated Git or CI lanes receive the sibling skill path and the request's exact authorization. Direct Git or CI work reads that skill and its relevant references before acting. A single read-only Git lookup does not need the skill.
 - Every delegation passes authorized actions, restrictions, and effects still subject to approval; additional decisions return to the Orchestrator.
 - Every delegation names the allowed file scope and validation owner. Review remains proportionate; a routine independent review can use a new read-only Reviewer.
@@ -83,7 +83,7 @@ Implementer implements and validates assigned changes. Reviewer independently in
 - Completion gate: account for delegate failures, returned decisions, inspected outputs, validation, material review findings, unauthorized effects, skipped phases, and preset deviations before reporting completion.
 - Delegate lifecycle: track active, completed, blocked, failed, and cancelled lanes; reconcile scope changes, stop superseded or idle work when supported, and never finish while required work remains active.
 - Result integration: accept, correct, or reject every delegated result with evidence; resolve disagreements against actual files or sources before implementation.
-- Model or tool failure: record the unavailable supporting capability, avoid identical retries, and take over the work when possible. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
+- Model or tool failure: record the unavailable supporting capability and avoid identical retries. Direct takeover is an explicit fallback when a required specialist cannot run, not a discretionary path for substantive work. Do not confuse unavailable native delegation with absence of the skill or silently replace the distribution.
 
 These rules are a tested orchestration contract, not a runtime semantic classifier. The Orchestrator still applies the routing criteria. The TOML profiles remain optional templates rather than automatically registered agents, and session-level configuration can override requested read-only settings.
 

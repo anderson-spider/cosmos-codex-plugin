@@ -48,6 +48,11 @@ is only a recommendation for the Orchestrator; its effective model and effort
 are selected in the chat. Shipping the TOML files does not register the
 specialists automatically.
 
+When Cosmos is active, the Orchestrator routes non-trivial work to the relevant
+specialists and integrates their results. It handles one isolated, clear,
+low-risk action directly only when delegation overhead exceeds the action.
+Unavailable native delegation or a required preset is reported as a fallback.
+
 ## Versions and releases
 
 The manual `Release` workflow uses
