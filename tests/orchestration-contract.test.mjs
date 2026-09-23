@@ -72,7 +72,7 @@ function agentTable(document) {
   return rows;
 }
 
-test('orchestrator chooses direct work or bounded delegation', () => {
+test('orchestrator delegates substantive work and limits direct action', () => {
   for (const step of [
     'Understand',
     'Path Selection',
@@ -85,9 +85,13 @@ test('orchestrator chooses direct work or bounded delegation', () => {
     assert.match(skill, new RegExp(`\\*\\*${step}:\\*\\*`));
   }
 
-  assert.match(skill, /Direct execution is a normal Orchestrator path, including substantive work/);
-  assert.match(skill, /Task size or category alone does not require delegation/);
-  assert.match(skill, /independent work, specialist judgment or tools, or independent review/);
+  assert.match(skill, /not the default implementation worker/);
+  assert.match(skill, /For non-trivial work, identify separable lanes and delegate bounded work/);
+  assert.match(skill, /Do not keep substantive work in the Orchestrator by dividing it into a series of individually simple actions/);
+  assert.match(skill, /Direct execution is limited to one isolated, clear, low-risk action/);
+  assert.match(skill, /Route broad discovery to Explorer, current external research to Librarian, non-trivial implementation to Implementer/);
+  assert.match(skill, /user-facing design work to Designer, and 3D asset work to 3D Modeler/);
+  assert.doesNotMatch(skill, /Direct execution is a normal Orchestrator path, including substantive work/);
   assert.match(skill, /For direct Git or CI work, read the sibling/);
   assert.match(skill, /Dispatch independent lanes in parallel/);
   assert.match(skill, /Serialize lanes that depend on another result/);
@@ -127,6 +131,7 @@ test('fallbacks avoid repeated failures and preserve evidence boundaries', () =>
   assert.match(skill, /requested model or named selector is unavailable/);
   assert.match(skill, /Do not retry the same failed model, selector, or tool call without new evidence/);
   assert.match(skill, /Distinguish observed validation and source evidence from assumptions/);
+  assert.match(readme, /Direct takeover is an explicit fallback when a required specialist cannot run/);
 });
 
 test('all eight roles define positive, negative, and rule-of-thumb routing', () => {
@@ -164,8 +169,9 @@ test('routing examples and session instructions preserve decision and Git bounda
   assert.match(skill, /Make decisions using the instructions loaded in this session/);
   assert.match(skill, /source checkout or a local installation/);
   assert.match(skill, /does not retroactively change the instructions/);
-  assert.match(skill, /small change in a known file directly/);
-  assert.match(skill, /sequential local Git sync[\s\S]*reading the sibling Git Master skill/);
+  assert.match(skill, /one isolated, clear, low-risk change in a known file directly/);
+  assert.match(skill, /Delegate multi-step Git or CI work to Git Master/);
+  assert.match(skill, /single local Git operation[\s\S]*reading the sibling Git Master skill/);
   assert.match(skill, /read-only investigation to Oracle[\s\S]*independent judgment/);
   assert.match(skill, /For direct Git or CI work, read the sibling/);
 });

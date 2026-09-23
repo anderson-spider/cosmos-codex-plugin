@@ -1,4 +1,11 @@
-# Validation — 2026-09-22
+# Validation — 2026-09-23
+
+## Orchestrator delegation threshold — 2026-09-23
+
+- The source contract now routes non-trivial work to relevant specialists. Direct execution is limited to one isolated, clear, low-risk action when delegation overhead exceeds the action. Dividing substantive work into individually small steps does not bypass that threshold.
+- The Orchestrator still owns planning, scope, result integration, and verification. Unavailable native delegation or an unavailable exact specialist preset remains an explicit, reported direct fallback. The change does not install or register TOML profiles.
+- The OMO Slim source at `src/agents/orchestrator.ts` was inspected for its coordinator role and direct-action threshold. Cosmos retains its own native-tool, authorization, and fixed-preset boundaries.
+- Validation passed: `python3 -m unittest discover -s demo-cosmos -v` (7 tests), `npm test` (60 tests), `npm run lint:commits -- --from origin/main --to HEAD --verbose`, the plugin validator, both skill quick validators, and `git diff --check`. Node tooling was installed locally with `npm ci --ignore-scripts`; the first Node run failed only because `@commitlint/lint` and `semver` were absent. Contract tests establish source consistency, not live delegation behavior in an installed Codex session.
 
 ## Oracle Astra effort correction — 2026-09-22
 
@@ -25,7 +32,7 @@
 - Official documentation describes per-project profiles in `.codex/agents/`. An inspection with `codex debug prompt-input` in an isolated directory did not display profile names, so it was not used as proof of discovery or loading. `--strict-config` is not accepted by that diagnostic command.
 - **Registration or selection of TOML profiles by name and installation in the app were not runtime-validated.** The demonstrated workflow uses native generic-creation tools with explicit model, effort, and role instructions.
 - The delegation contract requires passing authorized actions, restrictions, and effects still subject to approval. Automated tests protect these boundaries, the return of additional decisions to the Orchestrator, and sibling-skill loading by Git Master.
-- The routing contract requires `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify`, allows substantive direct execution when delegation adds no clear benefit, and retains explicit positive, negative, and rule-of-thumb guidance for all eight specialist roles. Contract tests cover the choice and direct Git Master guidance; live routing remains unverified.
+- The earlier routing contract required `Understand -> Path Selection -> Delegation Check -> Dispatch -> Reconcile -> Verify` and allowed substantive direct execution when delegation added no clear benefit. The 2026-09-23 threshold above supersedes that direct-execution rule. Live routing remains unverified.
 - Dispatch now selects the smallest useful concurrency budget, defaults to no more than two simultaneous specialists, and treats available slots as a ceiling rather than a target. Contract tests protect these rules; they do not measure live scheduler behavior.
 - Delivery distinguishes implementation, verification, and independent read-only review contracts. A completion gate requires accounting for delegate failures, returned decisions, inspected outputs, validation, material findings, unauthorized effects, skipped phases, and preset deviations.
 - Automated tests parse all eight TOML profiles with Python `tomllib`, compare their names, models, and efforts with the skill and README, and protect the Explorer/Librarian/Oracle boundaries plus Designer/Implementer/3D Modeler ownership. This is static contract evidence, not a runtime semantic classifier.
@@ -59,7 +66,8 @@ Activation through `@Cosmos` and automatic discovery still need verification aft
 
 Automated tests verify that starter prompts invoke installed skills by namespace and that metadata does not disable automatic discovery. After reinstallation, app evaluation should record:
 
-- `@Cosmos` followed by work where delegation adds no clear benefit: Cosmos active and direct execution declared, regardless of task size.
+- `@Cosmos` followed by one isolated, clear, low-risk action: Cosmos active and the direct-action exception declared.
+- `@Cosmos` followed by non-trivial or multi-step work: Cosmos active and the relevant specialist lane selected when native delegation and its fixed preset are available.
 - `$cosmos:cosmos-orchestrate` followed by work with a bounded independent lane, useful specialist judgment or tools, or material independent review: Cosmos active and the matching specialist selected.
 - A textual mention of the Cosmos workflow: automatic skill discovery.
 - An ordinary development or subagent request without Cosmos: the skill must not be selected based only on those terms.
